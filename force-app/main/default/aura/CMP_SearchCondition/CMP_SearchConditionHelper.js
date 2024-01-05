@@ -1,4 +1,54 @@
 ({
+    //intit
+    getClasses: function (component) {
+        var action = component.get("c.getClassOptions");
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var classOptions = response.getReturnValue();
+                component.set("v.classList", classOptions);
+            } else {
+                console.error("Error fetching class options: " + state);
+            }
+        });
+
+        $A.enqueueAction(action);
+    },
+    initializeOptions: function(component) {
+        // Initialize monthOptions
+        component.set("v.monthOptions", [
+            { label: "January", value: "1" },
+            { label: "February", value: "2" },
+            { label: "March", value: "3" },
+            { label: "April", value: "4" },
+            { label: "May", value: "5" },
+            { label: "June", value: "6" },
+            { label: "July", value: "7" },
+            { label: "August", value: "8" },
+            { label: "September", value: "9" },
+            { label: "October", value: "10" },
+            { label: "November", value: "11" },
+            { label: "December", value: "12" }
+        ]);
+        component.set("v.FieldOrderByList",[
+            {label:"Student Code", value:"Student_Code__c"},
+            {label:"Student Name", value:"First_Name__c"},
+            {label:"Class", value:"Class__r.Class_Name__c"},
+            {label:"Student Birthdate", value:"Birthdate__c"},
+            {label:"Student Gender", value:"Gender__c"},
+        ])
+        component.set("v.OrderTypeList",[
+            {label:"Ascendant", value:"ASC"},
+            {label:"Descendant", value:"DESC"},
+        ])
+
+        // Initialize dayOptions
+        var days = [];
+        for (var i = 1; i <= 31; i++) {
+            days.push({ label: i.toString(), value: i.toString() });
+        }
+        component.set("v.dayOptions", days);
+    },
     //helper for search button(onclick handling)
     updatePageNumbers : function(component) {
         var totalPage = component.get("v.totalPage");

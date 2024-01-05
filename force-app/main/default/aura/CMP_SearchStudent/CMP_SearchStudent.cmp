@@ -33,7 +33,7 @@
     <aura:attribute name="OrderTypeList" type="List" />
 
     <!-- HANDLER -->
-    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <!-- <aura:handler name="init" value="{!this}" action="{!c.init}" /> -->
 
     <!-- CMP_StudentSearchAndTable.cmp -->
     <div class="slds-p-around_medium color-background	">

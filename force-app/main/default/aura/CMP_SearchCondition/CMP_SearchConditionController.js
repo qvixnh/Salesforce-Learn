@@ -1,4 +1,11 @@
 ({
+    init: function(component, event, helper) {
+        helper.getClasses(component);
+        helper.updatePageNumbers(component);
+        helper.initializeOptions(component);
+        helper.loadData(component);
+
+    },
     //setup the field for searching student
     handleDayChange: function(component, event, helper) {
         var day = component.get("v.searchDayOfBirth");
