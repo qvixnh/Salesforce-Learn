@@ -1,12 +1,9 @@
 ({
-    
-    //handle detail, update, delete
     getStudentDetail: function(component, studentId) {
         var action = component.get("c.getStudentDetails");
         action.setParams({
             "studentId": studentId
         });
-
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
@@ -32,7 +29,6 @@
         }else{
             component.set("v.allStudentChecked",false);
         }
-        // this.updateSelectedRecordsNumber(component);
     },
     updateSelectedRecordsNumber:function(component,allSelect=false){
         var students = component.get("v.students");
@@ -55,17 +51,15 @@
         component.set("v.selectedRecordsNumber",0);
 
     },
-    updateDisplayedRecordsPagination : function(component) {
+    updateTable : function(component) {
         var records = component.get("v.totalStudents");
         var currentPage = component.get("v.currentPage");
         var pageSize = component.get("v.pageSize");
         var start = (currentPage - 1) * pageSize;
         var end = start + pageSize;
         component.set("v.students", records.slice(start, end));
-    },
-    updatePageNumbersPagination : function(component) {
+        //update Page Numbers
         var totalPage = component.get("v.totalPage");
-        var currentPage = component.get("v.currentPage");
         var startPage = Math.max(1, currentPage - 1);
         var endPage = Math.min(totalPage, startPage + 2);
         var pageNumbers = [];
@@ -74,13 +68,11 @@
         }
         component.set("v.pageNumbers", pageNumbers);
     },
-
     navigateToPage : function(component, pageNumber) {
         this.uncheck(component);
         component.set("v.currentPage", pageNumber);
-        this.updateSelectAll(component,true);
-        this.updatePageNumbersPagination(component);
-        this.updateDisplayedRecordsPagination(component);
+        component.set("v.allStudentChecked",false);
+        this.updateTable(component);
 
     },
 
@@ -88,9 +80,8 @@
         this.uncheck(component);
         var currentPage = component.get("v.currentPage");
         component.set("v.currentPage", currentPage + direction);
-        this.updateSelectAll(component,true);
-        this.updatePageNumbersPagination(component);
-        this.updateDisplayedRecordsPagination(component);
+        component.set("v.allStudentChecked",false);
+        this.updateTable(component);
     },
     //helper to delete
     helperDeleteStudent: function(component) {

@@ -2,7 +2,6 @@ public with sharing class CMP_SearchStudentCtrl {
     public CMP_SearchStudentCtrl() {
 
     }
-
     @AuraEnabled
     public static List<Class__c> getClassOptions() {
         return  [SELECT 
@@ -28,23 +27,6 @@ public with sharing class CMP_SearchStudentCtrl {
                 WHERE Id = :studentId 
                 LIMIT 1];
     }
-    @AuraEnabled
-    public static String updateStudentDetails(Student__c student, boolean selected) {
-        student.selected__c = selected;
-        update student;
-        return student.Id;
-    }
-    @AuraEnabled
-    public static void updateAllStudentsSelect(List<Student__c> students, boolean selected) {
-        
-        for (Student__c student : students){
-            student.selected__c = selected;
-        }
-        
-        update students;
-    }
-    //CMP_SearchStudentCtrl.cls
-    //PAGINATION APEX CONTROLLER.CLS
     @AuraEnabled
     public static PaginationResult getRecords(Integer pageSize, String classId,  Integer gender,String searchName, String searchCode, Integer day, Integer month, Integer year , String birthdate, String orderField, String orderType) {
         List<Student__c> records = getStudents(classId, gender, searchName, searchCode,day,month,year,birthdate,orderField, orderType);
@@ -122,13 +104,10 @@ public with sharing class CMP_SearchStudentCtrl {
         queryString +=', Birthdate__c';
         queryString +=', Address__c';
         queryString += ' FROM Student__c';
-        queryString += ' WHERE First_Name__c LIKE \'%' + searchName + '%\'';//khi no blank thi cho no khoi like 
+        queryString += ' WHERE First_Name__c LIKE \'%' + searchName + '%\''; 
         queryString += ' AND Student_Code__c LIKE \'%' + searchCode + '%\'';
-
         if (classId != null && classId != 'null') {
-
-            queryString += ' AND Class__c = \'' + classId + '\'';//String joinedString = String.join(listToJoin, delimiter);
-            //queryString = String.join(queryString,' AND ');
+            queryString += ' AND Class__c = \'' + classId + '\'';
         }
         if(gender==1){
             queryString += ' AND Gender__c = True';
@@ -137,8 +116,6 @@ public with sharing class CMP_SearchStudentCtrl {
             queryString += ' AND Gender__c = False';
         }
         if (birthdate != '') {
-            // String formattedDate = birthdate.year() + '-' + pad(birthdate.month()) + '-' + pad(birthdate.day());
-            // queryString += ' AND Birthdate__c = ' + formattedDate;
             queryString += ' AND Birthdate__c = ' + birthdate;
         }
         queryString = searchByDayMonthYear(queryString,day,month,year);

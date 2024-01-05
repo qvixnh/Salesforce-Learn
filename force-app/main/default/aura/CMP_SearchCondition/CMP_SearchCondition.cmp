@@ -1,6 +1,5 @@
 <aura:component  controller="CMP_SearchStudentCtrl" implements="flexipage:availableForAllPageTypes">
     <!-- ATTRIBUTE-->
-    <aura:attribute name="totalStudents" type="List" />
     <aura:attribute name="selectedClass" type="String" />
     <aura:attribute name="classList" type="List" />
     <aura:attribute name="selectedGender" type="Integer" />
@@ -12,16 +11,7 @@
     <aura:attribute name="searchMonthOfBirth" type="Integer" default="0"/>
     <aura:attribute name="monthOptions" type="List"/>
     <aura:attribute name="searchYearOfBirth" type="Integer" default="0"/>
-    <!-- search handling -->
-    <aura:attribute name="totalPage" type="Integer" default="1" />
-    <aura:attribute name="currentPage" type="Integer" default="1" />
-    <aura:attribute name="pageNumbers" type="List" />
-    <aura:attribute name="students" type="List" />
     <aura:attribute name="pageSize" type="Integer" default="4" />
-    <aura:attribute name="allStudentChecked" type="boolean" default="false"/>
-    <aura:attribute name="selectedRecordsNumber" type="Integer" default="0" />
-    <aura:attribute name="totalRecords" type="Integer" default="0" />
-    <!-- data order -->
     <aura:attribute name="FieldOrderBy" type="String" default="Student_Code__c"/>
     <aura:attribute name="FieldOrderByList" type="List" />
     <aura:attribute name="OrderType" type="String" default="ASC"/>

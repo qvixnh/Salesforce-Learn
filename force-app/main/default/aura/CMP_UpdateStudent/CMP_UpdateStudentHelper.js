@@ -27,7 +27,6 @@
         }
         else if(sFirstName || sFirstName.trim() != ''){
             firstNameError.innerHTML = "";
-            
         }
         var sLastName = component.find("sLastName").get("v.value");
         if (!sLastName || sLastName.trim() === '') {

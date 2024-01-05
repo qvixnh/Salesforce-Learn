@@ -26,8 +26,8 @@
     <aura:handler event="c:CMP_SearchEvent" action="{!c.handleSearchEvent}"/>
     <!-- COMPONENT BODY -->
     <div class="slds-m-top_medium slds-grid slds-gutters slds-m-left_xxx-small">
-        <lightning:button label="Create Student" onclick="{!c.handlerActionCreate}" class="slds-button slds-button_success" name="createStudent" />
-        <lightning:button label="Delete Selected Records" onclick="{!c.handlerActionDeleteMultipleStudents}"  class="slds-button slds-button_text-destructive" name="detleSelectedStudent" disabled="{!v.selectedRecordsNumber == 0}"/>
+        <lightning:button label="Create Student" onclick="{!c.openCreate}" class="slds-button slds-button_success" name="createStudent" />
+        <lightning:button label="Delete Selected Records" onclick="{!c.openDeleteMultipleStudents}"  class="slds-button slds-button_text-destructive" name="detleSelectedStudent" disabled="{!v.selectedRecordsNumber == 0}"/>
     </div>
     <!-- Student Table -->
     <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered slds-m-top_medium">
@@ -35,7 +35,7 @@
             <tr class="slds-line-height_reset">
                 <th scope="col" style="width:40px;">
                     <div class="slds-truncate" title="Select">
-                        <lightning:input type="checkbox" label="" onchange="{!c.handleSelectAll}" aura:id="selectAllCheckbox" checked="{!v.allStudentChecked}"/>
+                        <lightning:input type="checkbox" label="" onchange="{!c.selectAll}" aura:id="selectAllCheckbox" checked="{!v.allStudentChecked}"/>
                     </div>
                 </th>
                 <th scope="col" style="width:40px;">
@@ -66,7 +66,7 @@
         </thead>
         <tbody>
             <aura:iteration items="{!v.students}" var="student">
-                <tr class="slds-hint-parent" onclick="{!c.handleRowClick}"  >
+                <tr class="slds-hint-parent" onclick="{!c.rowClick}"  >
                     <td data-label="Select" >
                         <lightning:input type="checkbox"  aura:id="checkboxes" value="{!student.Id}" checked="{!student.selected__c}"/>
                     </td>
@@ -78,9 +78,9 @@
                     <td data-label="Birthdate" >{!student.Birthdate__c}</td>
                     <td data-label="Address"  >{!student.Address__c}</td>
                     <td class="actionBtn">
-                        <lightning:button label="Detail"  onclick="{!c.handlerAction}" name="{!student.Id}" />
-                        <lightning:button label="Update" onclick="{!c.handlerActionUpdate}"  class=" slds-button slds-button_brand" name="{!student.Id}"  />
-                        <lightning:button label="Delete"  class=" slds-button slds-button_destructive" onclick="{!c.handlerActionDelete}" name="{!student.Id}"  />
+                        <lightning:button label="Detail"  onclick="{!c.openDetail}" name="{!student.Id}" />
+                        <lightning:button label="Update" onclick="{!c.openUpdate}"  class=" slds-button slds-button_brand" name="{!student.Id}"  />
+                        <lightning:button label="Delete"  class=" slds-button slds-button_destructive" onclick="{!c.openDelete}" name="{!student.Id}"  />
                         
                     </td>
                 </tr>
@@ -91,13 +91,13 @@
     <div class="slds-m-top_medium slds-grid_align-end">
         <div class="slds-grid slds-gutters">
             <div class="slds-col slds-size_2-of-3">
-                <lightning:button disabled="{!v.currentPage == 1}" label="First" onclick="{!c.handleFirst}" />
-                <lightning:button disabled="{!v.currentPage == 1}" label="Previous" onclick="{!c.handlePrevious}" />
+                <lightning:button disabled="{!v.currentPage == 1}" label="First" onclick="{!c.first}" />
+                <lightning:button disabled="{!v.currentPage == 1}" label="Previous" onclick="{!c.previous}" />
                 <aura:iteration items="{!v.pageNumbers}" var="pageNumber">
-                    <lightning:button label="{!pageNumber}" disabled="{!v.currentPage == pageNumber}" onclick="{!c.navigateToPage}" />
+                    <lightning:button label="{!pageNumber}" disabled="{!v.currentPage == pageNumber}" onclick="{!c.page}" />
                 </aura:iteration>
-                <lightning:button disabled="{!v.currentPage * v.pageSize >= v.totalRecords}" label="Next" onclick="{!c.handleNext}" />
-                <lightning:button disabled="{!v.currentPage * v.pageSize >= v.totalRecords}" label="Last" onclick="{!c.handleLast}" />
+                <lightning:button disabled="{!v.currentPage * v.pageSize >= v.totalRecords}" label="Next" onclick="{!c.next}" />
+                <lightning:button disabled="{!v.currentPage * v.pageSize >= v.totalRecords}" label="Last" onclick="{!c.last}" />
             </div>
             <div class="slds-col  slds-m-top_small">
                 <p>Selected: {!v.selectedRecordsNumber} of {!v.totalRecords} total Records</p>
@@ -114,7 +114,7 @@
                 <header class="slds-modal__header">
                     <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Detail Student</h2>
                     <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
-                            title="Close" onclick="{!c.handlerActionClose}">
+                            title="Close" onclick="{!c.close}">
                         
                     </button>
                 </header>
@@ -124,7 +124,9 @@
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">
-                    <lightning:button variant="brand" label="Close" onclick="{!c.handlerActionClose}" />
+                    <lightning:button label="Update" onclick="{!c.openUpdate}"  class=" slds-button slds-button_brand"  />
+
+                    <lightning:button variant="brand" label="Close" onclick="{!c.close}" />
                 </footer>
             </div>
         </div>
@@ -139,7 +141,7 @@
                 <header class="slds-modal__header">
                     <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Update Student</h2>
                     <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
-                            title="Close" onclick="{!c.handlerActionClose}">
+                            title="Close" onclick="{!c.close}">
                         
                     </button>
                 </header>
@@ -149,7 +151,7 @@
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">
-                    <lightning:button variant="brand" label="Close" onclick="{!c.handlerActionUpdateClose}" />
+                    <lightning:button variant="brand" label="Close" onclick="{!c.closeUpdate}" />
                 </footer>
             </div>
         </div>
@@ -163,7 +165,7 @@
                 <header class="slds-modal__header">
                     <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Are you sure to delete?</h2>
                     <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
-                            title="Close" onclick="{!c.handlerActionClose}">
+                            title="Close" onclick="{!c.close}">
                         
                     </button>
                 </header>
@@ -174,7 +176,7 @@
                 </div>
                 <footer class="slds-modal__footer">
                     <lightning:button variant="brand"  class="slds-button slds-button_destructive" label="Delete" onclick="{!c.deleteStudent}" />
-                    <lightning:button variant="brand" label="Close" onclick="{!c.handlerActionClose}" />
+                    <lightning:button variant="brand" label="Close" onclick="{!c.close}" />
                 </footer>
             </div>
         </div>
@@ -189,7 +191,7 @@
                 <header class="slds-modal__header">
                     <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create Student</h2>
                     <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
-                            title="Close" onclick="{!c.handlerActionClose}">
+                            title="Close" onclick="{!c.close}">
                         
                     </button>
                 </header>
@@ -199,7 +201,7 @@
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">
-                    <lightning:button variant="brand" label="Close" onclick="{!c.handlerActionCreateClose}" />
+                    <lightning:button variant="brand" label="Close" onclick="{!c.closeCreate}" />
                 </footer>
             </div>
         </div>
@@ -214,13 +216,13 @@
                     <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Delete Multiple Students</h2>
                     <div class="slds-text-color_error slds-text-align_left slds-text-heading_medium">Are you sure to delete {!v.selectedRecordsNumber} students.</div>
                     <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
-                            title="Close" onclick="{!c.handlerActionClose}">
+                            title="Close" onclick="{!c.close}">
                         
                     </button>
                 </header>
                 <footer class="slds-modal__footer">
                     <lightning:button label="Delete Selected Student" variant="brand" class="slds-button slds-button_destructive" onclick="{!c.deleteSelectedStudents}" />
-                    <lightning:button variant="brand" label="Close" onclick="{!c.handlerActionClose}" />
+                    <lightning:button variant="brand" label="Close" onclick="{!c.close}" />
                 </footer>
             </div>
         </div>

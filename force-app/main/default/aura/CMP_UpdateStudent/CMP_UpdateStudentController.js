@@ -9,6 +9,6 @@
 
     },
     updateStudentRecs: function(component, event, helper) {
-        updateStudentHelper(component);
+        helper.updateStudentHelper(component);
     },
 })

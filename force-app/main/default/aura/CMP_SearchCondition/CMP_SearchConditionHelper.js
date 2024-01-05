@@ -85,11 +85,6 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
-                component.set("v.students", result.records);
-                component.set("v.totalStudents", result.records);
-                component.set("v.totalPage", result.totalPage);
-                component.set("v.totalRecords", result.totalRecords);
-                //fire event
                 var searchEvent = $A.get("e.c:CMP_SearchEvent");
                 searchEvent.setParams({
                     "totalStudents": result.records,

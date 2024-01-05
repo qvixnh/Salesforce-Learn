@@ -1,2 +1,30 @@
-.THIS {
+/* CMP_StudentDetail.css */
+.THIS .slds-card {
+    border: 1px solid #d8dde6; /* Adjust border color as needed */
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    margin: 0 auto; /* Center the card horizontally */
+    max-width: 600px; /* Adjust the max-width as needed */
+}
+
+.THIS .slds-list_horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Center the list horizontally */
+    text-align: left; /* Align text to the left within the list */
+}
+
+.THIS .slds-item_label {
+    flex: 0 0 30%; /* Adjust label width as needed */
+    font-weight: bold;
+}
+
+.THIS .slds-item_detail {
+    flex: 0 0 70%; /* Adjust detail width as needed */
+    margin-bottom: 0.5rem; /* Add spacing between label and detail */
+}
+
+.THIS h1 {
+    margin-bottom: 1rem; /* Add spacing between heading and details */
+    text-align: center; /* Center the heading text */
 }

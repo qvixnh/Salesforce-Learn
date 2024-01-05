@@ -1,4 +1,3 @@
-CMP_StudentDetail.cmp
 <aura:component>
     <aura:attribute name="childStatus" type="boolean" default="false"/>
     <aura:attribute name="student" type="Object" />
@@ -19,7 +18,7 @@ CMP_StudentDetail.cmp
                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Gender">Gender:</dt>
                 <dd class="slds-item_detail slds-truncate">{!v.student.Gender__c}</dd>
                 
-                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Gender">Selected:</dt>
+                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Selected">Selected:</dt>
                 <dd class="slds-item_detail slds-truncate">{!v.student.selected__c}</dd>
                 
                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Birthdate">Birthdate:</dt>

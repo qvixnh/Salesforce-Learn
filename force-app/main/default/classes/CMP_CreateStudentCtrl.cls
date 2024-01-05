@@ -19,23 +19,6 @@ public class CMP_CreateStudentCtrl {
             throw new AuraHandledException(e.getMessage());
         }
     }
-        
-    private static Boolean isStudentOldEnough(Date birthdate) {
-        if (birthdate == null) {
-            return false;
-        }
-
-        // Calculate age
-        Date today = Date.today();
-        Integer studentAge = today.year() - birthdate.year();
-
-        // Check if the student is at least 17 years old
-        if (today.month() < birthdate.month() || (today.month() == birthdate.month() && today.day() < birthdate.day())) {
-            studentAge--; // Adjust age if the birthday hasn't occurred yet this year
-        }
-
-        return studentAge >= 17;
-    }
     @AuraEnabled
     public static List<Class__c>  getClasses(){
         try { 
@@ -50,5 +33,4 @@ public class CMP_CreateStudentCtrl {
             throw new AuraHandledException(e.getMessage());
         }
     }
-    // Add additional methods or logic as needed
 }

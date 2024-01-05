@@ -10,7 +10,7 @@
 
     },
     createValidate: function(component, event, helper) {
-        createStudentHelper(component);
+        helper.createStudentHelper(component);
     },
     
 })

@@ -5,9 +5,6 @@ public with sharing class CMP_UpdateStudentCtrl {
     @AuraEnabled
     public static String updateStudentRec(Student__c student, String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate) {
         try {
-            if (!isStudentOldEnough(sBirthdate)) {
-                throw new AuraHandledException('Student must be at least 17 years old.');
-            }
             student.Name = sFirstName + ' ' + sLastName;
             student.First_Name__c = sFirstName;
             student.Last_Name__c = slastName;
@@ -21,22 +18,6 @@ public with sharing class CMP_UpdateStudentCtrl {
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
-    }
-    private static Boolean isStudentOldEnough(Date birthdate) {
-        if (birthdate == null) {
-            return false;
-        }
-
-        // Calculate age
-        Date today = Date.today();
-        Integer studentAge = today.year() - birthdate.year();
-
-        // Check if the student is at least 17 years old
-        if (today.month() < birthdate.month() || (today.month() == birthdate.month() && today.day() < birthdate.day())) {
-            studentAge--; // Adjust age if the birthday hasn't occurred yet this year
-        }
-
-        return studentAge >= 17;
     }
     @AuraEnabled
     public static List<Class__c>  getClasses(){

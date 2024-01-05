@@ -7,11 +7,10 @@
         component.set("v.totalStudents",totalStudents);
         component.set("v.totalPage",totalPages);
         component.set("v.totalRecords",totalRecords);
-        helper.updatePageNumbersPagination(component);
-        helper.updateDisplayedRecordsPagination(component);
+        helper.updateTable(component);
         helper.navigateToPage(component,1);
     },
-    handleSelectAll: function(component, event, helper) {
+    selectAll: function(component, event, helper) {
         var students = component.get("v.students");
         var checked = event.getSource().get("v.checked");
         for(let i = 0; i<students.length;i++ ){
@@ -21,38 +20,40 @@
         component.set("v.students",students); 
     },
     //handle 3 action button
-    handlerAction: function(component, event, helper) {
+    openDetail: function(component, event, helper) {
         var studentId = event.getSource().get("v.name");
         helper.getStudentDetail(component, studentId);
         component.set("v.DetailStudentModal", true);
     },
-    handlerActionCreate: function(component, event, helper) {
+    openCreate: function(component, event, helper) {
         component.set("v.CreateStudentModal", true);
     },
-    handlerActionUpdate: function(component, event, helper) {
+    openUpdate: function(component, event, helper) {
         var studentId = event.getSource().get("v.name");
         helper.getStudentDetail(component, studentId);
         component.set("v.UpdateStudentModal", true);
     },
-    handlerActionDelete: function(component, event, helper) {
+    openDelete: function(component, event, helper) {
         var studentId = event.getSource().get("v.name");
         helper.getStudentDetail(component, studentId);
         component.set("v.DeleteStudentModal", true);
     },
-    handlerActionDeleteMultipleStudents: function(component, event, helper) {
+    openDeleteMultipleStudents: function(component, event, helper) {
         component.set("v.DeleteMultipleStudentsModal", true);
     },
-    handlerActionClose: function(component, event, helper) {
+    close: function(component, event, helper) {
         component.set("v.DeleteMultipleStudentsModal", false);
         component.set("v.DetailStudentModal", false);
         component.set("v.DeleteStudentModal", false);
     },
-    handlerActionCreateClose: function(component, event, helper) {
+    closeCreate: function(component, event, helper) {
         component.set("v.CreateStudentModal", false);
         helper.navigateToPage(component, component.get("v.totalPage"));
     },
-    handlerActionUpdateClose: function(component, event, helper) {
+    closeUpdate: function(component, event, helper) {
         component.set("v.UpdateStudentModal", false);
+        component.set("v.DetailStudentModal", false);
+
         helper.navigateToPage(component, component.get("v.currentPage"));
     },
     deleteStudent: function(component, event, helper) {
@@ -62,25 +63,25 @@
         helper.helperDeleteSelectedStudents(component);
     },
     //PAGINATION
-    handlePrevious : function(component, event, helper) {
+    previous : function(component, event, helper) {
         helper.navigate(component, -1);
     },
-    handleFirst : function(component, event, helper) {
+    first : function(component, event, helper) {
         helper.navigateToPage(component, 1);
     },
-    handleNext : function(component, event, helper) {
+    next : function(component, event, helper) {
         helper.navigate(component, 1);
     },
-    handleLast : function(component, event, helper) {
+    last : function(component, event, helper) {
         helper.navigateToPage(component, component.get("v.totalPage"));
     },
-    navigateToPage : function(component, event, helper) {
+    page : function(component, event, helper) {
         var pageNumber = event.getSource().get("v.label");
         helper.navigateToPage(component, pageNumber);
     },
     
     //ROW SELECTION
-    handleRowClick: function(component, event, helper) {
+    rowClick: function(component, event, helper) {
         var clickedRow = event.currentTarget;
         var modal = component.get("v.parentStatus");
         if(modal){
