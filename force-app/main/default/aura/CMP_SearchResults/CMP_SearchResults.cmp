@@ -34,7 +34,8 @@
     <aura:attribute name="OrderType" type="String" default="true"/>
     
     <!-- sort attribute -->
-
+    <!-- search event handler -->
+    <aura:handler event="c:CMP_SearchEvent" action="{!c.handleSearchEvent}"/>
     <!-- COMPONENT BODY -->
     <div class="slds-m-top_medium slds-grid slds-gutters slds-m-left_xxx-small">
         <lightning:button label="Create Student" onclick="{!c.handlerActionCreate}" class="slds-button slds-button_success" name="createStudent" />

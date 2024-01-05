@@ -1,0 +1,4 @@
+<!-- CMP_SearchEvent.cmp -->
+<aura:event type="APPLICATION">
+    <aura:attribute name="totalStudents" type="Student__c[]"/>
+</aura:event>

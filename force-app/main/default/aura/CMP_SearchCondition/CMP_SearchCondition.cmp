@@ -26,6 +26,9 @@
     <aura:attribute name="FieldOrderByList" type="List" />
     <aura:attribute name="OrderType" type="String" default="ASC"/>
     <aura:attribute name="OrderTypeList" type="List" />
+    <!-- event -->
+    <aura:registerEvent name="CMP_SearchEvent" type="c:CMP_SearchEvent"/>
+    <!-- <aura:handler name="init" value="{!this}" action="{!c.init}" /> -->
     <!-- COMPONENT BODY -->
     <div class="slds-grid slds-gutters">
         <div class="slds-col slds-size_1-of-4">

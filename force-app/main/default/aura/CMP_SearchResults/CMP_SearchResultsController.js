@@ -1,4 +1,10 @@
 ({
+    //search event
+    handleSearchEvent: function(component, event, helper) {
+        // Your event handling logic here
+        var totalStudents = event.getParam("totalStudents");
+        console.log("Received total students: ", totalStudents);
+    },
 
     //table's controller handle
 

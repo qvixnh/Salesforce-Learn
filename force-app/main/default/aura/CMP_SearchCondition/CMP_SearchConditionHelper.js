@@ -56,6 +56,12 @@
                 component.set("v.totalRecords", result.totalRecords);
                 this.updateDisplayedRecords(component);
                 this.updatePageNumbers(component);
+                //fire event
+                var searchEvent = $A.get("e.c:CMP_SearchEvent");
+                searchEvent.setParams({
+                    "totalStudents": result.records
+                });
+                searchEvent.fire();
             } else {
                 console.error("Error fetching data");
             }

@@ -47,9 +47,7 @@
         $A.enqueueAction(action);
     },
     //helper method
-    loadData : function(component,dataChanged=true) {
-        console.log("data has been chanaged? ",dataChanged);
-        console.log("student: ", JSON.stringify( component.get("v.totalStudents")));
+    loadData : function(component) {
         var action = component.get("c.getRecords");
         var searchName = component.get("v.searchName");
         var searchCode = component.get("v.searchCode");
@@ -116,13 +114,22 @@
         }
         component.set("v.pageNumbers", pageNumbers);
     },
+    ShowRecords : function(component) {
+        var records = component.get("v.students");
+        var currentPage = component.get("v.currentPage");
+        var pageSize = component.get("v.pageSize");
+        var start = (currentPage - 1) * pageSize;
+        var end = start + pageSize;
+        component.set("v.students", records.slice(start, end));
+    },
     navigateToPage : function(component, pageNumber) {
         // Update the current page and reload data
         component.set("v.currentPage", pageNumber);
         this.updateSelectAll(component,true);
-        // this.updateDisplayedRecords(component);
-        // this.updatePageNumbers(component);
         this.loadData(component);
+        //load 
+        var totalStudents=component.get("v.totalStudents");
+        console.log("Total Student: ", JSON.stringify(totalStudents));
     },
 
     navigate : function(component, direction) {
