@@ -1,0 +1,31 @@
+<aura:component controller="CMP_DeleteStudentCtrl" implements="flexipage:availableForAllPageTypes">
+    <aura:attribute name="childStatus" type="boolean" default="false"/>
+    <aura:attribute name="student" type="Object" />
+
+    <aura:if isTrue="{!v.childStatus}">
+        <div class="slds-card slds-p-around_medium">
+            <h1 class="slds-text-heading_large">{!v.student.Student_Code__c}</h1>
+            <dl class="slds-list_horizontal slds-wrap">
+                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="First Name">First Name:</dt>
+                <dd class="slds-item_detail slds-truncate">{!v.student.First_Name__c}</dd>
+                
+                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Last Name">Last Name:</dt>
+                <dd class="slds-item_detail slds-truncate">{!v.student.Last_Name__c}</dd>
+                
+                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Class">Class:</dt>
+                <dd class="slds-item_detail slds-truncate">{!v.student.Class__r.Class_Name__c}</dd>
+                
+                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Gender">Gender:</dt>
+                <dd class="slds-item_detail slds-truncate">{!v.student.Gender__c}</dd>
+                
+                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Birthdate">Birthdate:</dt>
+                <dd class="slds-item_detail slds-truncate">{!v.student.Birthdate__c}</dd>
+                
+                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Address">Address:</dt>
+                <dd class="slds-item_detail slds-truncate">{!v.student.Address__c}</dd>
+            </dl>
+        </div>
+        
+
+    </aura:if>
+</aura:component>	

@@ -1,0 +1,239 @@
+<aura:component controller="CMP_SearchStudentCtrl" implements="flexipage:availableForAllPageTypes">
+    <!-- attribute -->
+    <!-- handle selection -->
+    <aura:attribute name="students" type="List" />
+    <aura:attribute name="totalStudents" type="List" />
+    <aura:attribute name="allStudentChecked" type="boolean" default="false"/>
+    <aura:attribute name="pageSize" type="Integer" default="4" />
+    <aura:attribute name="selectedRecordsNumber" type="Integer" default="0" />
+    <!-- handle 3 action -->
+    <aura:attribute name="selectedStudent" type="Object"/>
+    <aura:attribute name="parentStatus" type="boolean"/>
+    <!-- child attribute -->
+    <aura:attribute name="DetailStudentModal" type="Boolean" default="false"/>
+    <aura:attribute name="UpdateStudentModal" type="Boolean" default="false"/>
+    <aura:attribute name="DeleteStudentModal" type="Boolean" default="false"/>
+    <aura:attribute name="CreateStudentModal" type="Boolean" default="false"/>
+    <aura:attribute name="DeleteMultipleStudentsModal" type="Boolean" default="false"/>
+    <!-- pagination attribute -->
+    <aura:attribute name="currentPage" type="Integer" default="1" />
+    <aura:attribute name="pageNumbers" type="List" />
+    <aura:attribute name="totalRecords" type="Integer" default="0" />
+    <aura:attribute name="totalPage" type="Integer" default="1" />
+
+    <!-- load data attribute -->
+    <aura:attribute name="selectedClass" type="String" />
+    <aura:attribute name="selectedGender" type="Integer" />
+    <aura:attribute name="searchName" type="String"  default=""/>
+    <aura:attribute name="searchCode" type="String" default=""/>
+    <aura:attribute name="birthdate" type="String" default=""/>
+    <aura:attribute name="searchDayOfBirth" type="Integer" default="0"/>
+    <aura:attribute name="searchMonthOfBirth" type="Integer" default="0"/>
+    <aura:attribute name="searchYearOfBirth" type="Integer" default="0"/>
+    <aura:attribute name="FieldOrderBy" type="String" default="0"/>
+    <aura:attribute name="OrderType" type="String" default="true"/>
+    
+    <!-- sort attribute -->
+
+    <!-- COMPONENT BODY -->
+    <div class="slds-m-top_medium slds-grid slds-gutters slds-m-left_xxx-small">
+        <lightning:button label="Create Student" onclick="{!c.handlerActionCreate}" class="slds-button slds-button_success" name="createStudent" />
+        <lightning:button label="Delete Selected Records" onclick="{!c.handlerActionDeleteMultipleStudents}"  class="slds-button slds-button_text-destructive" name="detleSelectedStudent" disabled="{!v.selectedRecordsNumber == 0}"/>
+    </div>
+    <!-- Student Table -->
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered slds-m-top_medium">
+        <thead>
+            <tr class="slds-line-height_reset">
+                <th scope="col" style="width:40px;">
+                    <div class="slds-truncate" title="Select">
+                        <lightning:input type="checkbox" label="" onchange="{!c.handleSelectAll}" aura:id="selectAllCheckbox" checked="{!v.allStudentChecked}"/>
+                    </div>
+                </th>
+                <th scope="col" style="width:40px;">
+                    <div class="slds-truncate " title="Code">Code</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="First Name">First Name</div>
+                </th>
+                <th scope="col" >
+                    <div class="slds-truncate" title="Last Name">Last Name</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Class">Class</div>
+                </th>
+                <th scope="col" style="width:40px;">
+                    <div class="slds-truncate" title="Gender">Gender</div>
+                </th>
+                <th scope="col" style="width:90px;">
+                    <div class="slds-truncate" title="Birthdate">Birthdate</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate" title="Address">Address</div>
+                </th>
+                <th scope="col" class="col-action" style="width:100px;">
+                    <div class="slds-truncate" title="Action">Action</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.students}" var="student">
+                <tr class="slds-hint-parent" onclick="{!c.handleRowClick}"  >
+                    <td data-label="Select" >
+                        <lightning:input type="checkbox" id="{!student.Student_Code__c}" aura:id="{!student.Student_Code__c}"  onchange="{!c.handleRowSelection}"  value="{!student.Id}" checked="{!student.selected__c}"/>
+                    </td>
+                    <td data-label="Student Code" >{!student.Student_Code__c}</td>
+                    <td data-label="First Name"  >{!student.First_Name__c}</td>
+                    <td data-label="Last Name"  >{!student.Last_Name__c}</td>
+                    <td data-label="Class"  >{!student.Class__r.Class_Name__c}</td>
+                    <td data-label="Gender"  >{!student.Gender__c}</td>
+                    <td data-label="Birthdate" >{!student.Birthdate__c}</td>
+                    <td data-label="Address"  >{!student.Address__c}</td>
+                    <td class="actionBtn">
+                        <lightning:button label="Detail"  onclick="{!c.handlerAction}" name="{!student.Id}" />
+                        <lightning:button label="Update" onclick="{!c.handlerActionUpdate}"  class=" slds-button slds-button_brand" name="{!student.Id}"  />
+                        <lightning:button label="Delete"  class=" slds-button slds-button_destructive" onclick="{!c.handlerActionDelete}" name="{!student.Id}"  />
+                        
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+    <!-- Pagination controls button section-->
+    <div class="slds-m-top_medium slds-grid_align-end">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_2-of-3">
+                <lightning:button disabled="{!v.currentPage == 1}" label="First" onclick="{!c.handleFirst}" />
+                <lightning:button disabled="{!v.currentPage == 1}" label="Previous" onclick="{!c.handlePrevious}" />
+                <aura:iteration items="{!v.pageNumbers}" var="pageNumber">
+                    <lightning:button label="{!pageNumber}" disabled="{!v.currentPage == pageNumber}" onclick="{!c.navigateToPage}" />
+                </aura:iteration>
+                <lightning:button disabled="{!v.currentPage * v.pageSize >= v.totalRecords}" label="Next" onclick="{!c.handleNext}" />
+                <lightning:button disabled="{!v.currentPage * v.pageSize >= v.totalRecords}" label="Last" onclick="{!c.handleLast}" />
+            </div>
+            <div class="slds-col  slds-m-top_small">
+                <p>Selected: {!v.selectedRecordsNumber} of {!v.totalRecords} total Records</p>
+            </div>
+        </div>
+    </div>
+    <!-- Pagination controls button section-->
+    <!-- CMP_DetailStudentModal.cmp -->
+    <aura:if isTrue="{!v.DetailStudentModal}">
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-03" aria-modal="true"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Detail Student</h2>
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick="{!c.handlerActionClose}">
+                        
+                    </button>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning:card>
+                        <c:CMP_DetailStudent childStatus="{!v.parentStatus}" student="{!v.selectedStudent}" />
+                    </lightning:card>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="brand" label="Close" onclick="{!c.handlerActionClose}" />
+                </footer>
+            </div>
+        </div>
+    </aura:if>
+    
+    <!-- CMP_UpdateStudentModal.cmp -->
+    <aura:if isTrue="{!v.UpdateStudentModal}">
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Update Student</h2>
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick="{!c.handlerActionClose}">
+                        
+                    </button>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning:card>
+                        <c:CMP_UpdateStudent childStatus="{!v.parentStatus}" student="{!v.selectedStudent}" />
+                    </lightning:card>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="brand" label="Close" onclick="{!c.handlerActionUpdateClose}" />
+                </footer>
+            </div>
+        </div>
+    </aura:if>
+     <!-- DeleteStudentModal -->
+     <aura:if isTrue="{!v.DeleteStudentModal}">
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-03" aria-modal="true"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Are you sure to delete?</h2>
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick="{!c.handlerActionClose}">
+                        
+                    </button>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning:card>
+                        <c:CMP_DetailStudent childStatus="{!v.parentStatus}" student="{!v.selectedStudent}" />
+                    </lightning:card>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="brand"  class="slds-button slds-button_destructive" label="Delete" onclick="{!c.deleteStudent}" />
+                    <lightning:button variant="brand" label="Close" onclick="{!c.handlerActionClose}" />
+                </footer>
+            </div>
+        </div>
+    </aura:if>
+    <!-- CreateStudentsModal -->
+
+    <aura:if isTrue="{!v.CreateStudentModal}">
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create Student</h2>
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick="{!c.handlerActionClose}">
+                        
+                    </button>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning:card>
+                        <c:CMP_CreateStudent childStatus="{!v.parentStatus}" />
+                    </lightning:card>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="brand" label="Close" onclick="{!c.handlerActionCreateClose}" />
+                </footer>
+            </div>
+        </div>
+    </aura:if>
+    <!-- DeleteMultipleStudentsModal -->
+    <aura:if isTrue="{!v.DeleteMultipleStudentsModal}">
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-03" aria-modal="true"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Delete Multiple Students</h2>
+                    <div class="slds-text-color_error slds-text-align_left slds-text-heading_medium">Are you sure to delete {!v.selectedRecordsNumber} students.</div>
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                            title="Close" onclick="{!c.handlerActionClose}">
+                        
+                    </button>
+                </header>
+                <footer class="slds-modal__footer">
+                    <lightning:button label="Delete Selected Student" variant="brand" class="slds-button slds-button_destructive" onclick="{!c.deleteSelectedStudents}" />
+                    <lightning:button variant="brand" label="Close" onclick="{!c.handlerActionClose}" />
+                </footer>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

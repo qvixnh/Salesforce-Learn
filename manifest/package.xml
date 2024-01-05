@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+	<types>
+		<members>CMP_CreateStudent</members>
+		<members>CMP_DetailStudent</members>
+		<members>CMP_SearchStudent</members>
+		<members>CMP_UpdateStudent</members>
+		<members>StudentApp</members>
+		<name>AuraDefinitionBundle</name>
+	</types>
+	<version>58.0</version>
+</Package>

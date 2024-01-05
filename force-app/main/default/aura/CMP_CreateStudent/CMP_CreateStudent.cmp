@@ -1,0 +1,39 @@
+<!-- CMP_CreateStudent.cmp -->
+<aura:component controller="CMP_CreateStudentCtrl" implements="flexipage:availableForAllPageTypes">
+    <aura:attribute name="childStatus" type="boolean" default="false"/>
+    <!-- Attribute -->
+    <aura:attribute name="genderOptions" type="List"/>
+    <aura:attribute name="selectedGender" type="Boolean" default="false"/>
+    <!-- class mac dinh se la tieng anh 1 -->
+    <aura:attribute name="selectedClass" type="Id" default="a035j00000WuPMm"/>
+    <aura:attribute name="classList" type="List"/>
+    <aura:attribute name="errorMessages" type="List" />
+    <!-- Handler -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <!-- AURA BODY -->
+    <div class="slds-card slds-p-around_medium">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-2">
+                <lightning:input type="text" label="Enter First Name" aura:id="sFirstName"/>
+                <p id="sFirstNameError" class="slds-text-color_destructive"></p>
+                <lightning:input type="text" label="Enter Last Name"  aura:id="sLastName"/>
+                <p id="sLastNameError" class="slds-text-color_destructive"></p>
+                <lightning:select name="classList" label="Select Class" value="{!v.selectedClass}">
+                    <aura:iteration items="{!v.classList}" var="item">
+                        <option value="{!item.Id}">{!item.Class_Name__c}</option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning:input type="text" label="Enter Address" aura:id="sAddress"/>
+                <p id="sAddressError" class="slds-text-color_destructive"></p>
+                <lightning:input type="date" name="BirthdateInput" label="Enter Birthdate" aura:id="sBirthdate"/>
+                <p id="sBirthdateError" class="slds-text-color_destructive"></p>
+                <lightning:radioGroup name="gender" label="Gender" aura:id="sGender" options="{!v.genderOptions}" value="{!v.selectedGender}" />
+            </div>
+        </div>
+        <div class="slds-m-top_medium">
+            <lightning:button label="Create Student" variant="brand" class=" slds-align_absolute-center slds-button slds-button_brand" onclick="{!c.createValidate}"/>
+        </div>
+    </div>
+</aura:component>

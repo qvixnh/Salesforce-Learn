@@ -1,0 +1,101 @@
+<aura:component  controller="CMP_SearchStudentCtrl" implements="flexipage:availableForAllPageTypes">
+    <!-- ATTRIBUTE-->
+    <aura:attribute name="totalStudents" type="List" />
+    <aura:attribute name="selectedClass" type="String" />
+    <aura:attribute name="classList" type="List" />
+    <aura:attribute name="selectedGender" type="Integer" />
+    <aura:attribute name="searchName" type="String"  default=""/>
+    <aura:attribute name="searchCode" type="String" default=""/>
+    <aura:attribute name="birthdate" type="String" default=""/>
+    <aura:attribute name="searchDayOfBirth" type="Integer" default="0"/>
+    <aura:attribute name="dayOptions" type="List"/>
+    <aura:attribute name="searchMonthOfBirth" type="Integer" default="0"/>
+    <aura:attribute name="monthOptions" type="List"/>
+    <aura:attribute name="searchYearOfBirth" type="Integer" default="0"/>
+    <!-- search handling -->
+    <aura:attribute name="totalPage" type="Integer" default="1" />
+    <aura:attribute name="currentPage" type="Integer" default="1" />
+    <aura:attribute name="pageNumbers" type="List" />
+    <aura:attribute name="students" type="List" />
+    <aura:attribute name="pageSize" type="Integer" default="4" />
+    <aura:attribute name="allStudentChecked" type="boolean" default="false"/>
+    <aura:attribute name="selectedRecordsNumber" type="Integer" default="0" />
+    <aura:attribute name="totalRecords" type="Integer" default="0" />
+    <!-- data order -->
+    <aura:attribute name="FieldOrderBy" type="String" default="Student_Code__c"/>
+    <aura:attribute name="FieldOrderByList" type="List" />
+    <aura:attribute name="OrderType" type="String" default="ASC"/>
+    <aura:attribute name="OrderTypeList" type="List" />
+    <!-- COMPONENT BODY -->
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:input type="date" name="BirthdateInput" label="Enter Birthdate" value="{!v.birthdate}" />
+        </div>
+        <!-- Select Lists for Date of Birth -->
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:select name="dayOfBirth" label="Day of Birth" value="{!v.searchDayOfBirth}" onchange="{!c.handleDayChange}">
+                <option value="0">None</option>
+                <aura:iteration items="{!v.dayOptions}" var="day">
+                    <option value="{!day.value}">{!day.label}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:select name="monthOfBirth" label="Month of Birth" value="{!v.searchMonthOfBirth}" onchange="{!c.handleMonthChange}" >
+                <option value="0">None</option>
+                <aura:iteration items="{!v.monthOptions}" var="month">
+                    <option value="{!month.value}">{!month.label}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:input type="number" label="Year of Birth" value="{!v.searchYearOfBirth}" default="0" />
+        </div>
+    </div>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:select name="classSelect" label="Select Class" value="{!v.selectedClass}">
+                <option value="null">None</option>
+                <aura:iteration items="{!v.classList}" var="item">
+                    <option value="{!item.Id}">{!item.Class_Name__c}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:select name="genderSelect" label="Select Gender" value="{!v.selectedGender}">
+                <option value="2">None</option>
+                <option value="1">Male</option>
+                <option value="0">Female</option>
+            </lightning:select>
+        </div>
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:input type="text" label="Enter Name" value="{!v.searchName}" />
+        </div>
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:input type="text" label="Enter Code" value="{!v.searchCode}" />
+        </div>
+
+    </div>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:select name="FieldOrder" label="Select Field Order" value="{!v.FieldOrderBy}" onchange="{!c.handleChange}">
+                <aura:iteration items="{!v.FieldOrderByList}" var="item">
+                    <option value="{!item.value}">{!item.label}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>  
+        <div class="slds-col slds-size_1-of-4">
+            <lightning:select name="OrderType" label="Select Order type" value="{!v.OrderType}" onchange="{!c.handleChange}">
+                <aura:iteration items="{!v.OrderTypeList}" var="item">
+                    <option value="{!item.value}">{!item.label}</option>
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        <div class="slds-col slds-size_1-of-4 slds-m-top_large">
+            <lightning:button label="Clear All Filters"  onclick="{!c.clearAllFilters}" class="slds-button slds-button_outline-brand slds-button_stretch" disabled="{!v.disableClearAll}" />
+        </div>
+        <div class="slds-col slds-size_1-of-4 slds-m-top_large">
+            <lightning:button label="Search Student" onclick="{!c.handleChange}" class="slds-button slds-button_brand slds-button_stretch" name="searchStudent" />
+        </div>
+    </div>
+</aura:component>
