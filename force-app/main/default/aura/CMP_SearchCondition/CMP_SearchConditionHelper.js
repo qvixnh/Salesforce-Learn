@@ -73,8 +73,6 @@
         var birthdate=component.get("v.birthdate");
         var FieldOrderBy=component.get("v.FieldOrderBy");
         var OrderType=component.get("v.OrderType");
-        console.log(FieldOrderBy);
-        console.log(OrderType);
         if(year==""){
             year =0;
         }

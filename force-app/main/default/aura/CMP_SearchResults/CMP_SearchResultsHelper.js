@@ -1,4 +1,23 @@
 ({
+    
+    //handle detail, update, delete
+    getStudentDetail: function(component, studentId) {
+        var action = component.get("c.getStudentDetails");
+        action.setParams({
+            "studentId": studentId
+        });
+
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                component.set("v.selectedStudent", response.getReturnValue());
+            } else {
+                console.error('Error: ' + state);
+            }
+        });
+        $A.enqueueAction(action);
+    },
+    //PAGINATION
     updateSelectAll: function(component, navigated){
         var students = component.get("v.students");
         var selectedIds = [] ;
@@ -28,82 +47,15 @@
             component.set("v.selectedRecordsNumber",component.get("v.pageSize"));
         }
     },
-
-    //handle detail, update, delete
-    getStudentDetail: function(component, studentId) {
-        var action = component.get("c.getStudentDetails");
-        action.setParams({
-            "studentId": studentId
-        });
-
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                component.set("v.selectedStudent", response.getReturnValue());
-            } else {
-                console.error('Error: ' + state);
-            }
-        });
-        $A.enqueueAction(action);
-    },
-    //helper method
-    loadData : function(component) {
-        var action = component.get("c.getRecords");
-        var searchName = component.get("v.searchName");
-        var searchCode = component.get("v.searchCode");
-        var gender = component.get("v.selectedGender");
-        var classId= component.get("v.selectedClass");
-        var day=component.get("v.searchDayOfBirth");
-        var month=component.get("v.searchMonthOfBirth");
-        var year=component.get("v.searchYearOfBirth");
-        var birthdate=component.get("v.birthdate");
-        var FieldOrderBy=component.get("v.FieldOrderBy");
-        var OrderType=component.get("v.OrderType");
-        if(year==""){
-            year =0;
-        }
-        if(birthdate==null){
-            birthdate='';
-        }
-        action.setParams({
-            currentPage: component.get("v.currentPage"),
-            pageSize: component.get("v.pageSize"),
-            classId: classId,
-            gender:gender,
-            searchName:searchName,
-            searchCode:searchCode,
-            day:day,
-            month:month,
-            year:year,
-            birthdate:birthdate,
-            orderField:FieldOrderBy,
-            orderType:OrderType
-        });
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var result = response.getReturnValue();
-                component.set("v.students", result.records);
-                component.set("v.totalStudents", result.records);
-                component.set("v.totalPage", result.totalPage);
-                component.set("v.totalRecords", result.totalRecords);
-                this.updateDisplayedRecords(component);
-                this.updatePageNumbers(component);
-            } else {
-                console.error("Error fetching student data");
-            }
-        });
-        $A.enqueueAction(action);
-    },
-    updateDisplayedRecords : function(component) {
-        var records = component.get("v.students");
+    updateDisplayedRecordsPagination : function(component) {
+        var records = component.get("v.totalStudents");
         var currentPage = component.get("v.currentPage");
         var pageSize = component.get("v.pageSize");
         var start = (currentPage - 1) * pageSize;
         var end = start + pageSize;
         component.set("v.students", records.slice(start, end));
     },
-    updatePageNumbers : function(component) {
+    updatePageNumbersPagination : function(component) {
         var totalPage = component.get("v.totalPage");
         var currentPage = component.get("v.currentPage");
         var startPage = Math.max(1, currentPage - 1);
@@ -114,32 +66,105 @@
         }
         component.set("v.pageNumbers", pageNumbers);
     },
-    ShowRecords : function(component) {
-        var records = component.get("v.students");
-        var currentPage = component.get("v.currentPage");
-        var pageSize = component.get("v.pageSize");
-        var start = (currentPage - 1) * pageSize;
-        var end = start + pageSize;
-        component.set("v.students", records.slice(start, end));
-    },
     navigateToPage : function(component, pageNumber) {
-        // Update the current page and reload data
         component.set("v.currentPage", pageNumber);
-        this.updateSelectAll(component,true);
-        this.loadData(component);
-        //load 
-        var totalStudents=component.get("v.totalStudents");
-        console.log("Total Student: ", JSON.stringify(totalStudents));
+        this.updateSelectAll(component);
+        this.updatePageNumbersPagination(component);
+        this.updateDisplayedRecordsPagination(component);
     },
 
     navigate : function(component, direction) {
-        // Update the current page and reload data
         var currentPage = component.get("v.currentPage");
         component.set("v.currentPage", currentPage + direction);
-        this.updateSelectAll(component,true);
-        this.loadData(component,false);
-        
-        // this.updateDisplayedRecords(component);
-        // this.updatePageNumbers(component);
+        this.updateSelectAll(component);
+        this.updatePageNumbersPagination(component);
+        this.updateDisplayedRecordsPagination(component);
     },
+    //helper to delete
+    helperDeleteStudent: function(component) {
+        var studentId = component.get("v.selectedStudent.Id");
+        var action = component.get("c.deleteStudentRecord");
+        action.setParams({
+            "studentId": studentId
+        });
+
+        action.setCallback(this, function(response) {
+            var state = response.getState();    
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                if (result === 'Success') {
+                    // var toastEvent = $A.get("e.force:showToast");
+                    // toastEvent.setParams({
+                    //     "title": "Success!",
+                    //     "message": "Student record deleted successfully.",
+                    //     "type": "success"
+                    // });
+                    // toastEvent.fire();
+                    alert("student delete successfully");
+                    var reloadEvent = $A.get("e.c:CMP_ReloadEvent");
+                    reloadEvent.fire();
+                } else {
+                    // Show an error toast message
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error",
+                        "message": result,
+                        "type": "error"
+                    });
+                    toastEvent.fire();
+                }
+            } else {
+                // Show an error toast message
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error",
+                    "message": "error occued when deleting student",
+                    "type": "error"
+                });
+                toastEvent.fire();
+            }
+        });
+
+        $A.enqueueAction(action);
+        component.set("v.DeleteStudentModal", false);
+        component.set("v.parentStatus", false);
+    },
+    helperDeleteSelectedStudents:function(component){
+        var students = component.get("v.students");
+        var selectedIds = [] ;
+        students.forEach(function(student){
+            if(student.selected__c ==true){
+                selectedIds.push(student.Id);
+            }
+        });
+        var action = component.get("c.deleteSelectedStudentsCtrl");
+        action.setParams({
+            "studentIds": selectedIds
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var result = response.getReturnValue();
+                // var toastEvent = $A.get("e.force:showToast");
+                // toastEvent.setParams({
+                //     "title": "Success!",
+                //     "message": "Student record deleted successfully - ."+ result,
+                //     "type": "success"
+                // });
+                // toastEvent.fire();
+                alert("multiple students deleted successfully");
+                var reloadEvent = $A.get("e.c:CMP_ReloadEvent");
+                reloadEvent.fire();
+            } else {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error",
+                    "message": "error occued when deleting student",
+                    "type": "error"
+                });
+                toastEvent.fire();
+            }
+        });
+        $A.enqueueAction(action);
+    }
 })

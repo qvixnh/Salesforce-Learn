@@ -34,18 +34,18 @@
             var state= stuRecds.getState();
             if(state == "SUCCESS"){
                 var stuId = stuRecds.getReturnValue();
-                // Show a success toast message
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    "title": "Success!",
-                    "message": "Student record deleted successfully.",
-                    "type": "success"
-                });
-                toastEvent.fire();
-                //helper.refreshTableData(component);
+                // var toastEvent = $A.get("e.force:showToast");
+                // toastEvent.setParams({
+                //     "title": "Success!",
+                //     "message": "Student record deleted successfully.",
+                //     "type": "success"
+                // });
+                // toastEvent.fire();
+                alert("Student record created successfully...."+stuId);
+                var reloadEvent = $A.get("e.c:CMP_ReloadEvent");
+                reloadEvent.fire();
                 helper.resetForm(component);
             }else{
-                
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error",

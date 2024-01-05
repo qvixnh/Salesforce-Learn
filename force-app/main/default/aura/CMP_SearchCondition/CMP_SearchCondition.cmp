@@ -28,6 +28,7 @@
     <aura:attribute name="OrderTypeList" type="List" />
     <!-- event -->
     <aura:registerEvent name="CMP_SearchEvent" type="c:CMP_SearchEvent"/>
+    <aura:handler event="c:CMP_ReloadEvent" action="{!c.handleChange}"/>
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     <!-- <aura:handler name="init" value="{!this}" action="{!c.init}" /> -->
     <!-- COMPONENT BODY -->

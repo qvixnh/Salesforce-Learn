@@ -35,16 +35,16 @@
             var state= stuRecds.getState();
             if(state == "SUCCESS"){
                 var stuId = stuRecds.getReturnValue();
-                // Show a success toast message
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    "title": "Success!",
-                    "message": "Student record updated successfully.",
-                    "type": "success"
-                });
-                //helper.refreshTableData(component);
-                toastEvent.fire();
-                // alert("Student record updated successfully...."+stuId);
+                // var toastEvent = $A.get("e.force:showToast");
+                // toastEvent.setParams({
+                //     "title": "Success!",
+                //     "message": "Student record updated successfully.",
+                //     "type": "success"
+                // });
+                // toastEvent.fire();
+                alert("Student record updated successfully...."+stuId);
+                var reloadEvent = $A.get("e.c:CMP_ReloadEvent");
+                reloadEvent.fire();
             }else{
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({

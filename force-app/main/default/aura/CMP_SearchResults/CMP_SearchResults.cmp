@@ -20,20 +20,8 @@
     <aura:attribute name="pageNumbers" type="List" />
     <aura:attribute name="totalRecords" type="Integer" default="0" />
     <aura:attribute name="totalPage" type="Integer" default="1" />
-
-    <!-- load data attribute -->
-    <aura:attribute name="selectedClass" type="String" />
-    <aura:attribute name="selectedGender" type="Integer" />
-    <aura:attribute name="searchName" type="String"  default=""/>
-    <aura:attribute name="searchCode" type="String" default=""/>
-    <aura:attribute name="birthdate" type="String" default=""/>
-    <aura:attribute name="searchDayOfBirth" type="Integer" default="0"/>
-    <aura:attribute name="searchMonthOfBirth" type="Integer" default="0"/>
-    <aura:attribute name="searchYearOfBirth" type="Integer" default="0"/>
-    <aura:attribute name="FieldOrderBy" type="String" default="0"/>
-    <aura:attribute name="OrderType" type="String" default="true"/>
-    
-    <!-- sort attribute -->
+    <!-- reload event  -->
+    <aura:registerEvent name="CMP_ReloadEvent" type="c:CMP_ReloadEvent"/>
     <!-- search event handler -->
     <aura:handler event="c:CMP_SearchEvent" action="{!c.handleSearchEvent}"/>
     <!-- COMPONENT BODY -->
@@ -80,7 +68,7 @@
             <aura:iteration items="{!v.students}" var="student">
                 <tr class="slds-hint-parent" onclick="{!c.handleRowClick}"  >
                     <td data-label="Select" >
-                        <lightning:input type="checkbox" id="{!student.Student_Code__c}" aura:id="{!student.Student_Code__c}"  onchange="{!c.handleRowSelection}"  value="{!student.Id}" checked="{!student.selected__c}"/>
+                        <lightning:input type="checkbox" id="{!student.Student_Code__c}" aura:id="{!student.Student_Code__c}"    value="{!student.Id}" checked="{!student.selected__c}"/>
                     </td>
                     <td data-label="Student Code" >{!student.Student_Code__c}</td>
                     <td data-label="First Name"  >{!student.First_Name__c}</td>
@@ -132,7 +120,7 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning:card>
-                        <c:CMP_DetailStudent childStatus="{!v.parentStatus}" student="{!v.selectedStudent}" />
+                        <c:CMP_DetailStudent childStatus="{!v.DetailStudentModal}" student="{!v.selectedStudent}" />
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">
@@ -157,7 +145,7 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning:card>
-                        <c:CMP_UpdateStudent childStatus="{!v.parentStatus}" student="{!v.selectedStudent}" />
+                        <c:CMP_UpdateStudent childStatus="{!v.UpdateStudentModal}" student="{!v.selectedStudent}" />
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">
@@ -181,7 +169,7 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning:card>
-                        <c:CMP_DetailStudent childStatus="{!v.parentStatus}" student="{!v.selectedStudent}" />
+                        <c:CMP_DetailStudent childStatus="{!v.DeleteStudentModal}" student="{!v.selectedStudent}" />
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">
@@ -207,7 +195,7 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning:card>
-                        <c:CMP_CreateStudent childStatus="{!v.parentStatus}" />
+                        <c:CMP_CreateStudent childStatus="{!v.CreateStudentModal}" />
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">

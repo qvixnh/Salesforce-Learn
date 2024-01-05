@@ -9,6 +9,7 @@
     <aura:attribute name="classList" type="List"/>
     <aura:attribute name="errorMessages" type="List" />
     <!-- Handler -->
+    <aura:registerEvent name="CMP_ReloadEvent" type="c:CMP_ReloadEvent"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <!-- AURA BODY -->
     <div class="slds-card slds-p-around_medium">

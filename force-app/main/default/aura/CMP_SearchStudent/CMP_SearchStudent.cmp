@@ -4,16 +4,6 @@
     <!-- ATTRIBUTE -->
     <aura:attribute name="totalStudents" type="List" />
     <aura:attribute name="students" type="List" />
-    <!-- <aura:attribute name="students" type="List" />     -->
-    <aura:attribute name="classList" type="List" />
-    <aura:attribute name="selectedClass" type="String" />
-    <aura:attribute name="selectedGender" type="Integer" />
-    <aura:attribute name="birthdate" type="String" default=""/>
-    <aura:attribute name="dayOptions" type="List"/>
-    <aura:attribute name="monthOptions" type="List"/>
-    <aura:attribute name="searchDayOfBirth" type="Integer" default="0"/>
-    <aura:attribute name="searchMonthOfBirth" type="Integer" default="0"/>
-    <aura:attribute name="searchYearOfBirth" type="Integer" default="0"/>
     <!--pagination attribute section-->
     <aura:attribute name="allStudentChecked" type="boolean" default="false"/>
     <aura:attribute name="currentPage" type="Integer" default="1" />
@@ -21,49 +11,24 @@
     <aura:attribute name="totalPage" type="Integer" default="1" />
     <aura:attribute name="totalRecords" type="Integer" default="0" />
     <aura:attribute name="selectedRecordsNumber" type="Integer" default="0" />
-
     <aura:attribute name="pageNumbers" type="List" />
-    <!--pagination attribute section-->
-    <aura:attribute name="searchName" type="String"  default=""/>
-    <aura:attribute name="searchCode" type="String" default="ST-"/>
-    <!-- order -->
-    <aura:attribute name="FieldOrderBy" type="String" default="Student_Code__c"/>
-    <aura:attribute name="OrderType" type="String" default="ASC"/>
-    <aura:attribute name="FieldOrderByList" type="List" />
-    <aura:attribute name="OrderTypeList" type="List" />
-
     <!-- HANDLER -->
-    <!-- <aura:handler name="init" value="{!this}" action="{!c.init}" /> -->
-
     <!-- CMP_StudentSearchAndTable.cmp -->
     <div class="slds-p-around_medium color-background	">
         <c:CMP_SearchCondition 
-        selectedClass="{!v.selectedClass}"
-        classList="{!v.classList}"
-        selectedGender="{!v.selectedGender}"
-        searchCode="{!v.searchCode}"
-        searchName="{!v.searchName}"
-        birthdate="{!v.birthdate}"
-        searchDayOfBirth="{!v.searchDayOfBirth}"
-        dayOptions="{!v.dayOptions}"
-        searchMonthOfBirth="{!v.searchMonthOfBirth}"
-        monthOptions="{!v.monthOptions}"
-        searchYearOfBirth="{!v.searchYearOfBirth}"
-        totalPage="{!v.totalPage}"
+        totalStudents="{!v.totalStudents}"
+        students="{!v.students}"
+        allStudentChecked="{!v.allStudentChecked}"
+        pageSize="{!v.pageSize}" 
+        selectedRecordsNumber="{!v.selectedRecordsNumber}"
         currentPage="{!v.currentPage}"
         pageNumbers="{!v.pageNumbers}"
-        students="{!v.students}"
-        pageSize="{!v.pageSize}" 
-        allStudentChecked="{!v.allStudentChecked}"
-        selectedRecordsNumber="{!v.selectedRecordsNumber}"
         totalRecords="{!v.totalRecords}"
-        OrderType="{!v.OrderType}"
-        FieldOrderBy="{!v.FieldOrderBy}"
-        OrderTypeList="{!v.OrderTypeList}"
-        FieldOrderByList="{!v.FieldOrderByList}"
-        totalStudents="{!v.totalStudents}"
+        totalPage="{!v.totalPage}"
+
         />
         <c:CMP_SearchResults 
+        totalStudents="{!v.totalStudents}"
         students="{!v.students}" 
         allStudentChecked="{!v.allStudentChecked}" 
         pageSize="{!v.pageSize}" 
@@ -72,17 +37,7 @@
         pageNumbers="{!v.pageNumbers}"
         totalRecords="{!v.totalRecords}"
         totalPage="{!v.totalPage}"
-        selectedClass="{!v.selectedClass}"
-        selectedGender="{!v.selectedGender}"
-        searchCode="{!v.searchCode}"
-        searchName="{!v.searchName}"
-        birthdate="{!v.birthdate}"
-        searchDayOfBirth="{!v.searchDayOfBirth}"
-        searchMonthOfBirth="{!v.searchMonthOfBirth}"
-        searchYearOfBirth="{!v.searchYearOfBirth}"
-        OrderType="{!v.OrderType}"
-        totalStudents="{!v.totalStudents}"
-        FieldOrderBy="{!v.FieldOrderBy}"
+
         />
         
     </div>

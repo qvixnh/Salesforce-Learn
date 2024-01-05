@@ -8,6 +8,7 @@
     <aura:attribute name="errorMessages" type="List" />
 
     <!-- Handler -->
+    <aura:registerEvent name="CMP_ReloadEvent" type="c:CMP_ReloadEvent"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     
     <!-- Aura Body -->
