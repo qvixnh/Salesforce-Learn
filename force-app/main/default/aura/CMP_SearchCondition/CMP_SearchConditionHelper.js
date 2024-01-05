@@ -68,7 +68,6 @@
             birthdate='';
         }
         action.setParams({
-            currentPage: component.get("v.currentPage"),
             pageSize: component.get("v.pageSize"),
             classId: classId,
             gender:gender,

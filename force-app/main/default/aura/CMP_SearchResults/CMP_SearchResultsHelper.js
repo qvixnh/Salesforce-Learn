@@ -18,7 +18,7 @@
         $A.enqueueAction(action);
     },
     //PAGINATION
-    updateSelectAll: function(component, navigated){
+    updateSelectAll: function(component, navigated=false){
         var students = component.get("v.students");
         var selectedIds = [] ;
         students.forEach(function(student){
@@ -32,7 +32,7 @@
         }else{
             component.set("v.allStudentChecked",false);
         }
-        this.updateSelectedRecordsNumber(component);
+        // this.updateSelectedRecordsNumber(component);
     },
     updateSelectedRecordsNumber:function(component,allSelect=false){
         var students = component.get("v.students");
@@ -46,6 +46,14 @@
         if(allSelect){
             component.set("v.selectedRecordsNumber",component.get("v.pageSize"));
         }
+    },
+    uncheck:function(component){
+        var students = component.get("v.students");
+        students.forEach(function(student){
+            student.selected__c =false;
+        });
+        component.set("v.selectedRecordsNumber",0);
+
     },
     updateDisplayedRecordsPagination : function(component) {
         var records = component.get("v.totalStudents");
@@ -66,17 +74,21 @@
         }
         component.set("v.pageNumbers", pageNumbers);
     },
+
     navigateToPage : function(component, pageNumber) {
+        this.uncheck(component);
         component.set("v.currentPage", pageNumber);
-        this.updateSelectAll(component);
+        this.updateSelectAll(component,true);
         this.updatePageNumbersPagination(component);
         this.updateDisplayedRecordsPagination(component);
+
     },
 
     navigate : function(component, direction) {
+        this.uncheck(component);
         var currentPage = component.get("v.currentPage");
         component.set("v.currentPage", currentPage + direction);
-        this.updateSelectAll(component);
+        this.updateSelectAll(component,true);
         this.updatePageNumbersPagination(component);
         this.updateDisplayedRecordsPagination(component);
     },

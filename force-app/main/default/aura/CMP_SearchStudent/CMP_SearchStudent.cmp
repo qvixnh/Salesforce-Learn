@@ -1,23 +1,7 @@
 <!-- CMP_SearchStudent.cmp -->
 <aura:component controller="CMP_SearchStudentCtrl" implements="flexipage:availableForAllPageTypes">
-    
-    <!-- ATTRIBUTE -->
-    <aura:attribute name="currentPage" type="Integer" default="1" />
-    <aura:attribute name="pageSize" type="Integer" default="4" />
-    <!-- HANDLER -->
-    <!-- CMP_StudentSearchAndTable.cmp -->
     <div class="slds-p-around_medium color-background">
-        <c:CMP_SearchCondition 
-        pageSize="{!v.pageSize}" 
-        currentPage="{!v.currentPage}"
-        />
-        <c:CMP_SearchResults 
-        pageSize="{!v.pageSize}" 
-        currentPage="{!v.currentPage}"
-        />
-        
+        <c:CMP_SearchCondition />
+        <c:CMP_SearchResults />
     </div>
-
-    
-
 </aura:component>

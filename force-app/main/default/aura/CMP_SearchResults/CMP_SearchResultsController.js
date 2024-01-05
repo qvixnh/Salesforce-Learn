@@ -9,6 +9,7 @@
         component.set("v.totalRecords",totalRecords);
         helper.updatePageNumbersPagination(component);
         helper.updateDisplayedRecordsPagination(component);
+        helper.navigateToPage(component,1);
     },
     handleSelectAll: function(component, event, helper) {
         var students = component.get("v.students");
@@ -77,6 +78,7 @@
         var pageNumber = event.getSource().get("v.label");
         helper.navigateToPage(component, pageNumber);
     },
+    
     //ROW SELECTION
     handleRowClick: function(component, event, helper) {
         var clickedRow = event.currentTarget;
@@ -96,5 +98,5 @@
         helper.updateSelectAll(component,false);
         helper.updateSelectedRecordsNumber(component);
         component.set("v.students",students);
-    },
+    }
 })

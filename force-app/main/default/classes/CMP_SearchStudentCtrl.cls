@@ -46,7 +46,7 @@ public with sharing class CMP_SearchStudentCtrl {
     //CMP_SearchStudentCtrl.cls
     //PAGINATION APEX CONTROLLER.CLS
     @AuraEnabled
-    public static PaginationResult getRecords(Integer currentPage, Integer pageSize, String classId,  Integer gender,String searchName, String searchCode, Integer day, Integer month, Integer year , String birthdate, String orderField, String orderType) {
+    public static PaginationResult getRecords(Integer pageSize, String classId,  Integer gender,String searchName, String searchCode, Integer day, Integer month, Integer year , String birthdate, String orderField, String orderType) {
         List<Student__c> records = getStudents(classId, gender, searchName, searchCode,day,month,year,birthdate,orderField, orderType);
         if(records != null){
             Integer totalRecords = records.size();

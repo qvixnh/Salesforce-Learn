@@ -10,52 +10,7 @@
 
     },
     createValidate: function(component, event, helper) {
-        var isValid = helper.validation(component);
-        if (!isValid) {
-            // Validation failed, do not proceed with creating student records
-            return;
-        }
-        var  sFirstName  = component.find("sFirstName").get("v.value");
-        var sLastName = component.find("sLastName").get("v.value");
-        var sClassId =  component.get('v.selectedClass');
-        var sGender = component.get('v.selectedGender');
-        var sAddress = component.find("sAddress").get("v.value");
-        var sBirthdate = component.find("sBirthdate").get("v.value");
-        var action = component.get("c.createStudentRec");
-        action.setParams({
-            "sFirstName":sFirstName,
-            "sLastName":sLastName,
-            "sClassId":sClassId,
-            "sGender":sGender,
-            "sAddress":sAddress,
-            "sBirthdate":sBirthdate
-        })
-        action.setCallback(this, function(stuRecds){
-            var state= stuRecds.getState();
-            if(state == "SUCCESS"){
-                var stuId = stuRecds.getReturnValue();
-                // var toastEvent = $A.get("e.force:showToast");
-                // toastEvent.setParams({
-                //     "title": "Success!",
-                //     "message": "Student record deleted successfully.",
-                //     "type": "success"
-                // });
-                // toastEvent.fire();
-                alert("Student record created successfully...."+stuId);
-                var reloadEvent = $A.get("e.c:CMP_ReloadEvent");
-                reloadEvent.fire();
-                helper.resetForm(component);
-            }else{
-                var toastEvent = $A.get("e.force:showToast");
-                toastEvent.setParams({
-                    "title": "Error",
-                    "message": "error occured when creating student",
-                    "type": "error"
-                });
-                toastEvent.fire();
-            }
-        });
-        $A.enqueueAction(action);
+        createStudentHelper(component);
     },
     
 })
