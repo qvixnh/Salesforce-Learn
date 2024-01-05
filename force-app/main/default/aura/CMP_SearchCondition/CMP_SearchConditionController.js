@@ -1,16 +1,13 @@
 ({
     init: function(component, event, helper) {
         helper.getClasses(component);
-        helper.updatePageNumbers(component);
         helper.initializeOptions(component);
         helper.loadData(component);
-
     },
     //setup the field for searching student
     handleDayChange: function(component, event, helper) {
         var day = component.get("v.searchDayOfBirth");
         var month = component.get("v.searchMonthOfBirth");
-        var year = component.get("v.searchYearOfBirth");
         if(month==2 && day>28){
             component.set("v.searchMonthOfBirth",0 )
         }  
@@ -41,9 +38,7 @@
     },
     //handle search action
     handleChange: function(component, event, helper) {
-        helper.updatePageNumbers(component);
         helper.loadData(component);
-        helper.navigateToPage(component, 1);
     },
     
 })

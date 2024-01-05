@@ -2,42 +2,18 @@
 <aura:component controller="CMP_SearchStudentCtrl" implements="flexipage:availableForAllPageTypes">
     
     <!-- ATTRIBUTE -->
-    <aura:attribute name="totalStudents" type="List" />
-    <aura:attribute name="students" type="List" />
-    <!--pagination attribute section-->
-    <aura:attribute name="allStudentChecked" type="boolean" default="false"/>
     <aura:attribute name="currentPage" type="Integer" default="1" />
     <aura:attribute name="pageSize" type="Integer" default="4" />
-    <aura:attribute name="totalPage" type="Integer" default="1" />
-    <aura:attribute name="totalRecords" type="Integer" default="0" />
-    <aura:attribute name="selectedRecordsNumber" type="Integer" default="0" />
-    <aura:attribute name="pageNumbers" type="List" />
     <!-- HANDLER -->
     <!-- CMP_StudentSearchAndTable.cmp -->
-    <div class="slds-p-around_medium color-background	">
+    <div class="slds-p-around_medium color-background">
         <c:CMP_SearchCondition 
-        totalStudents="{!v.totalStudents}"
-        students="{!v.students}"
-        allStudentChecked="{!v.allStudentChecked}"
         pageSize="{!v.pageSize}" 
-        selectedRecordsNumber="{!v.selectedRecordsNumber}"
         currentPage="{!v.currentPage}"
-        pageNumbers="{!v.pageNumbers}"
-        totalRecords="{!v.totalRecords}"
-        totalPage="{!v.totalPage}"
-
         />
         <c:CMP_SearchResults 
-        totalStudents="{!v.totalStudents}"
-        students="{!v.students}" 
-        allStudentChecked="{!v.allStudentChecked}" 
         pageSize="{!v.pageSize}" 
-        selectedRecordsNumber="{!v.selectedRecordsNumber}" 
         currentPage="{!v.currentPage}"
-        pageNumbers="{!v.pageNumbers}"
-        totalRecords="{!v.totalRecords}"
-        totalPage="{!v.totalPage}"
-
         />
         
     </div>

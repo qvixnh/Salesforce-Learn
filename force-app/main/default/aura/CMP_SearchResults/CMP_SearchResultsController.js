@@ -2,7 +2,13 @@
     //search event
     handleSearchEvent: function(component, event, helper) {
         var totalStudents = event.getParam("totalStudents");
-        console.log("Received total students: ", totalStudents);
+        var totalPages = event.getParam("totalPages");
+        var totalRecords = event.getParam("totalRecords");
+        component.set("v.totalStudents",totalStudents);
+        component.set("v.totalPage",totalPages);
+        component.set("v.totalRecords",totalRecords);
+        helper.updatePageNumbersPagination(component);
+        helper.updateDisplayedRecordsPagination(component);
     },
     handleSelectAll: function(component, event, helper) {
         var students = component.get("v.students");
