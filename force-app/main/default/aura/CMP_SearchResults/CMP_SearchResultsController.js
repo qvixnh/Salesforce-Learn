@@ -48,7 +48,6 @@
     },
     closeCreate: function(component, event, helper) {
         component.set("v.CreateStudentModal", false);
-        helper.navigateToPage(component, component.get("v.totalPage"));
     },
     closeUpdate: function(component, event, helper) {
         component.set("v.UpdateStudentModal", false);

@@ -27,6 +27,7 @@
         var lastNameError = document.getElementById("sLastNameError");
         var addressError = document.getElementById("sAddressError");
         var birthdateError = document.getElementById("sBirthdateError");
+        var classError = document.getElementById("sClassError");
 
         if (!sFirstName || sFirstName.trim() === '') {
             isValid = false;
@@ -50,6 +51,14 @@
         }
         else if (sAddress || sAddress.trim() != '') {
             addressError.innerHTML = "";
+        }
+        var sClass = component.get("v.selectedClass");
+        if (!sClass || sClass.trim() === '') {
+            isValid = false;
+            classError.innerHTML = "Please select one class";
+        }
+        else if (sClass || sClass.trim() != '') {
+            classError.innerHTML = "";
         }
         var sBirthdate = component.find("sBirthdate").get("v.value");
         if (!sBirthdate || sBirthdate.trim() === '') {
@@ -94,14 +103,14 @@
             var state= stuRecds.getState();
             if(state == "SUCCESS"){
                 var stuId = stuRecds.getReturnValue();
-                // var toastEvent = $A.get("e.force:showToast");
-                // toastEvent.setParams({
-                //     "title": "Success!",
-                //     "message": "Student record deleted successfully.",
-                //     "type": "success"
-                // });
-                // toastEvent.fire();
-                alert("Student record created successfully...."+stuId);
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Success!",
+                    "message": "Student record deleted successfully.",
+                    "type": "success"
+                });
+                toastEvent.fire();
+                // alert("Student record created successfully...."+stuId);
                 var reloadEvent = $A.get("e.c:CMP_ReloadEvent");
                 reloadEvent.fire();
                 this.resetForm(component);
@@ -113,6 +122,7 @@
                     "type": "error"
                 });
                 toastEvent.fire();
+                this.resetForm(component);
             }
         });
         $A.enqueueAction(action);

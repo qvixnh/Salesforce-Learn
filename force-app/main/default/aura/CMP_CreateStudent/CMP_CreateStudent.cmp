@@ -5,9 +5,9 @@
     <aura:attribute name="genderOptions" type="List"/>
     <aura:attribute name="selectedGender" type="Boolean" default="false"/>
     <!-- class mac dinh se la tieng anh 1 -->
-    <aura:attribute name="selectedClass" type="Id" default="a035j00000WuPMm"/>
+    <aura:attribute name="selectedClass" type="Id" default=""/>
     <aura:attribute name="classList" type="List"/>
-    <aura:attribute name="errorMessages" type="List" />
+    
     <!-- Handler -->
     <aura:registerEvent name="CMP_ReloadEvent" type="c:CMP_ReloadEvent"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -20,10 +20,12 @@
                 <lightning:input type="text" label="Enter Last Name"  aura:id="sLastName"/>
                 <p id="sLastNameError" class="slds-text-color_destructive"></p>
                 <lightning:select name="classList" label="Select Class" value="{!v.selectedClass}">
+                    <option value="">Select class</option>
                     <aura:iteration items="{!v.classList}" var="item">
                         <option value="{!item.Id}">{!item.Class_Name__c}</option>
                     </aura:iteration>
                 </lightning:select>
+                <p id="sClassError" class="slds-text-color_destructive"></p>
             </div>
             <div class="slds-col slds-size_1-of-2">
                 <lightning:input type="text" label="Enter Address" aura:id="sAddress"/>

@@ -38,6 +38,9 @@
                         <lightning:input type="checkbox" label="" onchange="{!c.selectAll}" aura:id="selectAllCheckbox" checked="{!v.allStudentChecked}"/>
                     </div>
                 </th>
+                <th scope="col" style="width:50px;">
+                    <div class="slds-truncate" title="Row">#</div>
+                </th>
                 <th scope="col" style="width:40px;">
                     <div class="slds-truncate " title="Code">Code</div>
                 </th>
@@ -65,11 +68,13 @@
             </tr>
         </thead>
         <tbody>
-            <aura:iteration items="{!v.students}" var="student">
+            <aura:iteration items="{!v.students}" var="student" indexVar="rowIndex">
                 <tr class="slds-hint-parent" onclick="{!c.rowClick}"  >
                     <td data-label="Select" >
                         <lightning:input type="checkbox"  aura:id="checkboxes" value="{!student.Id}" checked="{!student.selected__c}"/>
                     </td>
+
+                    <td data-label="Row">{!rowIndex+1}</td>
                     <td data-label="Student Code" >{!student.Student_Code__c}</td>
                     <td data-label="First Name"  >{!student.First_Name__c}</td>
                     <td data-label="Last Name"  >{!student.Last_Name__c}</td>
@@ -96,7 +101,7 @@
                 <aura:iteration items="{!v.pageNumbers}" var="pageNumber">
                     <lightning:button label="{!pageNumber}" disabled="{!v.currentPage == pageNumber}" onclick="{!c.page}" />
                 </aura:iteration>
-                <lightning:button disabled="{!v.currentPage * v.pageSize >= v.totalRecords}" label="Next" onclick="{!c.next}" />
+                <lightning:button disabled="{!v.currentPage * v.pageSize >= v.totalRecords}" label="Next" onclick="{!c.next}"/>
                 <lightning:button disabled="{!v.currentPage * v.pageSize >= v.totalRecords}" label="Last" onclick="{!c.last}" />
             </div>
             <div class="slds-col  slds-m-top_small">
