@@ -30,7 +30,7 @@ public with sharing class CMP_SearchStudentCtrl {
     @AuraEnabled
     public static PaginationResult getRecords(Integer pageSize, String classId,  Integer gender,String searchName, String searchCode, Integer day, Integer month, Integer year , String birthdate, String orderField, String orderType) {
         List<Student__c> records = getStudents(classId, gender, searchName, searchCode,day,month,year,birthdate,orderField, orderType);
-        if(records != null){
+        if(!records.isEmpty()){
             Integer totalRecords = records.size();
             Integer totalPage = calTotalPage(totalRecords, pageSize);
             return new PaginationResult(records, totalRecords,totalPage);
@@ -61,26 +61,32 @@ public with sharing class CMP_SearchStudentCtrl {
     public static String deleteSelectedStudentsCtrl(List<String> studentIds) {
         try {
             System.debug('Message');
-            for(String id : studentIds){
-                Student__c student = [SELECT Id FROM Student__c WHERE Id = :id];
-                delete student;
+            List<Student__c> studentsToDelete = [SELECT Id FROM Student__c WHERE Id IN :studentIds];
+            if (!studentsToDelete.isEmpty()) {
+                delete studentsToDelete;
+                return 'Success';
+            } else {
+                return 'No records found for deletion';
             }
-            return 'Success';
         } catch (Exception e) {
-            return 'Error ';
+            return 'Error';
         }
     }
+
     
     @AuraEnabled
     public static String deleteStudentRecord(String studentId) {
         try {
+            if(studentId==''){
+                return 'student Id to delete can not be blank';
+            }
             Student__c studentToDelete = 
             [SELECT Id
             , First_Name__c
             , Student_Code__c
             FROM Student__c 
-            WHERE Id = :studentId 
-            LIMIT 1];
+            WHERE Id = :studentId ];
+            
             if (studentToDelete != null) {
                 delete studentToDelete;
                 return 'Success';
@@ -92,8 +98,7 @@ public with sharing class CMP_SearchStudentCtrl {
         }
     }
     // Example method to fetch student data
-    public static List<Student__c> getStudents(String classId,  Integer gender,String searchName, String searchCode, Integer day, Integer month, Integer year, String birthdate, String orderField, String orderType) {
-        String andString = ' AND ';
+    public static List<Student__c> getStudents(String classId, Integer gender, String searchName, String searchCode, Integer day, Integer month, Integer year, String birthdate, String orderField, String orderType) {
         String queryString = 'SELECT Id';
         queryString += ', Student_Code__c';
         queryString +=', First_Name__c';
@@ -104,36 +109,43 @@ public with sharing class CMP_SearchStudentCtrl {
         queryString +=', Birthdate__c';
         queryString +=', Address__c';
         queryString += ' FROM Student__c';
-        queryString += ' WHERE First_Name__c LIKE \'%' + searchName + '%\''; 
-        queryString += ' AND Student_Code__c LIKE \'%' + searchCode + '%\'';
+    
+        List<String> conditions = new List<String>();
+    
+        if (!String.isBlank(searchName)) {
+            conditions.add('First_Name__c LIKE \'%' + searchName + '%\'');
+        }
+        if (!String.isBlank(searchCode)) {
+            conditions.add('Student_Code__c LIKE \'%' + searchCode + '%\'');
+        }
         if (classId != null && classId != 'null') {
-            queryString += ' AND Class__c = \'' + classId + '\'';
+            conditions.add('Class__c = \'' + classId + '\'');
         }
-        if(gender==1){
-            queryString += ' AND Gender__c = True';
+        if (gender == 1 || gender == 0 ) {
+            conditions.add('Gender__c = ' + (gender == 1 ? 'True' : 'False'));
         }
-        else if(gender==0){
-            queryString += ' AND Gender__c = False';
+        if (!String.isBlank(birthdate)) {
+            conditions.add('Birthdate__c = ' + birthdate);
         }
-        if (birthdate != '') {
-            queryString += ' AND Birthdate__c = ' + birthdate;
-        }
-        queryString = searchByDayMonthYear(queryString,day,month,year);
-        queryString += ' ORDER BY ' + orderField + ' ' + orderType;
-        System.debug(queryString);
-        return Database.query(queryString);
-    }
-    private static String  searchByDayMonthYear(String queryString,  Integer day, Integer month, Integer year){
         if (day > 0) {
-            queryString += ' AND DAY_IN_MONTH(Birthdate__c) = :day';
+            conditions.add('DAY_IN_MONTH(Birthdate__c) = ' + day);
         }
         if (month > 0) {
-            queryString += ' AND CALENDAR_MONTH(Birthdate__c) = :month';
+            conditions.add('CALENDAR_MONTH(Birthdate__c) = ' + month);
         }
-        if (year >0) {
-            queryString += ' AND CALENDAR_YEAR(Birthdate__c) = :year';
+        if (year > 0) {
+            conditions.add('CALENDAR_YEAR(Birthdate__c) = ' + year);
         }
-        return queryString;
+    
+        if (!conditions.isEmpty()) {
+            queryString += ' WHERE ' + String.join(conditions, ' AND ');
+            if (queryString.endsWith(' AND ')) {
+                queryString = queryString.substring(0, queryString.length() - 5);
+            }
+        }
+    
+        queryString += ' ORDER BY ' + orderField + ' ' + orderType;
+        return Database.query(queryString);
     }
 
 }

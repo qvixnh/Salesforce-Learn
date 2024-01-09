@@ -33,4 +33,5 @@ public class CMP_CreateStudentCtrl {
             throw new AuraHandledException(e.getMessage());
         }
     }
+    // Add additional methods or logic as needed
 }

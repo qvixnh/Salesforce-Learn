@@ -4,6 +4,7 @@
         helper.initializeOptions(component);
         helper.loadData(component);
     },
+    //setup the field for searching student
     handleDayChange: function(component, event, helper) {
         var day = component.get("v.searchDayOfBirth");
         var month = component.get("v.searchMonthOfBirth");
@@ -38,5 +39,6 @@
     //handle search action
     handleChange: function(component, event, helper) {
         helper.loadData(component);
-    }
+    },
+    
 })
