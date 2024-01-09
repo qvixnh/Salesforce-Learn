@@ -20,6 +20,7 @@
     <aura:attribute name="pageNumbers" type="List" />
     <aura:attribute name="totalRecords" type="Integer" default="0" />
     <aura:attribute name="totalPage" type="Integer" default="1" />
+    <aura:attribute name="rowAdd" type="Integer" default="4" />
     <!-- reload event  -->
     <aura:registerEvent name="CMP_ReloadEvent" type="c:CMP_ReloadEvent"/>
     <!-- search event handler -->
@@ -74,13 +75,19 @@
                         <lightning:input type="checkbox"  aura:id="checkboxes" value="{!student.Id}" checked="{!student.selected__c}"/>
                     </td>
 
-                    <td data-label="Row">{!rowIndex+1}</td>
+                    <td data-label="Row">{!rowIndex+!rowAdd}</td>
                     <td data-label="Student Code" >{!student.Student_Code__c}</td>
                     <td data-label="First Name"  >{!student.First_Name__c}</td>
                     <td data-label="Last Name"  >{!student.Last_Name__c}</td>
                     <td data-label="Class"  >{!student.Class__r.Class_Name__c}</td>
-                    <td data-label="Gender"  >{!student.Gender__c}</td>
-                    <td data-label="Birthdate" >{!student.Birthdate__c}</td>
+                    <td data-label="Gender"  >{!IF(student.Gender__c, 'Male', 'Female')}</td>
+                    <!-- <td data-label="Birthdate" >{!student.Birthdate__c}</td> -->
+                    <td  data-label="Birthdate" >
+                        <lightning:formattedDateTime value="{!student.Birthdate__c}" 
+                                  year="numeric" 
+                                  month="short" 
+                                  day="2-digit" />
+                    </td>
                     <td data-label="Address"  >{!student.Address__c}</td>
                     <td class="actionBtn">
                         <lightning:button label="Detail"  onclick="{!c.openDetail}" name="{!student.Id}" />
