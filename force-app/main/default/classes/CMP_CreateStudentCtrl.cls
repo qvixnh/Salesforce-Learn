@@ -1,6 +1,17 @@
-// CMP_CreateStudentCtrl.cls
+/**
+ * クラス名：   CMP_CreateStudentCtrl.cls
+ * クラス概要： create student
+ * @created： 2023/12/26 + Nguyen Vinh
+ * @modified: 
+ */
 public class CMP_CreateStudentCtrl {
-
+    /**
+     * createStudentRec
+     * @param    : String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate
+     * @return   : String 
+     * @created  : 2023/12/26 + Nguyen Vinh
+     * @modified : 
+     */
     @AuraEnabled
     public static String createStudentRec(String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate) {
         try {
@@ -19,6 +30,13 @@ public class CMP_CreateStudentCtrl {
             throw new AuraHandledException(e.getMessage());
         }
     }
+    /**
+     * getClasses
+     * @param    : 
+     * @return   : List<Class__c> 
+     * @created  : 2023/12/26 + Nguyen Vinh
+     * @modified : 
+     */
     @AuraEnabled
     public static List<Class__c>  getClasses(){
         try { 
@@ -33,5 +51,4 @@ public class CMP_CreateStudentCtrl {
             throw new AuraHandledException(e.getMessage());
         }
     }
-    // Add additional methods or logic as needed
 }

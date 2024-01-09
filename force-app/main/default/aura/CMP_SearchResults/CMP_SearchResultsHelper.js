@@ -1,4 +1,7 @@
 ({
+    /*
+        get student detail to show in detail modal, update, or delete 1 student record
+    */
     getStudentDetail: function(component, studentId) {
         var action = component.get("c.getStudentDetails");
         action.setParams({
@@ -14,7 +17,10 @@
         });
         $A.enqueueAction(action);
     },
-    //PAGINATION
+    /*
+    when the page change or checkbox elements change, udpate the check all 
+    */
+
     updateSelectAll: function(component, navigated=false){
         var students = component.get("v.students");
         var selectedIds = [] ;
@@ -30,6 +36,9 @@
             component.set("v.allStudentChecked",false);
         }
     },
+    /*
+    when the page change or checkbox elements change, udpate the selected records number label all 
+    */
     updateSelectedRecordsNumber:function(component,allSelect=false){
         var students = component.get("v.students");
         var selectedIds = [] ;
@@ -43,6 +52,7 @@
             component.set("v.selectedRecordsNumber",component.get("v.pageSize"));
         }
     },
+    /*when navigate to another page, uncheck all the student records*/
     uncheck:function(component){
         var students = component.get("v.students");
         students.forEach(function(student){
@@ -51,6 +61,7 @@
         component.set("v.selectedRecordsNumber",0);
 
     },
+    /*when navigate to another page,update the display student by current page number and update the page numbers list*/
     updateTable : function(component) {
         var records = component.get("v.totalStudents");
         var currentPage = component.get("v.currentPage");
@@ -58,7 +69,6 @@
         var start = (currentPage - 1) * pageSize;
         var end = start + pageSize;
         component.set("v.students", records.slice(start, end));
-        //update Page Numbers
         var totalPage = component.get("v.totalPage");
         var startPage = Math.max(1, currentPage - 1);
         var endPage = Math.min(totalPage, startPage + 2);
@@ -68,6 +78,7 @@
         }
         component.set("v.pageNumbers", pageNumbers);
     },
+    /*when click on page number, navigate to that page*/
     navigateToPage : function(component, pageNumber) {
         this.uncheck(component);
         component.set("v.currentPage", pageNumber);
@@ -75,7 +86,9 @@
         this.updateTable(component);
 
     },
-
+    /*
+        handle navigate nex or previous page
+    */
     navigate : function(component, direction) {
         this.uncheck(component);
         var currentPage = component.get("v.currentPage");
@@ -83,7 +96,9 @@
         component.set("v.allStudentChecked",false);
         this.updateTable(component);
     },
-    //helper to delete
+    /*
+        handle delete one student record
+    */
     helperDeleteStudent: function(component) {
         var studentId = component.get("v.selectedStudent.Id");
         var action = component.get("c.deleteStudentRecord");
@@ -96,18 +111,16 @@
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
                 if (result === 'Success') {
-                    // var toastEvent = $A.get("e.force:showToast");
-                    // toastEvent.setParams({
-                    //     "title": "Success!",
-                    //     "message": "Student record deleted successfully.",
-                    //     "type": "success"
-                    // });
-                    // toastEvent.fire();
-                    alert("student delete successfully");
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Success!",
+                        "message": "Student record deleted successfully.",
+                        "type": "success"
+                    });
+                    toastEvent.fire();
                     var reloadEvent = $A.get("e.c:CMP_ReloadEvent");
                     reloadEvent.fire();
                 } else {
-                    // Show an error toast message
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         "title": "Error",
@@ -117,7 +130,6 @@
                     toastEvent.fire();
                 }
             } else {
-                // Show an error toast message
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error",
@@ -132,6 +144,9 @@
         component.set("v.DeleteStudentModal", false);
         component.set("v.parentStatus", false);
     },
+    /*
+        handle delete selected student records
+    */
     helperDeleteSelectedStudents:function(component){
         var students = component.get("v.students");
         var selectedIds = [] ;
@@ -148,14 +163,13 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var result = response.getReturnValue();
-                // var toastEvent = $A.get("e.force:showToast");
-                // toastEvent.setParams({
-                //     "title": "Success!",
-                //     "message": "Student record deleted successfully - ."+ result,
-                //     "type": "success"
-                // });
-                // toastEvent.fire();
-                alert("multiple students deleted successfully");
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Success!",
+                    "message": "Student record deleted successfully - ."+ result,
+                    "type": "success"
+                });
+                toastEvent.fire();
                 var reloadEvent = $A.get("e.c:CMP_ReloadEvent");
                 reloadEvent.fire();
             } else {

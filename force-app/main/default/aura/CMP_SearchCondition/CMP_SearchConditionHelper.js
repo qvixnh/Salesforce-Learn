@@ -1,5 +1,7 @@
 ({
-    //intit
+    /*
+        get class to set the class options to search student by class
+    */  
     getClasses: function (component) {
         var action = component.get("c.getClassOptions");
         action.setCallback(this, function (response) {
@@ -14,8 +16,10 @@
 
         $A.enqueueAction(action);
     },
+    /*
+    init all select options for searching action
+    */
     initializeOptions: function(component) {
-        // Initialize monthOptions
         component.set("v.monthOptions", [
             { label: "January", value: "1" },
             { label: "February", value: "2" },
@@ -42,13 +46,15 @@
             {label:"Descendant", value:"DESC"},
         ])
 
-        // Initialize dayOptions
         var days = [];
         for (var i = 1; i <= 31; i++) {
             days.push({ label: i.toString(), value: i.toString() });
         }
         component.set("v.dayOptions", days);
     },
+    /*
+        get all the query condition and search student, then set the event attribute 
+    */
     loadData : function(component) {
         var action = component.get("c.getRecords");
         var searchName = component.get("v.searchName");

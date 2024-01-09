@@ -1,4 +1,7 @@
 ({
+    /*
+    reset the create form went student record created
+    */
     resetForm: function(component) {
         component.find("sFirstName").set("v.value", "");
         component.find("sLastName").set("v.value", "");
@@ -7,6 +10,9 @@
         component.find("sAddress").set("v.value", "");
         component.find("sBirthdate").set("v.value", "");
     },
+    /*
+    get class options to select when creating student 
+    */
     getClasses: function (component) {
         var action = component.get("c.getClasses");
         action.setCallback(this, function (response) {
@@ -20,6 +26,9 @@
         });
         $A.enqueueAction(action);
     },
+    /*
+    validation student input
+    */
     validation: function(component) {
         var isValid = true;
         var sFirstName = component.find("sFirstName").get("v.value");
@@ -78,10 +87,12 @@
         }
         return isValid;
     },
+    /*
+    call action from apex controller to create student
+    */
     createStudentHelper:function(component){
         var isValid = this.validation(component);
         if (!isValid) {
-            // Validation failed, do not proceed with creating student records
             return;
         }
         var  sFirstName  = component.find("sFirstName").get("v.value");
@@ -110,7 +121,6 @@
                     "type": "success"
                 });
                 toastEvent.fire();
-                // alert("Student record created successfully...."+stuId);
                 var reloadEvent = $A.get("e.c:CMP_ReloadEvent");
                 reloadEvent.fire();
                 this.resetForm(component);

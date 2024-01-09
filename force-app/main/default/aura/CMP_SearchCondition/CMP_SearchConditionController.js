@@ -1,10 +1,13 @@
 ({
+    /*init class options, gender, day, month select options, and load student to event*/
     init: function(component, event, helper) {
         helper.getClasses(component);
         helper.initializeOptions(component);
         helper.loadData(component);
     },
-    //setup the field for searching student
+    /*
+        validate the date select if it's valid, if not then clear the month options
+    */
     handleDayChange: function(component, event, helper) {
         var day = component.get("v.searchDayOfBirth");
         var month = component.get("v.searchMonthOfBirth");
@@ -12,6 +15,9 @@
             component.set("v.searchMonthOfBirth",0 )
         }  
     },
+    /*
+    validate the month select and get the days of selected month to ensure that not choosing the invalid day
+    */
     handleMonthChange: function(component, event, helper) {
         var day = component.get("v.searchDayOfBirth");
         var month = component.get("v.searchMonthOfBirth");
@@ -26,6 +32,9 @@
             component.set("v.searchDayOfBirth",0 )
         }
     },
+    /*
+    clear all search filters to get all students
+    */
     clearAllFilters: function(component, event, helper) {
         component.set("v.selectedClass", "null");
         component.set("v.selectedGender", "2");
@@ -36,7 +45,9 @@
         component.set("v.searchMonthOfBirth",0)
         component.set("v.searchYearOfBirth",0)
     },
-    //handle search action
+    /*
+    handle search button
+    */
     handleChange: function(component, event, helper) {
         helper.loadData(component);
     },

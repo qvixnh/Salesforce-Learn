@@ -4,7 +4,7 @@
     <aura:attribute name="classList" type="List" />
     <aura:attribute name="selectedGender" type="Integer" />
     <aura:attribute name="searchName" type="String"  default=""/>
-    <aura:attribute name="searchCode" type="String" default=""/>
+    <aura:attribute name="searchCode" type="String" default="ST-"/>
     <aura:attribute name="birthdate" type="String" default=""/>
     <aura:attribute name="searchDayOfBirth" type="Integer" default="0"/>
     <aura:attribute name="dayOptions" type="List"/>
@@ -44,7 +44,7 @@
             </lightning:select>
         </div>
         <div class="slds-col slds-size_1-of-4">
-            <lightning:input type="number" label="Year of Birth" value="{!v.searchYearOfBirth}" default="0" />
+            <lightning:input label="Year of Birth" value="{!v.searchYearOfBirth}" default="0" />
         </div>
     </div>
     <div class="slds-grid slds-gutters">
