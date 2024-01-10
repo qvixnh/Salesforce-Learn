@@ -1,0 +1,13 @@
+<!-- LWC_UpdateStudent.html -->
+<template>
+    <lightning-card title="Update Student" icon-name="standard:account">
+        <div class="slds-m-around_medium">
+            <p><strong>Student Code:</strong> {student.Student_Code__c}</p>
+            <p><strong>First Name:</strong> {student.First_Name__c} {student.Last_Name__c}</p>
+            <p><strong>Class Name:</strong> {student.Class__r.Class_Name__c}</p>
+            <p><strong>Gender:</strong> {student.Gender__c}</p>
+            <p><strong>Birthdate:</strong> {student.Birthdate__c}</p>
+            <p><strong>Address:</strong> {student.Address__c}</p>
+        </div>
+    </lightning-card>
+</template>

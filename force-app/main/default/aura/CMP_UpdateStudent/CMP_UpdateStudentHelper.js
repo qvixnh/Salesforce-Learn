@@ -10,7 +10,6 @@
                 console.error("Error fetching class options: " + state);
             }
         });
-
         $A.enqueueAction(action);
     },
     validation: function(component) {

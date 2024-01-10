@@ -25,6 +25,7 @@ export default class LWC_SearchStudent extends LightningElement {
     // Variables for modal
     showModal = false;
     isUpdateModalOpen=false;
+    isDetailModalOpen=false;
     selectedStudent;
     // Variables for selecting students
     selectedStudentIds = [];
@@ -44,6 +45,10 @@ export default class LWC_SearchStudent extends LightningElement {
         { label: 'October', value: '10' },
         { label: 'November', value: '11' },
         { label: 'December', value: '12' },
+    ];
+    genderOptions=[
+        {label:'Male', value:'true'},
+        {label:'Female', value:'false'}        
     ];
     @wire(getClassOptions)
     wiredClasses({ error, data }) {
@@ -169,9 +174,17 @@ export default class LWC_SearchStudent extends LightningElement {
     closeModalUpdate() {
         this.isUpdateModalOpen = false;
         this.selectedStudent = null;
-
     }
-    
+    openModalDetail(event) {
+        const studentId = event.currentTarget.dataset.studentId;
+        this.selectedStudent = this.students.find(student => student.Id === studentId);
+        this.isDetailModalOpen = true;
+    }
+    closeModalDetail() {
+        this.isDetailModalOpen = false;
+        this.selectedStudent = null;
+
+    }    
     // Method to close modal
     closeModalDelete() {
         this.showModal = false;
