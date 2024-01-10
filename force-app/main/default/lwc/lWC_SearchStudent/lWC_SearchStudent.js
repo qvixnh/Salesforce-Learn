@@ -1,8 +1,10 @@
 // LWC_SearchStudent.js
 import { LightningElement, wire } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getClassOptions from '@salesforce/apex/LWC_SearchStudentCtrl.getClassOptions';
 import getStudents from '@salesforce/apex/LWC_SearchStudentCtrl.getStudents';
-import deleteSelectedStudents from '@salesforce/apex/LWC_SearchStudentCtrl.deleteSelectedStudents';
+import deleteSelectedStudentsCtrl from '@salesforce/apex/LWC_SearchStudentCtrl.deleteSelectedStudentsCtrl';
+import deleteStudentRecord from '@salesforce/apex/LWC_SearchStudentCtrl.deleteStudentRecord';
 
 const ITEMS_PER_PAGE = 4;
 
@@ -22,6 +24,7 @@ export default class LWC_SearchStudent extends LightningElement {
     totalPages = 1;
     // Variables for modal
     showModal = false;
+    isUpdateModalOpen=false;
     selectedStudent;
     // Variables for selecting students
     selectedStudentIds = [];
@@ -153,13 +156,24 @@ export default class LWC_SearchStudent extends LightningElement {
             this.updateDisplayedStudents();
         }
     }
-    openModal(event) {
+    openModalDelete(event) {
         const studentId = event.currentTarget.dataset.studentId;
         this.selectedStudent = this.students.find(student => student.Id === studentId);
         this.showModal = true;
     }
+    openModalUpdate(event) {
+        const studentId = event.currentTarget.dataset.studentId;
+        this.selectedStudent = this.students.find(student => student.Id === studentId);
+        this.isUpdateModalOpen = true;
+    }
+    closeModalUpdate() {
+        this.isUpdateModalOpen = false;
+        this.selectedStudent = null;
+
+    }
+    
     // Method to close modal
-    closeModal() {
+    closeModalDelete() {
         this.showModal = false;
         this.selectedStudent = null;
     }
@@ -218,10 +232,11 @@ export default class LWC_SearchStudent extends LightningElement {
             }
         }
         alert(`are you sure  to delete ${this.selectedStudentIds.length} students`);
-        deleteSelectedStudents({ studentIds: this.selectedStudentIds })
+        deleteSelectedStudentsCtrl({ studentIds: this.selectedStudentIds })
             .then(result => {
                 this.selectedStudentIds = [];
-                // this.isSelectAllChecked = false;
+                this.isSelectAllChecked = false;
+                this.showSuccessToast('Multiples Student deleted successfully');
                 this.refreshStudents();
             })
             .catch(error => {
@@ -229,7 +244,34 @@ export default class LWC_SearchStudent extends LightningElement {
             });
         alert("delete selected student successfully");
     }
+    deleteStudentHandler(event) {
+        const studentId = event.currentTarget.dataset.studentId;
+        this.deleteStudent(studentId);
+        this.showModal = false;
+        this.selectedStudent = null;
+    }
+
+    deleteStudent(studentId) {
+        deleteStudentRecord({ studentId })
+            .then(result => {
+                // Handle success
+                this.showSuccessToast('Student deleted successfully');
+                this.refreshStudents();
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error deleting student: ', error);
+            });
+    }
     refreshStudents() {
         refreshApex(this.wiredStudents);
+    }
+    showSuccessToast(message) {
+        const event = new ShowToastEvent({
+            title: 'Success',
+            message: message,
+            variant: 'success',
+        });
+        this.dispatchEvent(event);
     }
 }

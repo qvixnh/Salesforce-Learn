@@ -65,18 +65,28 @@ public with sharing class LWC_SearchStudentCtrl {
             return new List<Student__c>();
         }
     }
-    @AuraEnabled(cacheable=true)
-    public static String deleteSelectedStudents(List<String> studentIds) {
+    @AuraEnabled
+    public static void deleteSelectedStudentsCtrl(List<Id> studentIds) {
         try {
             List<Student__c> studentsToDelete = [SELECT Id FROM Student__c WHERE Id IN :studentIds];
-            if (!studentsToDelete.isEmpty()) {
-                delete studentsToDelete;
-                return 'Success';
+            delete studentsToDelete;
+        } catch (Exception e) {
+            throw new AuraHandledException('Error deleting selected students: ' + e.getMessage());
+        }
+    }
+    @AuraEnabled
+    public static void deleteStudentRecord(Id studentId) {
+        try {
+            Student__c studentToDelete = [SELECT Id FROM Student__c WHERE Id = :studentId LIMIT 1];
+            
+            // Check if the student record exists
+            if (studentToDelete != null) {
+                delete studentToDelete;
             } else {
-                return 'No records found for deletion';
+                throw new AuraHandledException('Student record not found for deletion.');
             }
         } catch (Exception e) {
-            return 'Error';
+            throw new AuraHandledException('Error deleting student record: ' + e.getMessage());
         }
     }
 }
