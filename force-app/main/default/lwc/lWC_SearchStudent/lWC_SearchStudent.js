@@ -25,6 +25,7 @@ export default class LWC_SearchStudent extends LightningElement {
     // Variables for modal
     showModal = false;
     isUpdateModalOpen=false;
+    isCreateModalOpen=false;
     isDetailModalOpen=false;
     selectedStudent;
     // Variables for selecting students
@@ -173,6 +174,15 @@ export default class LWC_SearchStudent extends LightningElement {
     }
     closeModalUpdate() {
         this.isUpdateModalOpen = false;
+        this.selectedStudent = null;
+    }
+    openModalCreate(event) {
+        const studentId = event.currentTarget.dataset.studentId;
+        this.selectedStudent = this.students.find(student => student.Id === studentId);
+        this.isCreateModalOpen = true;
+    }
+    closeModalCreate() {
+        this.isCreateModalOpen = false;
         this.selectedStudent = null;
     }
     openModalDetail(event) {

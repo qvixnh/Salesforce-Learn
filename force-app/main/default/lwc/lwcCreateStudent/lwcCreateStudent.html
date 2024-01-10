@@ -1,0 +1,27 @@
+<!-- LWC_UpdateStudent.html -->
+<template>
+    <lightning-card title="Create Student" icon-name="standard:account">
+        <div class="slds-card slds-p-around_medium">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input type="text" label="Enter First Name" data-id="sFirstName" ></lightning-input>
+                    <p id="sFirstNameError" class="slds-text-color_destructive"></p>
+                    <lightning-input type="text" label="Enter Last Name" data-id="sLastName" ></lightning-input>
+                    <p id="sLastNameError" class="slds-text-color_destructive"></p>
+                    <lightning-combobox label="Select Class" value={selectedClass} options={classes}></lightning-combobox>
+                    <p id="sClassError" class="slds-text-color_destructive"></p>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input type="text" label="Enter Address" data-id="sAddress" ></lightning-input>
+                    <p id="sAddressError" class="slds-text-color_destructive"></p>
+                    <lightning-input type="date" label="Enter Birthdate" data-id="sBirthdate"></lightning-input>
+                    <p id="sBirthdateError" class="slds-text-color_destructive"></p>
+                    <lightning-radio-group label="Gender" data-id="sGender" options={genderOptions} value={selectedGender}></lightning-radio-group>
+                </div>
+            </div>
+            <div class="slds-m-top_medium">
+                <lightning-button label="Create Student" variant="brand" class="slds-align_absolute-center slds-button slds-button_brand" onclick={handleUpdate}></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>
