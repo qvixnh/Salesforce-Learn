@@ -1,13 +1,19 @@
 /**
  * クラス名：   CMP_UpdateStudentCtrl.cls
- * クラス概要： update student
+ * クラス概要： Update Student Controller
  * @created： 2023/12/26 + Nguyen Vinh
  * @modified: 
  */
 public with sharing class CMP_UpdateStudentCtrl {
     /**
     * updateStudentRec
-    * @param    : Student__c student, String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate
+    * @param    :   Student__c student
+                    String  sFirstName
+                    String sLastName
+                    String sClassId
+                    Boolean sGender
+                    String sAddress
+                    Date sBirthdate
     * @return   : String 
     * @created  : 2023/12/26 + Nguyen Vinh
     * @modified : 

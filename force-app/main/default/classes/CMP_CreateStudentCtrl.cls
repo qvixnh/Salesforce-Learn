@@ -1,13 +1,19 @@
 /**
  * クラス名：   CMP_CreateStudentCtrl.cls
- * クラス概要： create student
+ * クラス概要： Create Student Controller
  * @created： 2023/12/26 + Nguyen Vinh
  * @modified: 
  */
 public class CMP_CreateStudentCtrl {
     /**
      * createStudentRec
-     * @param    : String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate
+     * @param    : 
+     *            String  sFirstName
+     *            String sLastName
+     *            String sClassId
+     *            Boolean sGender
+     *            String sAddress
+     *            Date sBirthdate
      * @return   : String 
      * @created  : 2023/12/26 + Nguyen Vinh
      * @modified : 

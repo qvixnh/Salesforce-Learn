@@ -1,6 +1,6 @@
 /**
  * クラス名：   CMP_SearchStudentCtrl.cls
- * クラス概要： search student, delete student, get student details
+ * クラス概要： Search Student Controller
  * @created： 2023/12/26 + Nguyen Vinh
  * @modified: 
  */
@@ -23,10 +23,10 @@ public with sharing class CMP_SearchStudentCtrl {
                             , Number_Of_Student__c
                         FROM Class__c 
                         ORDER BY Class_Code__c];
+            return classList;
         } catch (Exception e) {
-            System.debug('An error occurred when getting classes: ' + e.getMessage());
+            throw new CustomException('An error occurred when getting classes: ' + e.getMessage());
         }
-        return classList;
     }
     /**
      * getStudentDetails
@@ -52,14 +52,21 @@ public with sharing class CMP_SearchStudentCtrl {
                                 , Address__c
                             FROM Student__c 
                             WHERE Id = :studentId];
+            return studentDetails;
         } catch (Exception e) {
-            System.debug('An error occurred when getting student details: ' + e.getMessage());
+            throw new CustomException('An error occurred when getting student details: ' + e.getMessage());
         }
-        return studentDetails;
     }
     /**
      * getRecords
-     * @param    : Integer pageSize, String classId,  Integer gender,String searchName, String searchCode, Integer day, Integer month, Integer year , String birthdate, String orderField, String orderType
+     * @param    :  Integer pageSize
+     *              String classId
+     *              Integer gender
+     *              String searchName
+     *              String searchCode
+     *              Integer day
+     *              Integer month
+     *              Integer year , String birthdate, String orderField, String orderType
      * @return   : PaginationResult 
      * @created  : 2023/12/28 + Nguyen Vinh
      * @modified : 
@@ -74,15 +81,16 @@ public with sharing class CMP_SearchStudentCtrl {
                 Integer totalPage = calTotalPage(totalRecords, pageSize);
                 return new PaginationResult(records, totalRecords, totalPage);
             }
-        } catch (Exception e) {
-            System.debug('An error occurred: ' + e.getMessage());
+            return new PaginationResult(new List<Student__c>(), 0, 1);
+        } catch (Exception e) { 
+            throw new CustomException('An error occurred: ' + e.getMessage());
         }
-        return new PaginationResult(new List<Student__c>(), 0, 1);
         
     }
     /**
      * calTotalPage
-     * @param    : Integer  totalRecords, Integer pageSize
+     * @param    :  Integer  totalRecords
+     *              Integer pageSize
      * @return   : Integer 
      * @created  : 2023/12/28 + Nguyen Vinh
      * @modified : 
@@ -148,7 +156,16 @@ public with sharing class CMP_SearchStudentCtrl {
     }
     /**
      * getStudents
-     * @param    : String classId, Integer gender, String searchName, String searchCode, Integer day, Integer month, Integer year, String birthdate, String orderField, String orderType
+     * @param    :  String classId
+     *              Integer gender
+     *              String searchName
+     *              String searchCode
+     *              Integer day
+     *              Integer month
+     *              Integer year
+     *              String birthdate
+     *              String orderField
+     *              String orderType
      * @return   : List<Student__c> 
      * @created  : 2023/12/29 + Nguyen Vinh
      * @modified : 
@@ -195,8 +212,7 @@ public with sharing class CMP_SearchStudentCtrl {
             queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ') + ' ORDER BY ' + orderField + ' ' + orderType :' ORDER BY ' + orderField + ' ' + orderType;
             return Database.query(queryString);
         } catch (Exception e) {
-            System.debug('An error occurred in getStudents: ' + e.getMessage());
-            return new List<Student__c>(); 
+            throw new CustomException('An error occurred in getStudents: ' + e.getMessage());
         }
     }
     /**
@@ -217,5 +233,8 @@ public with sharing class CMP_SearchStudentCtrl {
             this.totalRecords = totalRecords;
             this.totalPage = totalPage;
         }
+    }
+    public  class  CustomException extends Exception {
+        
     }
 }
