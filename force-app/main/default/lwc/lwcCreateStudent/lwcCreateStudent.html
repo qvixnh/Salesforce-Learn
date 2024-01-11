@@ -3,9 +3,9 @@
         <div class="slds-card slds-p-around_medium">
             <div class="slds-grid slds-gutters">
                 <div class="slds-col slds-size_1-of-2">
-                    <lightning-input type="text" label="Enter First Name" data-id="sFirstName"  onchange={handleInputChange}></lightning-input>
+                    <lightning-input type="text" label="Enter First Name" data-id="sFirstName" value={firstName}  onchange={handleInputChange}></lightning-input>
                     <p id="sFirstNameError" class="slds-text-color_destructive">{firstNameError}</p>
-                    <lightning-input type="text" label="Enter Last Name" data-id="sLastName"  onchange={handleInputChange}></lightning-input>
+                    <lightning-input type="text" label="Enter Last Name" data-id="sLastName" value={lastName}  onchange={handleInputChange}></lightning-input>
                     <p id="sLastNameError" class="slds-text-color_destructive">{lastNameError}</p>
                     <lightning-combobox label="Select Class"  value={selectedClass} options={classes} onchange={handleChangeClass}></lightning-combobox>
                     <p id="sClassError" class="slds-text-color_destructive">{classError}</p>
@@ -13,9 +13,10 @@
                 <div class="slds-col slds-size_1-of-2">
                     <lightning-input type="text" label="Enter Address" data-id="sAddress" value={address} onchange={handleInputChange}></lightning-input>
                     <p id="sAddressError" class="slds-text-color_destructive">{addressError}</p>
-                    <lightning-input type="date" label="Enter Birthdate" data-id="sBirthdate" value={birthdate} onchange={handleInputChange}></lightning-input>
+                    <lightning-input type="date" label="Enter Birthdate" data-id="sBirthdate" value={birthdate} onchange={handleInputChange} date-style="short"></lightning-input>
                     <p id="sBirthdateError" class="slds-text-color_destructive">{birthdateError}</p>
                     <lightning-radio-group label="Gender" data-id="sGender" options={genderOptions} value={selectedGender} onchange={handleChangeGender}></lightning-radio-group>
+                    <p id="sGenderError" class="slds-text-color_destructive">{genderError}</p>
                 </div>
             </div>
             <div class="slds-m-top_medium">

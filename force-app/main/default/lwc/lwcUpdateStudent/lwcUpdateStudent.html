@@ -14,7 +14,7 @@
                 <div class="slds-col slds-size_1-of-2">
                     <lightning-input type="text" label="Enter Address" data-id="sAddress" value={student.Address__c}></lightning-input>
                     <p id="sAddressError" class="slds-text-color_destructive"></p>
-                    <lightning-input type="date" label="Enter Birthdate" data-id="sBirthdate" value={student.Birthdate__c}></lightning-input>
+                    <lightning-input type="date" label="Enter Birthdate" data-id="sBirthdate" value={student.Birthdate__c} date-style="short"></lightning-input>
                     <p id="sBirthdateError" class="slds-text-color_destructive"></p>
                     <lightning-radio-group label="Gender" data-id="sGender" options={genderOptions} value={student.Gender__c}></lightning-radio-group>
                 </div>
