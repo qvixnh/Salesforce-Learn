@@ -193,7 +193,6 @@ export default class LWC_SearchStudent extends LightningElement {
     closeModalDetail() {
         this.isDetailModalOpen = false;
         this.selectedStudent = null;
-
     }    
     // Method to close modal
     closeModalDelete() {

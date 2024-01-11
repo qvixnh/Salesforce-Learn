@@ -36,35 +36,30 @@ export default class LWC_CreateStudent extends LightningElement {
             this.classes = undefined;
         }
     }
-    handleCreate(){
-        console.log("Create ");
-        this.validation();
-    }
     handleInputChange(event) {
-        const { dataId, value } = event.target.dataset;
-
-        switch (dataId) {
-            case 'sFirstName':
-                this.firstName = value;
-                break;
-            case 'sLastName':
-                this.lastName = value;
-                break;
-            case 'sClass':
-                this.selectedClass = value;
-                break;
-            case 'sAddress':
-                this.address = value;
-                break;
-            case 'sBirthdate':
-                this.birthdate = value;
-                break;
-            case 'sGender':
-                this.selectedGender = value;
-                break;
-            default:
-                break;
-        }
+        // const { dataId, value } = event.target.dataset;
+        // switch (dataId) {
+        //     case 'sFirstName':
+        //         this.firstName = value;
+        //         break;
+        //     case 'sLastName':
+        //         this.lastName = value;
+        //         break;
+        //     case 'sClass':
+        //         this.selectedClass = value;
+        //         break;
+        //     case 'sAddress':
+        //         this.address = value;
+        //         break;
+        //     case 'sBirthdate':
+        //         this.birthdate = value;
+        //         break;
+        //     case 'sGender':
+        //         this.selectedGender = value;
+        //         break;
+        //     default:
+        //         break;
+        // }
     }
     handleChangeClass(event) {
         this.selectedClass = event.target.value;
@@ -96,7 +91,7 @@ export default class LWC_CreateStudent extends LightningElement {
             sBirthdate:this.birthdate
             
         }).then(newSCode => {
-            this.showSuccessToast('Multiples Student deleted successfully', newSCode);
+            this.showSuccessToast('Student created successfully', newSCode);
         })
         .catch(error => {
             this.showSuccessToast('Error creating student record:', error);
