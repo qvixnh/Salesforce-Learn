@@ -56,10 +56,11 @@ export default class LWC_SearchStudent extends LightningElement {
         { label: 'November', value: '11' },
         { label: 'December', value: '12' },
     ];
+    
     @track genderOptions=[
-        {label:'All', value: 2},
-        {label:'Male', value: 1},
-        {label:'Female', value:0}        
+        {label:'All', value: '2'},
+        {label:'Male', value: '1'},
+        {label:'Female', value:'0'}        
     ];
     connectedCallback() {
         console.log('lWC_SearchStudent Component connected to the DOM');
