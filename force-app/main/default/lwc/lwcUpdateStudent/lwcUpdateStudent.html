@@ -18,7 +18,7 @@
                     <p id="sAddressError" class="slds-text-color_destructive">{addressError}</p>
                     <lightning-input type="date" label="Enter Birthdate" data-id="sBirthdate" value={student.Birthdate__c} date-style="short"></lightning-input>
                     <p id="sBirthdateError" class="slds-text-color_destructive">{birthdateError}</p>
-                    <lightning-radio-group label="Gender" data-id="sGender" options={genderOptions} value={student.Gender__c} onchange={handleChangeGender} ></lightning-radio-group>
+                    <lightning-radio-group label="Gender" data-id="sGender" options={genderOptions} value={isTrue} onchange={handleChangeGender} ></lightning-radio-group>
                     <p id="sGenderError" class="slds-text-color_destructive">{genderError}</p>
                 </div>
             </div>

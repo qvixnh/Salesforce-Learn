@@ -11,7 +11,6 @@ public with sharing class LWC_UpdateStudentCtrl {
             student.Address__c = sAddress;
             update student;
             return student.Student_Code__c;
-            
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

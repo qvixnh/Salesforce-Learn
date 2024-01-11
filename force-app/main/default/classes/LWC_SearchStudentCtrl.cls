@@ -1,7 +1,4 @@
 public with sharing class LWC_SearchStudentCtrl {
-    public LWC_SearchStudentCtrl() {
-
-    }
     @AuraEnabled(cacheable=true)
     public static List<Class__c> getClassOptions() {
         List<Class__c> classList = new List<Class__c>();
@@ -18,7 +15,7 @@ public with sharing class LWC_SearchStudentCtrl {
         }
         return classList;
     }
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<Student__c> getStudents(String classId, Integer gender, String searchName, String searchCode, Integer day, Integer month, Integer year, String birthdate, String orderField, String orderType) {
         try {
             String queryString = 'SELECT Id';

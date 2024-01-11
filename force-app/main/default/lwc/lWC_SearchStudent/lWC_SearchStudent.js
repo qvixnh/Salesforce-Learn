@@ -1,5 +1,5 @@
 // LWC_SearchStudent.js
-import { LightningElement, wire } from 'lwc';
+import { LightningElement, wire, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getClassOptions from '@salesforce/apex/LWC_SearchStudentCtrl.getClassOptions';
 import getStudents from '@salesforce/apex/LWC_SearchStudentCtrl.getStudents';
@@ -10,30 +10,31 @@ const ITEMS_PER_PAGE = 4;
 
 export default class LWC_SearchStudent extends LightningElement {
     classes;
-    students;
-    displayedStudents;
+    @track students;
+    @track displayedStudents;
     error;
     //search condition
-    selectedClass = null;
-    selectedGender  = null;
-    searchCode = '';
-    searchName = '';
-    birthdate = '';
-    dayOfBirth = null;
-    monthOfBirth = null;
-    yearOfBirth = null;
+    @track selectedClass = null;
+    @track selectedGender  = null;
+    @track searchCode = '';
+    @track  searchName = '';
+    @track birthdate = '';
+    @track dayOfBirth = null;
+    @track monthOfBirth = null;
+    @track yearOfBirth = null;
     //pagination
-    currentPage = 1;
-    totalPages = 1;
+    @track currentPage = 1;
+    @track totalPages = 1;
     // Variables for modal
-    showModal = false;
-    isUpdateModalOpen=false;
-    isCreateModalOpen=false;
-    isDetailModalOpen=false;
-    selectedStudent;
+    @track showModal = false;
+    @track isUpdateModalOpen=false;
+    @track isCreateModalOpen=false;
+    @track isDetailModalOpen=false;
+    @track isDelSelStuModalOpen=false;
+    @track selectedStudent;
     // Variables for selecting students
-    selectedStudentIds = [];
-    isSelectAllChecked = false;
+    @track selectedStudentIds = [];
+    @track isSelectAllChecked = false;
     // Define select options for day and month
     dayOptions = Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}`, value: `${i + 1}` }));
     monthOptions = [
@@ -50,9 +51,10 @@ export default class LWC_SearchStudent extends LightningElement {
         { label: 'November', value: '11' },
         { label: 'December', value: '12' },
     ];
-    genderOptions=[
-        {label:'Male', value: true},
-        {label:'Female', value: false}        
+    @track genderOptions=[
+        {label:'All', value: 2},
+        {label:'Male', value: 1},
+        {label:'Female', value:0}        
     ];
     connectedCallback() {
         console.log('lWC_SearchStudent Component connected to the DOM');
@@ -72,19 +74,8 @@ export default class LWC_SearchStudent extends LightningElement {
             this.classes = undefined;
         }
     }
-
-    // @wire(getStudents, { classId: '$selectedClass', gender: null, searchName: '$searchName', searchCode: '$searchCode', day: '$dayOfBirth', month: '$monthOfBirth', year: '$yearOfBirth', birthdate: '$birthdate', orderField: 'Student_Code__c', orderType: 'ASC' })
-    // wiredStudents({ error, data }) {
-    //     if (data) {
-    //         this.students = data;
-    //         this.updateDisplayedStudents();
-    //         this.error = undefined;
-    //     } else if (error) {
-    //         this.error = 'Error retrieving students';
-    //         this.students = undefined;
-    //     }
-    // }
     loadStudents() {
+        console.log("selected")
         getStudents({
             classId: this.selectedClass,
             gender: this.selectedGender,
@@ -98,11 +89,7 @@ export default class LWC_SearchStudent extends LightningElement {
             orderType: 'ASC'
         })
             .then(result => {
-                console.log("RESULT: ");
-                console.log(JSON.stringify(result));
                 this.students = result;
-                console.log("STUDENT LIST: ");
-                console.log(JSON.stringify(this.students));
                 this.showSuccessToast("Student list loaded successfully");
                 this.updateDisplayedStudents();
                 this.error = undefined;
@@ -117,6 +104,10 @@ export default class LWC_SearchStudent extends LightningElement {
     //search condition
     handleClassChange(event) {
         this.selectedClass = event.detail.value;
+    }
+    handleGenderChange(event) {
+        this.selectedGender = event.detail.value;
+        console.log("this.selectedGender ", this.selectedGender);
     }
     handleSearchCodeChange(event) {
         this.searchCode = event.detail.value;
@@ -136,9 +127,7 @@ export default class LWC_SearchStudent extends LightningElement {
     handleYearOfBirthChange(event) {
         this.yearOfBirth = event.detail.value;
     }
-    handleGenderChange(event) {
-        this.selectedGender = event.detail.value;
-    }
+
 
     handleSearch() {
         this.currentPage = 1;
@@ -223,6 +212,8 @@ export default class LWC_SearchStudent extends LightningElement {
     closeModalCreate() {
         this.isCreateModalOpen = false;
         this.selectedStudent = null;
+        this.loadStudents();
+
     }
     openModalDetail(event) {
         const studentId = event.currentTarget.dataset.studentId;
@@ -232,7 +223,13 @@ export default class LWC_SearchStudent extends LightningElement {
     closeModalDetail() {
         this.isDetailModalOpen = false;
         this.selectedStudent = null;
-    }    
+    }
+    openModalDelSelStu() {
+        this.isDelSelStuModalOpen = true;
+    }
+    closeModalDelSelStu() {
+        this.isDelSelStuModalOpen = false;
+    }        
     // Method to close modal
     closeModalDelete() {
         this.showModal = false;
@@ -285,6 +282,9 @@ export default class LWC_SearchStudent extends LightningElement {
         }
         
     }
+    handleDeleteSelectedStudent(){
+        this.deleteSelectedStudents();
+    }
     deleteSelectedStudents() {
         this.selectedStudentIds=[];
         for(let i = 0; i<this.displayedStudents.length;i++ ){
@@ -292,7 +292,6 @@ export default class LWC_SearchStudent extends LightningElement {
                 this.selectedStudentIds.push(this.displayedStudents[i].Id);
             }
         }
-        alert(`are you sure  to delete ${this.selectedStudentIds.length} students`);
         deleteSelectedStudentsCtrl({ studentIds: this.selectedStudentIds })
             .then(result => {
                 this.selectedStudentIds = [];
@@ -303,7 +302,6 @@ export default class LWC_SearchStudent extends LightningElement {
             .catch(error => {
                 console.error('Error deleting students: ', error);
             });
-        alert("delete selected student successfully");
     }
     deleteStudentHandler(event) {
         const studentId = event.currentTarget.dataset.studentId;
