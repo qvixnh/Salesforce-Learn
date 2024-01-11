@@ -77,6 +77,7 @@
             pageNumbers.push(i);
         }
         component.set("v.pageNumbers", pageNumbers);
+    
     },
     /*when click on page number, navigate to that page*/
     navigateToPage : function(component, pageNumber) {

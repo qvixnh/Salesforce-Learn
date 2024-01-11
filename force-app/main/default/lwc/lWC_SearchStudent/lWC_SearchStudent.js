@@ -6,7 +6,7 @@ import getStudents from '@salesforce/apex/LWC_SearchStudentCtrl.getStudents';
 import deleteSelectedStudentsCtrl from '@salesforce/apex/LWC_SearchStudentCtrl.deleteSelectedStudentsCtrl';
 import deleteStudentRecord from '@salesforce/apex/LWC_SearchStudentCtrl.deleteStudentRecord';
 
-const ITEMS_PER_PAGE = 4;
+const ITEMS_PER_PAGE = 2;
 
 export default class LWC_SearchStudent extends LightningElement {
     classes;
@@ -22,9 +22,13 @@ export default class LWC_SearchStudent extends LightningElement {
     @track dayOfBirth = null;
     @track monthOfBirth = null;
     @track yearOfBirth = null;
+
     //pagination
     @track currentPage = 1;
     @track totalPages = 1;
+    @track pageNumbers;
+    // Add this property to your component
+    pageNumbers = [];
     // Variables for modal
     @track showModal = false;
     @track isUpdateModalOpen=false;
@@ -32,6 +36,7 @@ export default class LWC_SearchStudent extends LightningElement {
     @track isDetailModalOpen=false;
     @track isDelSelStuModalOpen=false;
     @track selectedStudent;
+
     // Variables for selecting students
     @track selectedStudentIds = [];
     @track isSelectAllChecked = false;
@@ -157,7 +162,15 @@ export default class LWC_SearchStudent extends LightningElement {
                     ...student,
                     selected__c:false
                 }));
-                this.isSelectAllChecked = false;    
+                this.isSelectAllChecked = false;
+
+                var startPage = Math.max(1, this.currentPage - 2);
+                var endPage = Math.min(this.totalPages, startPage + 4);
+                this.pageNumbers=[]
+                for (var i = startPage; i <= endPage; i++) {
+                    this.pageNumbers.push(i);
+                }
+                // this.pageNumbers = Array.from({ length: this.totalPages }, (_, i) => i + 1);
             } catch (error) {
                 console.log("error when updating student", error.message);
             }
@@ -165,10 +178,14 @@ export default class LWC_SearchStudent extends LightningElement {
         }
     }
 
+    get pageOptions() {
+        return this.pageNumbers.map(page => ({ label: String(page), value: page }));
+    }
     get isPreviousDisabled() {
         return this.currentPage === 1;
     }
-
+    get isCurrentPage(){
+    }
     get isNextDisabled() {
         return this.currentPage === this.totalPages;
     }
@@ -188,6 +205,10 @@ export default class LWC_SearchStudent extends LightningElement {
             this.currentPage++;
             this.updateDisplayedStudents();
         }
+    }
+    goToPage(event) {
+        this.currentPage = event.target.value;
+        this.updateDisplayedStudents();
     }
     openModalDelete(event) {
         const studentId = event.currentTarget.dataset.studentId;

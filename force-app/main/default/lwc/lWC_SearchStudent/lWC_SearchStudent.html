@@ -41,11 +41,11 @@
                 </div>
                 <div class="slds-col slds-size_1-of-4">
                     <lightning-combobox
-                    label="Month of Birth"
-                    value={monthOfBirth}
-                    options={monthOptions}
-                    onchange={handleMonthOfBirthChange}>
-                </lightning-combobox>
+                        label="Month of Birth"
+                        value={monthOfBirth}
+                        options={monthOptions}
+                        onchange={handleMonthOfBirthChange}>
+                    </lightning-combobox>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
                     <lightning-input type="number" label="Year of Birth" min="1900" max="2100" value={yearOfBirth} onchange={handleYearOfBirthChange}></lightning-input>
@@ -222,8 +222,7 @@
                             </template>
                         </tbody>
                     </table>
-    
-                    <div class="slds-m-top_medium">
+                    <div class="slds-m-around_medium">
                         <lightning-layout>
                             <lightning-layout-item flexibility="auto" size="1">
                                 <lightning-button-icon
@@ -233,8 +232,10 @@
                                     disabled={isPreviousDisabled}>
                                 </lightning-button-icon>
                             </lightning-layout-item>
-                            <lightning-layout-item flexibility="auto" size="1">
-                                Page {currentPage} of {totalPages}
+                            <lightning-layout-item   flexibility="auto" size="2"  style="margin-right: 50px;" >
+                                <template for:each={pageNumbers} for:item="pageNumber">
+                                    <lightning-button key={pageNumber} label={pageNumber} value={pageNumber} disabled={isCurrentPage} onclick={goToPage} ></lightning-button>
+                                </template>
                             </lightning-layout-item>
                             <lightning-layout-item flexibility="auto" size="1">
                                 <lightning-button-icon

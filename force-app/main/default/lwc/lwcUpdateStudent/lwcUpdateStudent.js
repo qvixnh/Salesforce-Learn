@@ -18,10 +18,13 @@ export default class LWC_UpdateStudent extends LightningElement {
     @track addressError = '';
     @track birthdateError = '';
     @track genderError = '';
-    genderOptions=[
-        {label:'Male', value:true},
-        {label:'Female', value:false}        
-    ];
+    
+    get genderOptions(){
+        return [
+            {label:'Male', value:true},
+            {label:'Female', value:false}        
+        ];
+    }
     get isTrue(){
         if(this.student.Gender__c == false){
             return false;
