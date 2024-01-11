@@ -13,13 +13,16 @@ export default class LWC_SearchStudent extends LightningElement {
     students;
     displayedStudents;
     error;
+    //search condition
     selectedClass = null;
+    selectedGender  = null;
     searchCode = '';
     searchName = '';
     birthdate = '';
     dayOfBirth = null;
     monthOfBirth = null;
     yearOfBirth = null;
+    //pagination
     currentPage = 1;
     totalPages = 1;
     // Variables for modal
@@ -48,9 +51,13 @@ export default class LWC_SearchStudent extends LightningElement {
         { label: 'December', value: '12' },
     ];
     genderOptions=[
-        {label:'Male', value:'true'},
-        {label:'Female', value:'false'}        
+        {label:'Male', value: true},
+        {label:'Female', value: false}        
     ];
+    connectedCallback() {
+        console.log('lWC_SearchStudent Component connected to the DOM');
+        this.loadStudents();
+    }
     @wire(getClassOptions)
     wiredClasses({ error, data }) {
         if (data) {
@@ -66,50 +73,76 @@ export default class LWC_SearchStudent extends LightningElement {
         }
     }
 
-    @wire(getStudents, { classId: '$selectedClass', gender: null, searchName: '$searchName', searchCode: '$searchCode', day: '$dayOfBirth', month: '$monthOfBirth', year: '$yearOfBirth', birthdate: '$birthdate', orderField: 'Student_Code__c', orderType: 'ASC' })
-    wiredStudents({ error, data }) {
-        if (data) {
-            this.students = data;
-            this.updateDisplayedStudents();
-            this.error = undefined;
-        } else if (error) {
-            this.error = 'Error retrieving students';
-            this.students = undefined;
-        }
+    // @wire(getStudents, { classId: '$selectedClass', gender: null, searchName: '$searchName', searchCode: '$searchCode', day: '$dayOfBirth', month: '$monthOfBirth', year: '$yearOfBirth', birthdate: '$birthdate', orderField: 'Student_Code__c', orderType: 'ASC' })
+    // wiredStudents({ error, data }) {
+    //     if (data) {
+    //         this.students = data;
+    //         this.updateDisplayedStudents();
+    //         this.error = undefined;
+    //     } else if (error) {
+    //         this.error = 'Error retrieving students';
+    //         this.students = undefined;
+    //     }
+    // }
+    loadStudents() {
+        getStudents({
+            classId: this.selectedClass,
+            gender: this.selectedGender,
+            searchName: this.searchName,
+            searchCode: this.searchCode,
+            day: this.dayOfBirth,
+            month: this.monthOfBirth,
+            year: this.yearOfBirth,
+            birthdate: this.birthdate,
+            orderField: 'Student_Code__c',
+            orderType: 'ASC'
+        })
+            .then(result => {
+                console.log("RESULT: ");
+                console.log(JSON.stringify(result));
+                this.students = result;
+                console.log("STUDENT LIST: ");
+                console.log(JSON.stringify(this.students));
+                this.showSuccessToast("Student list loaded successfully");
+                this.updateDisplayedStudents();
+                this.error = undefined;
+            })
+            .catch(error => {
+                this.handleClearFilters();
+                this.loadStudents();
+                this.error = 'Error retrieving students: ' + error.body.message;
+                this.students = undefined;
+            });
     }
-
+    //search condition
     handleClassChange(event) {
         this.selectedClass = event.detail.value;
-        this.currentPage = 1;
-        this.updateDisplayedStudents();
     }
-
     handleSearchCodeChange(event) {
         this.searchCode = event.detail.value;
     }
-
     handleSearchNameChange(event) {
         this.searchName = event.detail.value;
     }
-
     handleBirthdateChange(event) {
         this.birthdate = event.detail.value;
     }
-
     handleDayOfBirthChange(event) {
         this.dayOfBirth = event.detail.value;
     }
-
     handleMonthOfBirthChange(event) {
         this.monthOfBirth = event.detail.value;
     }
-
     handleYearOfBirthChange(event) {
         this.yearOfBirth = event.detail.value;
+    }
+    handleGenderChange(event) {
+        this.selectedGender = event.detail.value;
     }
 
     handleSearch() {
         this.currentPage = 1;
+        this.loadStudents();
         this.updateDisplayedStudents();
     }
     handleClearFilters() {
@@ -126,15 +159,20 @@ export default class LWC_SearchStudent extends LightningElement {
     updateDisplayedStudents() {
         
         if (this.students) {
-            this.totalPages = Math.ceil(this.students.length / ITEMS_PER_PAGE);
-            const startIndex = (this.currentPage - 1) * ITEMS_PER_PAGE;
-            const endIndex = startIndex + ITEMS_PER_PAGE;
-            this.displayedStudents = this.students.slice(startIndex, endIndex);
-            this.displayedStudents = this.displayedStudents.map(student => ({
-                ...student,
-                selected__c:false
-            }));
-            this.isSelectAllChecked = false;
+            try {
+                this.totalPages = Math.ceil(this.students.length / ITEMS_PER_PAGE);
+                const startIndex = (this.currentPage - 1) * ITEMS_PER_PAGE;
+                const endIndex = startIndex + ITEMS_PER_PAGE;
+                this.displayedStudents = this.students.slice(startIndex, endIndex);
+                this.displayedStudents = this.displayedStudents.map(student => ({
+                    ...student,
+                    selected__c:false
+                }));
+                this.isSelectAllChecked = false;    
+            } catch (error) {
+                console.log("error when updating student", error.message);
+            }
+            
         }
     }
 
@@ -175,6 +213,7 @@ export default class LWC_SearchStudent extends LightningElement {
     closeModalUpdate() {
         this.isUpdateModalOpen = false;
         this.selectedStudent = null;
+        this.loadStudents();
     }
     openModalCreate(event) {
         const studentId = event.currentTarget.dataset.studentId;
@@ -259,7 +298,7 @@ export default class LWC_SearchStudent extends LightningElement {
                 this.selectedStudentIds = [];
                 this.isSelectAllChecked = false;
                 this.showSuccessToast('Multiples Student deleted successfully');
-                this.refreshStudents();
+                this.loadStudents();
             })
             .catch(error => {
                 console.error('Error deleting students: ', error);
@@ -276,17 +315,13 @@ export default class LWC_SearchStudent extends LightningElement {
     deleteStudent(studentId) {
         deleteStudentRecord({ studentId })
             .then(result => {
-                // Handle success
                 this.showSuccessToast('Student deleted successfully');
-                this.refreshStudents();
+                this.loadStudents();
             })
             .catch(error => {
                 // Handle error
                 console.error('Error deleting student: ', error);
             });
-    }
-    refreshStudents() {
-        refreshApex(this.wiredStudents);
     }
     showSuccessToast(message) {
         const event = new ShowToastEvent({
