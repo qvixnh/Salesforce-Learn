@@ -1,4 +1,6 @@
+//1101
 public with sharing class LWC_SearchStudentCtrl {
+    //1101
     @AuraEnabled(cacheable=true)
     public static List<Class__c> getClassOptions() {
         List<Class__c> classList = new List<Class__c>();
@@ -15,6 +17,7 @@ public with sharing class LWC_SearchStudentCtrl {
         }
         return classList;
     }
+    //1101
     @AuraEnabled
     public static List<Student__c> getStudents(String classId, Integer gender, String searchName, String searchCode, Integer day, Integer month, Integer year, String birthdate, String orderField, String orderType) {
         try {
@@ -63,6 +66,7 @@ public with sharing class LWC_SearchStudentCtrl {
             return new List<Student__c>();
         }
     }
+    //1201
     @AuraEnabled
     public static List<Student__c> getStudentsByCondition(String searchConditionJSON) {
         try {
@@ -102,7 +106,7 @@ public with sharing class LWC_SearchStudentCtrl {
             return new List<Student__c>();
         }
     }
-
+    //1101
     @AuraEnabled
     public static void deleteSelectedStudentsCtrl(List<Id> studentIds) {
         try {
@@ -112,6 +116,7 @@ public with sharing class LWC_SearchStudentCtrl {
             throw new AuraHandledException('Error deleting selected students: ' + e.getMessage());
         }
     }
+    //1101
     @AuraEnabled
     public static void deleteStudentRecord(Id studentId) {
         try {

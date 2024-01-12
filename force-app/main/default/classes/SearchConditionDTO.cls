@@ -1,3 +1,4 @@
+//1201
 public class SearchConditionDTO {
     public SearchConditionDTO() {
 

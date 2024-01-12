@@ -17,7 +17,10 @@ export default class LWC_CreateStudent extends LightningElement {
     @track addressError = '';
     @track birthdateError = '';
     @track genderError = '';
-    @api genderOptions;
+    @track genderOptions=[
+        {label:'Male', value:true},
+        {label:'Female', value:false}        
+    ];
     classes;
     selectedClass;
     selectedGender;

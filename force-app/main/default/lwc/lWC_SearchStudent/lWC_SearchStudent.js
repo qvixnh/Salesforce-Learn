@@ -7,7 +7,7 @@ import getStudentsByCondition from '@salesforce/apex/LWC_SearchStudentCtrl.getSt
 import deleteSelectedStudentsCtrl from '@salesforce/apex/LWC_SearchStudentCtrl.deleteSelectedStudentsCtrl';
 import deleteStudentRecord from '@salesforce/apex/LWC_SearchStudentCtrl.deleteStudentRecord';
 
-const ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 5;
 
 export default class LWC_SearchStudent extends LightningElement {
     classes;

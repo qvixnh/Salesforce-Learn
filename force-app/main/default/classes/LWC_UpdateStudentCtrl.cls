@@ -1,4 +1,5 @@
 public with sharing class LWC_UpdateStudentCtrl {
+    //1101
     @AuraEnabled
     public static String updateStudentRec(Student__c student, String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate) {
         try {
