@@ -39,31 +39,6 @@ export default class LWC_CreateStudent extends LightningElement {
             this.classes = undefined;
         }
     }
-    handleInputChange(event) {
-        // const { dataId, value } = event.target.dataset;
-        // switch (dataId) {
-        //     case 'sFirstName':
-        //         this.firstName = value;
-        //         break;
-        //     case 'sLastName':
-        //         this.lastName = value;
-        //         break;
-        //     case 'sClass':
-        //         this.selectedClass = value;
-        //         break;
-        //     case 'sAddress':
-        //         this.address = value;
-        //         break;
-        //     case 'sBirthdate':
-        //         this.birthdate = value;
-        //         break;
-        //     case 'sGender':
-        //         this.selectedGender = value;
-        //         break;
-        //     default:
-        //         break;
-        // }
-    }
     handleChangeClass(event) {
         this.selectedClass = event.target.value;
     }
@@ -78,14 +53,7 @@ export default class LWC_CreateStudent extends LightningElement {
         this.resetForm();
     }
     createStudent(){
-        console.log("this.firstName: ",this.firstName);
-        console.log("this.lastName: ",this.lastName);
-        console.log("this.selectedClass: ",this.selectedClass);
-        console.log("this.selectedGender: ",this.selectedGender);
-        console.log("this.address: ",this.address);
-        console.log("this.birthdate: ",this.birthdate);
         createStudentRec({
-            //String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate
             sFirstName:this.firstName,
             sLastName:this.lastName,
             sClassId:this.selectedClass,
@@ -170,7 +138,6 @@ export default class LWC_CreateStudent extends LightningElement {
         return true;
     }
     resetForm() {
-        console.log("reset form");
         this.firstName = '';
         this.lastName = '';
         this.address = '';

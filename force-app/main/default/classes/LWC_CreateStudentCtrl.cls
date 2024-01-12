@@ -1,5 +1,23 @@
-//1101
+/**
+ * クラス名：   LWC_CreateStudentCtrl.cls
+ * クラス概要： Create Student Controller
+ * @created： 2023/01/11 + Nguyen Vinh
+ * @modified: 
+ */
 public with sharing class LWC_CreateStudentCtrl {
+     /**
+     * createStudentRec
+     * @param    :  
+     *              String  sFirstName
+     *              String sLastName
+     *              String sClassId
+     *              Boolean sGender
+     *              String sAddress
+     *              Date sBirthdate
+     * @return   : String 
+     * @created  : 2023/01/11 + Nguyen Vinh
+     * @modified : 
+     */
     @AuraEnabled
     public static String createStudentRec(String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate) {
         try {

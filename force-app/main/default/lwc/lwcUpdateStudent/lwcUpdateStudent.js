@@ -63,12 +63,6 @@ export default class LWC_UpdateStudent extends LightningElement {
     }
     updateStudent(){
         try {
-            console.log("this.firstName: ",this.firstName);
-            console.log("this.lastName: ",this.lastName);
-            console.log("this.selectedClass: ",this.selectedClass);
-            console.log("this.selectedGender: ",this.selectedGender);
-            console.log("this.address: ",this.address);
-            console.log("this.birthdate: ",this.birthdate);
             updateStudentRec({
                 //Student__C student, String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate
                 student:this.student,

@@ -2,7 +2,6 @@
 import { LightningElement, wire, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getClassOptions from '@salesforce/apex/LWC_SearchStudentCtrl.getClassOptions';
-import getStudents from '@salesforce/apex/LWC_SearchStudentCtrl.getStudents';
 import getStudentsByCondition from '@salesforce/apex/LWC_SearchStudentCtrl.getStudentsByCondition';
 import deleteSelectedStudentsCtrl from '@salesforce/apex/LWC_SearchStudentCtrl.deleteSelectedStudentsCtrl';
 import deleteStudentRecord from '@salesforce/apex/LWC_SearchStudentCtrl.deleteStudentRecord';
@@ -64,7 +63,6 @@ export default class LWC_SearchStudent extends LightningElement {
         {label:'Female', value:'0'}        
     ];
     connectedCallback() {
-        console.log('lWC_SearchStudent Component connected to the DOM');
         this.loadStudents();
 
     }
@@ -110,32 +108,7 @@ export default class LWC_SearchStudent extends LightningElement {
                 this.loadStudents();
                 this.error = 'Error retrieving students: ' + error.body.message;
                 this.students = undefined;
-            });
-        // getStudents({
-        //     classId: this.selectedClass,
-        //     gender: this.selectedGender,
-        //     searchName: this.searchName,
-        //     searchCode: this.searchCode,
-        //     day: this.dayOfBirth,
-        //     month: this.monthOfBirth,
-        //     year: this.yearOfBirth,
-        //     birthdate: this.birthdate,
-        //     orderField: 'Student_Code__c',
-        //     orderType: 'ASC'
-        // })
-            // .then(result => {
-            //     this.students = result;
-            //     this.showSuccessToast("Student list loaded successfully");
-            //     this.updateDisplayedStudents();
-            //     this.error = undefined;
-            // })
-            // .catch(error => {
-            //     this.handleClearFilters();
-            //     this.loadStudents();
-            //     this.error = 'Error retrieving students: ' + error.body.message;
-            //     this.students = undefined;
-            // });
-        
+            });        
     }
     //search condition
     handleClassChange(event) {
@@ -143,7 +116,6 @@ export default class LWC_SearchStudent extends LightningElement {
     }
     handleGenderChange(event) {
         this.selectedGender = event.detail.value;
-        console.log("this.selectedGender ", this.selectedGender);
     }
     handleSearchCodeChange(event) {
         this.searchCode = event.detail.value;
@@ -164,11 +136,9 @@ export default class LWC_SearchStudent extends LightningElement {
         this.monthOfBirth = event.detail.value;
         var daysInMonth = new Date(this.yearOfBirth,this.monthOfBirth,0).getDate();
         this.dayOptions=[];
-        console.log(this.dayOptions);
         for (var i = 1; i <= daysInMonth; i++) {
             this.dayOptions.push({ label: i.toString(), value: i.toString() });
         }
-        console.log(this.dayOptions);
     }
     handleYearOfBirthChange(event) {
         this.yearOfBirth = event.detail.value;

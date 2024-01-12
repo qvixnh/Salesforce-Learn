@@ -1,5 +1,23 @@
+/**
+ * クラス名：   LWC_UpdateStudentCtrl.cls
+ * クラス概要： Update Student Controller
+ * @created： 2023/01/10 + Nguyen Vinh
+ * @modified: 
+ */
 public with sharing class LWC_UpdateStudentCtrl {
-    //1101
+    /**
+     * updateStudentRec
+     * @param    :  Student__c student
+     *              String  sFirstName
+     *              String sLastName
+     *              String sClassId
+     *              Boolean sGender
+     *              String sAddress
+     *              Date sBirthdate
+     * @return   : String 
+     * @created  : 2023/01/11 + Nguyen Vinh
+     * @modified : 
+     */
     @AuraEnabled
     public static String updateStudentRec(Student__c student, String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate) {
         try {
