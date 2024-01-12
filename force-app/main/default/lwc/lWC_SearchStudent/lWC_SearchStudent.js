@@ -17,12 +17,12 @@ export default class LWC_SearchStudent extends LightningElement {
     //search condition
     @track selectedClass = null;
     @track selectedGender  = null;
-    @track searchCode = '';
-    @track  searchName = '';
+    @track searchCode = 'ST-';
+    @track searchName = '';
     @track birthdate = '';
     @track dayOfBirth = null;
     @track monthOfBirth = null;
-    @track yearOfBirth = null;
+    @track yearOfBirth = 0;
 
     //pagination
     @track currentPage = 1;
@@ -37,7 +37,7 @@ export default class LWC_SearchStudent extends LightningElement {
     @track isDetailModalOpen=false;
     @track isDelSelStuModalOpen=false;
     @track selectedStudent;
-
+    
     // Variables for selecting students
     @track selectedStudentIds = [];
     @track isSelectAllChecked = false;
@@ -66,6 +66,7 @@ export default class LWC_SearchStudent extends LightningElement {
     connectedCallback() {
         console.log('lWC_SearchStudent Component connected to the DOM');
         this.loadStudents();
+
     }
     @wire(getClassOptions)
     wiredClasses({ error, data }) {
@@ -155,9 +156,19 @@ export default class LWC_SearchStudent extends LightningElement {
     }
     handleDayOfBirthChange(event) {
         this.dayOfBirth = event.detail.value;
+        if(this.monthOfBirth==2 && this.dayOfBirth>28){
+            this.dayOfBirth=0;
+        }
     }
     handleMonthOfBirthChange(event) {
         this.monthOfBirth = event.detail.value;
+        var daysInMonth = new Date(this.yearOfBirth,this.monthOfBirth,0).getDate();
+        this.dayOptions=[];
+        console.log(this.dayOptions);
+        for (var i = 1; i <= daysInMonth; i++) {
+            this.dayOptions.push({ label: i.toString(), value: i.toString() });
+        }
+        console.log(this.dayOptions);
     }
     handleYearOfBirthChange(event) {
         this.yearOfBirth = event.detail.value;
@@ -171,13 +182,14 @@ export default class LWC_SearchStudent extends LightningElement {
     }
     handleClearFilters() {
         this.selectedClass = null;
-        this.searchCode = '';
+        this.searchCode = 'ST-';
         this.searchName = '';
         this.birthdate='';
         this.dayOfBirth = null;
         this.monthOfBirth = null;
-        this.yearOfBirth = null;
+        this.yearOfBirth = 0;
         this.currentPage = 1;
+        this.selectedGender = 2;
         this.updateDisplayedStudents();
     }
     updateDisplayedStudents() {
