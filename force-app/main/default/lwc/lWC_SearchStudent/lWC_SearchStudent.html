@@ -245,10 +245,13 @@
                                     disabled={isNextDisabled}>
                                 </lightning-button-icon>
                             </lightning-layout-item>
+                            <lightning-layout-item flexibility="auto" size="3">
+                                <div class="slds-col  slds-m-top_small">
+                                    <p>Selected: {selectedStudentIds.length} of {displayedStudents.length} total Records</p>
+                                </div>                            
+                            </lightning-layout-item>
                         </lightning-layout>
-                        <div class="slds-col  slds-m-top_small">
-                            <p>Selected: {selectedStudentIds.length} of {displayedStudents.length} total Records</p>
-                        </div>
+                        
                     </div>
                 </template>
             </div>
