@@ -6,7 +6,7 @@ import getStudentsByCondition from '@salesforce/apex/LWC_SearchStudentCtrl.getSt
 import deleteSelectedStudentsCtrl from '@salesforce/apex/LWC_SearchStudentCtrl.deleteSelectedStudentsCtrl';
 import deleteStudentRecord from '@salesforce/apex/LWC_SearchStudentCtrl.deleteStudentRecord';
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 4;
 
 export default class LWC_SearchStudent extends LightningElement {
     classes;
@@ -36,7 +36,6 @@ export default class LWC_SearchStudent extends LightningElement {
     @track isDetailModalOpen=false;
     @track isDelSelStuModalOpen=false;
     @track selectedStudent;
-    
     // Variables for selecting students
     @track selectedStudentIds = [];
     @track isSelectAllChecked = false;
@@ -63,7 +62,7 @@ export default class LWC_SearchStudent extends LightningElement {
         {label:'Female', value:'0'}        
     ];
     connectedCallback() {
-        this.loadStudents();
+        this.loadStudents(true);
 
     }
     @wire(getClassOptions)
@@ -80,7 +79,7 @@ export default class LWC_SearchStudent extends LightningElement {
             this.classes = undefined;
         }
     }
-    loadStudents() {
+    loadStudents(flagMessage=false) {
         const searchCondition = {
             classId: this.selectedClass,
             gender: this.selectedGender,
@@ -99,7 +98,9 @@ export default class LWC_SearchStudent extends LightningElement {
         })
             .then(result => {
                 this.students = result;
-                this.showSuccessToast("Student list loaded successfully");
+                if(flagMessage){
+                    this.showSuccessToast("Student list loaded successfully");
+                }
                 this.updateDisplayedStudents();
                 this.error = undefined;
             })
@@ -147,7 +148,7 @@ export default class LWC_SearchStudent extends LightningElement {
 
     handleSearch() {
         this.currentPage = 1;
-        this.loadStudents();
+        this.loadStudents(true);
         this.updateDisplayedStudents();
     }
     handleClearFilters() {
@@ -174,14 +175,19 @@ export default class LWC_SearchStudent extends LightningElement {
                     ...student,
                     selected__c:false
                 }));
+                this.displayedStudents = this.displayedStudents.map((student, index) => ({ ...student, index: index + 1 }));
                 this.isSelectAllChecked = false;
-
-                var startPage = Math.max(1, this.currentPage - 2);
-                var endPage = Math.min(this.totalPages, startPage + 4);
+                //pagelist = 0
+                var startPage = Math.max(1, this.currentPage - 1);
+                var endPage = Math.min(this.totalPages, startPage + 2);
                 this.pageNumbers=[]
+                if(this.currentPage==this.totalPages){
+                    this.pageNumbers.push(startPage-1);
+                }
                 for (var i = startPage; i <= endPage; i++) {
                     this.pageNumbers.push(i);
                 }
+
                 // this.pageNumbers = Array.from({ length: this.totalPages }, (_, i) => i + 1);
             } catch (error) {
                 console.log("error when updating student", error.message);
@@ -330,7 +336,7 @@ export default class LWC_SearchStudent extends LightningElement {
                 this.selectedStudentIds = [];
                 this.isSelectAllChecked = false;
                 this.showSuccessToast('Multiples Student deleted successfully');
-                this.loadStudents();
+                this.closeModalDelSelStu();
             })
             .catch(error => {
                 console.error('Error deleting students: ', error);

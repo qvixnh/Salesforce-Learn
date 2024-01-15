@@ -1,10 +1,29 @@
 <!-- LWC_UpdateStudent.html -->
 <template>
     <lightning-card title="Update Student" icon-name="standard:account">
-        <div class="slds-m-around_medium">
-            <!-- Form fields and buttons as before -->
+        <div class="slds-card slds-p-around_medium">
+            <h2 class="slds-text-heading_medium">Student Code: {student.Student_Code__c}</h2>
+            <h2 class="slds-text-heading_medium">Gender: {student.Gender__c}</h2>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input type="text" label="Enter First Name" data-id="sFirstName" value={student.First_Name__c}></lightning-input>
+                    <p id="sFirstNameError" class="slds-text-color_destructive">{firstNameError}</p>
+                    <lightning-input type="text" label="Enter Last Name" data-id="sLastName" value={student.Last_Name__c}></lightning-input>
+                    <p id="sLastNameError" class="slds-text-color_destructive">{lastNameError}</p>
+                    <lightning-combobox label="Select Class" data-id="sClass" value={student.Class__c} options={classes} onchange={handleChangeClass}></lightning-combobox>
+                    <p id="sClassError" class="slds-text-color_destructive">{classError}</p>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input type="text" label="Enter Address" data-id="sAddress" value={student.Address__c}></lightning-input>
+                    <p id="sAddressError" class="slds-text-color_destructive">{addressError}</p>
+                    <lightning-input type="date" label="Enter Birthdate" data-id="sBirthdate" value={student.Birthdate__c} date-style="short"></lightning-input>
+                    <p id="sBirthdateError" class="slds-text-color_destructive">{birthdateError}</p>
+                    <lightning-radio-group label="Gender" data-id="sGender" options={genderOptions} value={isTrue} onchange={handleChangeGender} ></lightning-radio-group>
+                    <p id="sGenderError" class="slds-text-color_destructive">{genderError}</p>
+                </div>
+            </div>
             <div class="slds-m-top_medium">
-                <lightning-button label="Update" variant="brand" onclick={handleUpdate}></lightning-button>
+                <lightning-button label="Update Student" variant="brand" class="slds-button slds-button_brand" onclick={handleUpdate}></lightning-button>
             </div>
         </div>
     </lightning-card>

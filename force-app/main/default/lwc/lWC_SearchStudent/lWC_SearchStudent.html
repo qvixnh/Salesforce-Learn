@@ -23,7 +23,7 @@
                     <lightning-input label="Student Code" value={searchCode} onchange={handleSearchCodeChange}></lightning-input>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning-input label="Student Name" value={searchName} onchange={handleSearchNameChange}></lightning-input>
+                    <lightning-input label="Student First Name" value={searchName} onchange={handleSearchNameChange}></lightning-input>
                 </div>
                
             </div> 
@@ -67,7 +67,7 @@
                         </header>
                         <div class="slds-modal__content slds-p-around_medium ">
                             <div class="slds-align_absolute-center">
-                                <c-lwc-detail-student student={selectedStudent}  ></c-lwc-detail-student>
+                                <c-l-w-c_-detail-student student={selectedStudent}  ></c-l-w-c_-detail-student>
                             </div>
                             <div class="slds-align_absolute-center">
                                 <button  class="slds-button slds-button_destructive" title="Close" onclick={deleteStudentHandler} data-student-id={selectedStudent.Id}>Delete</button>
@@ -112,10 +112,10 @@
                 <div class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container">
                         <div class="slds-modal__header">
-                            <h2 class="slds-text-heading_medium">Modal Header</h2>
+                            <h2 class="slds-text-heading_medium">Update Student Form</h2>
                         </div>  
                         <div class="slds-modal__content slds-p-around_medium">
-                            <c-lwc-update-student student={selectedStudent} class-list={classes} gender-options={genderOptions}></c-lwc-update-student>
+                            <c-l-w-c_-update-student student={selectedStudent} class-list={classes} gender-options={genderOptions}></c-l-w-c_-update-student>
                             <div class="slds-align_absolute-center">
                                 <button class="slds-button slds-button_neutral " title="Close" onclick={closeModalUpdate} >Close</button>
                             </div>  
@@ -129,10 +129,10 @@
                 <div class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container">
                         <div class="slds-modal__header">
-                            <h2 class="slds-text-heading_medium">Modal Header</h2>
+                            <h2 class="slds-text-heading_medium">Create Student Form</h2>
                         </div>
                         <div class="slds-modal__content slds-p-around_medium">
-                            <c-lwc-create-student ></c-lwc-create-student>
+                            <c-l-w-c_-create-student ></c-l-w-c_-create-student>
                             <div class="slds-align_absolute-center">
                                 <button class="slds-button slds-button_neutral " title="Close" onclick={closeModalCreate} >Close</button>
                             </div>
@@ -147,11 +147,11 @@
                 <div class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container">
                         <div class="slds-modal__header">
-                            <h2 class="slds-text-heading_medium">Modal Header</h2>
+                            <h2 class="slds-text-heading_medium">Student Detail</h2>
                         </div>
                         <div class="slds-modal__content slds-p-around_medium">
                             <div class="slds-align_absolute-center">
-                                <c-lwc-detail-student student={selectedStudent}  ></c-lwc-detail-student>
+                                <c-l-w-c_-detail-student student={selectedStudent}  ></c-l-w-c_-detail-student>
                             </div>
                             <div class="slds-align_absolute-center">
                                 <button class="slds-button slds-button_neutral " title="Close" onclick={closeModalDetail} >Close</button>
@@ -170,6 +170,7 @@
                                         <input type="checkbox"  checked={isSelectAllChecked} onchange={handleSelectAll} />
                                     </div>
                                 </th>    
+                                <th scope="col">#</th>
                                 <th scope="col">Student Code</th>
                                 <th scope="col">First Name</th>
                                 <th scope="col">Last Name</th>
@@ -186,11 +187,12 @@
                         <tbody>
                             <template for:each={displayedStudents} for:item="student">
                                 <tr key={student.Student_Code__c}>
-                                    <td>
+                                    <td style="width:40px">
                                         <div class="slds-truncate" title="Select">
                                             <input type="checkbox" value={student.Student_Code__c} checked={student.selected__c} onchange={handleSelect} />
                                         </div>
                                     </td>
+                                    <td style="width:40px">{student.index}</td>
                                     <td>{student.Student_Code__c}</td>
                                     <td>{student.First_Name__c}</td>
                                     <td>{student.Last_Name__c}</td>
@@ -201,7 +203,7 @@
                                     <template if:false={student.Gender__c}>
                                         <td>Female</td>
                                     </template>
-                                    <td>{student.Birthdate__c}</td>
+                                    <td style="width:80px">{student.Birthdate__c}</td>
                                     <td>{student.Address__c}</td>
                                     <!-- Add more columns as needed -->
                                     <td>

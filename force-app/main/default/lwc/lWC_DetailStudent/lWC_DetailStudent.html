@@ -1,3 +1,19 @@
 <template>
-    
+    <lightning-card title={student.Student_Code__c} icon-name="standard:account">
+        <div class="slds-m-around_medium">
+            <p><strong>First Name:</strong>{student.First_Name__c}</p>
+            <p><strong>Last Name:</strong>{student.Last_Name__c}</p>
+            <p><strong>Class Name:</strong> {student.Class__r.Class_Name__c}</p>
+            <p><strong>Gender:</strong>
+                <template if:true={student.Gender__c}>
+                    Male
+                </template>
+                <template if:false={student.Gender__c}>
+                    Female
+                </template>
+            </p>
+            <p><strong>Birthdate:</strong> {student.Birthdate__c}</p>
+            <p><strong>Address:</strong> {student.Address__c}</p>
+        </div>
+    </lightning-card>
 </template>
