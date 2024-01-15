@@ -1,9 +1,7 @@
 <!-- LWC_UpdateStudent.html -->
 <template>
-    <lightning-card title="Update Student" icon-name="standard:account">
+    <lightning-card title={student.Student_Code__c} icon-name="standard:account">
         <div class="slds-card slds-p-around_medium">
-            <h2 class="slds-text-heading_medium">Student Code: {student.Student_Code__c}</h2>
-            <h2 class="slds-text-heading_medium">Gender: {student.Gender__c}</h2>
             <div class="slds-grid slds-gutters">
                 <div class="slds-col slds-size_1-of-2">
                     <lightning-input type="text" label="Enter First Name" data-id="sFirstName" value={student.First_Name__c}></lightning-input>

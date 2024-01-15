@@ -1,19 +1,46 @@
 <template>
     <lightning-card title={student.Student_Code__c} icon-name="standard:account">
         <div class="slds-m-around_medium">
-            <p><strong>First Name:</strong>{student.First_Name__c}</p>
-            <p><strong>Last Name:</strong>{student.Last_Name__c}</p>
-            <p><strong>Class Name:</strong> {student.Class__r.Class_Name__c}</p>
-            <p><strong>Gender:</strong>
-                <template if:true={student.Gender__c}>
-                    Male
-                </template>
-                <template if:false={student.Gender__c}>
-                    Female
-                </template>
-            </p>
-            <p><strong>Birthdate:</strong> {student.Birthdate__c}</p>
-            <p><strong>Address:</strong> {student.Address__c}</p>
+            <table class="slds-table slds-table_cell-buffer slds-no-row-hover">
+                <tbody>
+                    <tr>
+                        <th class="slds-text-title_caps" scope="row">Student  Name:</th>
+                        <td>{student.First_Name__c} {student.Last_Name__c}</td>
+                    </tr>
+                    <tr>
+                        <th class="slds-text-title_caps" scope="row">First Name:</th>
+                        <td>{student.First_Name__c}</td>
+                    </tr>
+                    <tr>
+                        <th class="slds-text-title_caps" scope="row">Last Name:</th>
+                        <td>{student.Last_Name__c}</td>
+                    </tr>
+                    <tr>
+                        <th class="slds-text-title_caps" scope="row">Class Name:</th>
+                        <td>{student.Class__r.Class_Name__c}</td>
+                    </tr>
+                    <tr>
+                        <th class="slds-text-title_caps" scope="row">Gender:</th>
+                        <td>
+                            <template if:true={student.Gender__c}>
+                                Male
+                            </template>
+                            <template if:false={student.Gender__c}>
+                                Female
+                            </template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="slds-text-title_caps" scope="row">Birthdate:</th>
+                        <td>{student.Birthdate__c}</td>
+                    </tr>
+                    <tr>
+                        <th class="slds-text-title_caps" scope="row">Address:</th>
+                        <td>{student.Address__c}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+        
     </lightning-card>
 </template>

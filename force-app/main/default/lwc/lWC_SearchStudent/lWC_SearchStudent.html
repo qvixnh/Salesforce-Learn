@@ -29,7 +29,7 @@
             </div> 
             <div class="slds-grid slds-gutters slds-m-around_medium">
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning-input type="date" label="Birthdate" value={birthdate} onchange={handleBirthdateChange} date-style="short"></lightning-input>
+                    <lightning-input type="date" label="Birthdate" value={birthdate} onchange={handleBirthdateChange} date-style="short" placeholder="dd/mm/yyyy"></lightning-input>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
                     <lightning-combobox
@@ -86,12 +86,14 @@
                             <h2 class="slds-text-heading_medium">Delete Student</h2>
                         </header>
                         <div class="slds-modal__content slds-p-around_medium ">
-                            <div class=" slds-m-around_medium slds-text-color_destructive slds-text-heading_large">Are you sure to delete {selectedStudentIds.length}</div>
+                            <div class="slds-m-around_medium slds-text-color_destructive slds-text-heading_large">
+                                Are you sure to delete {selectedStudentIds.length} students
+                            </div>
                             <div class="slds-m-around_medium">
-                                <lightning-card >
-                                    <ul >
+                                <lightning-card>
+                                    <ul class="slds-list_ordered">
                                         <template for:each={selectedStudentIds} for:item="id">
-                                        <li key={id}>{id}</li>
+                                            <li key={id} class="slds-list__item">Student: {id}</li>
                                         </template>
                                     </ul>
                                 </lightning-card>
@@ -171,16 +173,21 @@
                                     </div>
                                 </th>    
                                 <th scope="col">#</th>
-                                <th scope="col">Student Code</th>
+                                <th scope="col" >Student Code</th>
                                 <th scope="col">First Name</th>
                                 <th scope="col">Last Name</th>
                                 <th scope="col">Class</th>
                                 <th scope="col">Gender</th>
                                 <th scope="col">Birthdate</th>
-                                <th scope="col">Address</th>
                                 <!-- Add more columns as needed -->
-                                <th scope="col">
-                                    <div class="slds-truncate" title="Actions">Actions</div>
+                                <th scope="col" style="width:30px;">
+                                    <div class="slds-truncate" title="Detail">Detail</div>
+                                </th>
+                                <th scope="col" style="width:30px;">
+                                    <div class="slds-truncate" title="Delete">Delete</div>
+                                </th>
+                                <th scope="col" style="width:30px;">
+                                    <div class="slds-truncate" title="Update">Update</div>
                                 </th>
                             </tr>
                         </thead>
@@ -192,19 +199,26 @@
                                             <input type="checkbox" value={student.Student_Code__c} checked={student.selected__c} onchange={handleSelect} />
                                         </div>
                                     </td>
-                                    <td style="width:40px">{student.index}</td>
-                                    <td>{student.Student_Code__c}</td>
+                                    <td style="width:50px">{student.index}</td>
+                                    <td style="width:110px">{student.Student_Code__c}</td>
                                     <td>{student.First_Name__c}</td>
                                     <td>{student.Last_Name__c}</td>
                                     <td>{student.Class__r.Class_Name__c}</td>
                                     <template if:true={student.Gender__c}>
-                                        <td>Male</td>
+                                        <td style="width:80px">Male</td>
                                     </template>
                                     <template if:false={student.Gender__c}>
-                                        <td>Female</td>
+                                        <td style="width:80px">Female</td>
                                     </template>
-                                    <td style="width:80px">{student.Birthdate__c}</td>
-                                    <td>{student.Address__c}</td>
+                                    <td style="width:80px">
+                                            <lightning-formatted-date-time
+                                              value={student.Birthdate__c}
+                                              year="numeric"
+                                              month="numeric"
+                                              day="numeric"
+                                            ></lightning-formatted-date-time>
+                                          
+                                    </td>
                                     <!-- Add more columns as needed -->
                                     <td>
                                         <lightning-button-icon
@@ -212,21 +226,28 @@
                                             alternative-text="Details"
                                             title="Details"
                                             onclick={openModalDetail} 
-                                            data-student-id={student.Id}>
+                                            data-student-id={student.Id}
+                                            >
                                         </lightning-button-icon>
-                                        <lightning-button-icon
-                                            icon-name="utility:delete"
-                                            alternative-text="Delete"
-                                            title="Delete"
-                                            onclick={openModalDelete}
-                                            data-student-id={student.Id}>
-                                        </lightning-button-icon>
+                                    </td>
+                                    <td><lightning-button-icon
+                                        icon-name="utility:delete"
+                                        alternative-text="Delete"
+                                        title="Delete"
+                                        onclick={openModalDelete}
+                                        data-student-id={student.Id}
+                                        
+                                        >
+                                    </lightning-button-icon></td>
+                                    <td>
                                         <lightning-button-icon
                                             icon-name="utility:settings"
                                             alternative-text="settings"
                                             title="Delete"
                                             onclick={openModalUpdate}
-                                            data-student-id={student.Id}>
+                                            data-student-id={student.Id}
+                                            >
+                                            
                                         </lightning-button-icon>
                                     </td>
                                 </tr>
@@ -242,9 +263,9 @@
                                 disabled={isPreviousDisabled}>
                             </lightning-button-icon>
                         </div>
-                        <div class="slds-size_2-of-12 " style="width: 180px;">
-                            <template for:each={pageNumbers} for:item="pageNumber">
-                                <lightning-button key={pageNumber} label={pageNumber} value={pageNumber} disabled={isCurrentPage} onclick={goToPage}></lightning-button>
+                        <div class="slds-size_2-of-12 " style="width: 140px;">
+                            <template for:each={pageNumbers} for:item="item">
+                                <lightning-button key={item.pageNumber} label={item.pageNumber} value={item.pageNumber} disabled={item.status} onclick={goToPage}></lightning-button>
                             </template>
                         </div>
                         <div class="slds-size_1-of-12" style="width: 50px;">

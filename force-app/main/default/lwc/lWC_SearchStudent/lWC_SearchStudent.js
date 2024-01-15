@@ -22,7 +22,6 @@ export default class LWC_SearchStudent extends LightningElement {
     @track dayOfBirth = null;
     @track monthOfBirth = null;
     @track yearOfBirth = 0;
-
     //pagination
     @track currentPage = 1;
     @track totalPages = 1;
@@ -177,32 +176,28 @@ export default class LWC_SearchStudent extends LightningElement {
                 }));
                 this.displayedStudents = this.displayedStudents.map((student, index) => ({ ...student, index: index + 1 }));
                 this.isSelectAllChecked = false;
-                //pagelist = 0
                 var startPage = Math.max(1, this.currentPage - 1);
                 var endPage = Math.min(this.totalPages, startPage + 2);
                 this.pageNumbers=[]
-                if(this.currentPage==this.totalPages){
-                    this.pageNumbers.push(startPage-1);
+                if(this.currentPage==this.totalPages && (startPage-1)>=1){
+                    this.pageNumbers.push({ pageNumber: startPage - 1, status: false });
                 }
                 for (var i = startPage; i <= endPage; i++) {
-                    this.pageNumbers.push(i);
+                    if(i==this.currentPage){
+                        this.pageNumbers.push({ pageNumber: i, status:true });
+                    }
+                    else{
+                        this.pageNumbers.push({ pageNumber: i, status: false });
+                    }
                 }
-
-                // this.pageNumbers = Array.from({ length: this.totalPages }, (_, i) => i + 1);
             } catch (error) {
                 console.log("error when updating student", error.message);
             }
             
         }
     }
-
-    get pageOptions() {
-        return this.pageNumbers.map(page => ({ label: String(page), value: page }));
-    }
     get isPreviousDisabled() {
         return this.currentPage === 1;
-    }
-    get isCurrentPage(){
     }
     get isNextDisabled() {
         return this.currentPage === this.totalPages;
@@ -217,7 +212,6 @@ export default class LWC_SearchStudent extends LightningElement {
             this.updateDisplayedStudents();
         }
     }
-
     nextPage() {
         if (this.currentPage < this.totalPages) {
             this.currentPage++;
