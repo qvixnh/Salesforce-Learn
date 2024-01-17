@@ -25,8 +25,9 @@ public with sharing class LWC_SearchStudentCtrl {
                         FROM Class__c 
                         ORDER BY Class_Code__c];
         } catch (Exception e) {
-            System.debug('An error occurred when getting classes: ' + e.getMessage());
-        }
+            throw new CustomException('An error occurred when getting classes: ' + e.getMessage());
+
+    }
         return classList;
     }
     
@@ -35,24 +36,19 @@ public with sharing class LWC_SearchStudentCtrl {
      * @param    : String searchConditionJSON
      * @return   : List<Student__c> 
      * @created  : 2023/01/10 + Nguyen Vinh
-     * @modified : 2023/01/12 + Nguyen Vinh
+     * @modified : 2023/01/1    2 + Nguyen Vinh
      */
     @AuraEnabled
     public static List<Student__c> getStudentsByCondition(String searchConditionJSON) {
         try {
             SearchConditionDTO searchCondition = (SearchConditionDTO) JSON.deserialize(searchConditionJSON, SearchConditionDTO.class);
-            String queryString = 'SELECT Id';
-            queryString += ', Student_Code__c';
-            queryString +=', First_Name__c';
-            queryString +=', Last_Name__c';
-            queryString +=', selected__c';
-            queryString +=', Class__r.Class_Name__c';
-            queryString +=', Gender__c';
-            queryString +=', Birthdate__c';
-            queryString +=', Address__c';
-            queryString += ' FROM Student__c';
             List<String> conditions = new List<String>();
-            
+            List<String> selectedFields = new List<String>{
+                'Id', 'Student_Code__c', 'First_Name__c', 'Last_Name__c', 'selected__c',
+                'Class__r.Class_Name__c', 'Gender__c', 'Birthdate__c', 'Address__c'
+            };
+            String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
+
             if (!String.isBlank(searchCondition.searchName)) {
                 conditions.add('First_Name__c LIKE \'%' + searchCondition.searchName + '%\'');
             }
@@ -77,12 +73,15 @@ public with sharing class LWC_SearchStudentCtrl {
             if (searchCondition.year > 0) {
                 conditions.add('CALENDAR_YEAR(Birthdate__c) = ' + searchCondition.year);
             }
-            queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ') + ' ORDER BY ' + searchCondition.orderField + ' ' + searchCondition.orderType : ' ORDER BY ' + searchCondition.orderField + ' ' + searchCondition.orderType;
-            System.debug(queryString);
+            queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ') + ' ORDER BY ' + searchCondition.orderField : ' ORDER BY ' + searchCondition.orderField;
+            if(searchCondition.orderType=='ASC'){
+                queryString+= ' ASC'; 
+            }else{
+                queryString+= ' DESC';
+            }
             return Database.query(queryString);
         } catch (Exception e) {
-            System.debug('An error occurred in getStudents: ' + e.getMessage());
-            return new List<Student__c>();
+            throw new CustomException('An error occurred in getStudents: ' + e.getMessage());
         }
     }
     /**
@@ -98,7 +97,7 @@ public with sharing class LWC_SearchStudentCtrl {
             List<Student__c> studentsToDelete = [SELECT Id FROM Student__c WHERE Id IN :studentIds];
             delete studentsToDelete;
         } catch (Exception e) {
-            throw new AuraHandledException('Error deleting selected students: ' + e.getMessage());
+            throw new CustomException('Error deleting selected students: ' + e.getMessage());
         }
     }
     /**
@@ -111,15 +110,18 @@ public with sharing class LWC_SearchStudentCtrl {
     @AuraEnabled
     public static void deleteStudentRecord(Id studentId) {
         try {
-            Student__c studentToDelete = [SELECT Id FROM Student__c WHERE Id = :studentId LIMIT 1];
+            Student__c studentToDelete = [SELECT Id FROM Student__c WHERE Id = :studentId];
             // Check if the student record exists
             if (studentToDelete != null) {
                 delete studentToDelete;
             } else {
-                throw new AuraHandledException('Student record not found for deletion.');
+                throw new CustomException('Student record not found for deletion.');
             }
         } catch (Exception e) {
-            throw new AuraHandledException('Error deleting student record: ' + e.getMessage());
+            throw new CustomException('Error deleting student record: ' + e.getMessage());
         }
+    }
+    public  class  CustomException extends Exception {
+        
     }
 }

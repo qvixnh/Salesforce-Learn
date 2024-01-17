@@ -6,43 +6,41 @@ import getStudentsByCondition from '@salesforce/apex/LWC_SearchStudentCtrl.getSt
 import deleteSelectedStudentsCtrl from '@salesforce/apex/LWC_SearchStudentCtrl.deleteSelectedStudentsCtrl';
 import deleteStudentRecord from '@salesforce/apex/LWC_SearchStudentCtrl.deleteStudentRecord';
 
-const ITEMS_PER_PAGE = 4;
+const ITEMS_PER_PAGE = 10;
 
 export default class LWC_SearchStudent extends LightningElement {
-    classes;
+    //track variable
+    @track classes;
     @track students;
     @track displayedStudents;
+    @track pageNumbers = [];
+    @track selectedStudentIds = [];
     error;
     //search condition
-    @track selectedClass = null;
-    @track selectedGender  = null;
-    @track searchCode = 'ST-';
-    @track searchName = '';
-    @track birthdate = '';
-    @track dayOfBirth = null;
-    @track monthOfBirth = null;
-    @track yearOfBirth = null;
+    selectedClass = null;
+    selectedGender  = null;
+    searchCode = 'ST-';
+    searchName = '';
+    birthdate = '';
+    dayOfBirth = null;
+    monthOfBirth = null;
+    yearOfBirth = null;
     // Define select options for day and month
-    @track fieldOrderBy = 'Student_Code__c';
-    @track orderType = 'ASC';
-    
+    fieldOrderBy = 'Student_Code__c';
+    orderType = 'ASC';
     //pagination
-    @track currentPage = 1;
-    @track totalPages = 1;
-    @track pageNumbers;
+    currentPage = 1;
+    totalPages = 1;
     // Add this property to your component
-    pageNumbers = [];
     // Variables for modal
-    @track showModal = false;
-    @track isUpdateModalOpen=false;
-    @track isCreateModalOpen=false;
-    @track isDetailModalOpen=false;
-    @track isDelSelStuModalOpen=false;
-    @track selectedStudent;
+    showModal = false;
+    isUpdateModalOpen=false;
+    isCreateModalOpen=false;
+    isDetailModalOpen=false;
+    isDelSelStuModalOpen=false;
+    selectedStudent;
     // Variables for selecting students
-    @track selectedStudentIds = [];
-    @track isSelectAllChecked = false;
-
+    isSelectAllChecked = false;
     get fieldOrderByOptions() {
         return [
             { label: 'Student Code', value: 'Student_Code__c' },
@@ -82,7 +80,11 @@ export default class LWC_SearchStudent extends LightningElement {
     ];
     connectedCallback() {
         this.loadStudents(true);
-
+        this.template.addEventListener('studentcreated', this.handleStudentCreated.bind(this));
+    }
+    handleStudentCreated() {
+        console.log("student list load by event ");
+        this.loadStudents(true);
     }
     @wire(getClassOptions)
     wiredClasses({ error, data }) {
@@ -190,7 +192,6 @@ export default class LWC_SearchStudent extends LightningElement {
         this.yearOfBirth = null;
         this.currentPage = 1;
         this.selectedGender = 2;
-        this.updateDisplayedStudents();
     }
     updateDisplayedStudents() {
         
@@ -226,6 +227,7 @@ export default class LWC_SearchStudent extends LightningElement {
             
         }
     }
+
     get isPreviousDisabled() {
         return this.currentPage === 1;
     }
@@ -241,16 +243,33 @@ export default class LWC_SearchStudent extends LightningElement {
             this.currentPage--;
             this.updateDisplayedStudents();
         }
+        this.uncheck();
+
     }
     nextPage() {
         if (this.currentPage < this.totalPages) {
             this.currentPage++;
             this.updateDisplayedStudents();
         }
+        this.uncheck();
+    }
+    lastPage() {
+        this.currentPage = this.totalPages;
+        this.updateDisplayedStudents();
+        this.uncheck();
+
+    }
+    firstPage() {
+        this.currentPage = 1;
+        this.updateDisplayedStudents();
+        this.uncheck();
+
     }
     goToPage(event) {
         this.currentPage = event.target.value;
         this.updateDisplayedStudents();
+        this.uncheck();
+
     }
     openModalDelete(event) {
         const studentId = event.currentTarget.dataset.studentId;
@@ -275,6 +294,7 @@ export default class LWC_SearchStudent extends LightningElement {
     closeModalCreate() {
         this.isCreateModalOpen = false;
         this.selectedStudent = null;
+        this.template.addEventListener('studentcreated', this.handleStudentCreated.bind(this));
         this.loadStudents();
 
     }
@@ -292,8 +312,8 @@ export default class LWC_SearchStudent extends LightningElement {
     }
     closeModalDelSelStu() {
         this.isDelSelStuModalOpen = false;
+        this.loadStudents();
     }        
-    // Method to close modal
     closeModalDelete() {
         this.showModal = false;
         this.selectedStudent = null;
@@ -313,11 +333,12 @@ export default class LWC_SearchStudent extends LightningElement {
     }
     handleSelect(event) {
         const studentCode = event.target.value;
+        const newcheck=event.target.checked;
         try {
             for(let i = 0; i<this.displayedStudents.length;i++ ){
                 if(this.displayedStudents[i].Student_Code__c == studentCode){
-                    this.displayedStudents[i].selected__c =event.target.checked;
-                    if(event.target.checked == true){
+                    this.displayedStudents[i].selected__c = newcheck;
+                    if(newcheck){
                         this.selectedStudentIds.push(this.displayedStudents[i].Student_Code__c);
                     }
                 }
@@ -327,23 +348,31 @@ export default class LWC_SearchStudent extends LightningElement {
         }
         this.updateSelectAll();
     }
-    updateSelectAll(){
-        this.selectedStudentIds=[];
-        try {
-            for(let i = 0; i<this.displayedStudents.length;i++ ){
-                if( this.displayedStudents[i].selected__c== true){
+    uncheck() {
+        const newcheck=false;
+        for(let i = 0; i<this.displayedStudents.length;i++ ){
+            if(this.displayedStudents[i].Student_Code__c == studentCode){
+                this.displayedStudents[i].selected__c = newcheck;
+                if(newcheck){
                     this.selectedStudentIds.push(this.displayedStudents[i].Student_Code__c);
                 }
             }
-            if(this.selectedStudentIds.length == ITEMS_PER_PAGE){
-                this.isSelectAllChecked=true;
-            }else{
-                this.isSelectAllChecked=false;
-            }    
-        } catch (error) {
-            console.log("error message when updateSelectAll", error.message);
         }
-        
+        this.updateSelectAll();
+    }
+    updateSelectAll(){
+        this.selectedStudentIds=[];
+        for(let i = 0; i<this.displayedStudents.length;i++ ){
+            if( this.displayedStudents[i].selected__c== true){
+                this.selectedStudentIds.push(this.displayedStudents[i].Student_Code__c);
+            }
+        }
+        if(this.selectedStudentIds.length == ITEMS_PER_PAGE){
+            this.isSelectAllChecked=true;
+        }else{
+            this.isSelectAllChecked=false;
+        }    
+    
     }
     handleDeleteSelectedStudent(){
         this.deleteSelectedStudents();

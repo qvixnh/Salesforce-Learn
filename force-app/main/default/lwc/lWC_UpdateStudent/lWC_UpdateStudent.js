@@ -6,18 +6,19 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 
 export default class LWC_UpdateStudent extends LightningElement {
-    @track firstName = '';
-    @track lastName = '';
-    @track selectedClass = '';
-    @track address = '';
-    @track birthdate = '';
-    @track selectedGender = false;
-    @track firstNameError = '';
-    @track lastNameError = '';
-    @track classError = '';
-    @track addressError = '';
-    @track birthdateError = '';
-    @track genderError = '';
+    @track classes;
+    firstName = '';
+    lastName = '';
+    selectedClass = '';
+    address = '';
+    birthdate = '';
+    selectedGender = false;
+    firstNameError = '';
+    lastNameError = '';
+    classError = '';
+    addressError = '';
+    birthdateError = '';
+    genderError = '';
     
     get genderOptions(){
         return [
@@ -32,9 +33,6 @@ export default class LWC_UpdateStudent extends LightningElement {
         return true;
     }
     @api student;
-    classes;
-    selectedClass;
-    selectedGender;
     @wire(getClassOptions)
     wiredClasses({ error, data }) {
         if (data) {

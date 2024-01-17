@@ -5,26 +5,23 @@ import createStudentRec from '@salesforce/apex/LWC_CreateStudentCtrl.createStude
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class LWC_CreateStudent extends LightningElement {
-    @track firstName = '';
-    @track lastName = '';
-    @track selectedClass = '';
-    @track address = '';
-    @track birthdate = '';
-    @track selectedGender = false;
-    @track firstNameError = '';
-    @track lastNameError = '';
-    @track classError = '';
-    @track addressError = '';
-    @track birthdateError = '';
-    @track genderError = '';
-    @track genderOptions=[
+    @track classes;
+    firstName = '';
+    lastName = '';
+    selectedClass = '';
+    address = '';
+    birthdate = '';
+    selectedGender = false;
+    firstNameError = '';
+    lastNameError = '';
+    classError = '';
+    addressError = '';
+    birthdateError = '';
+    genderError = '';
+    genderOptions=[
         {label:'Male', value:true},
         {label:'Female', value:false}        
     ];
-    classes;
-    selectedClass;
-    selectedGender;
-    
     @wire(getClassOptions)
     wiredClasses({ error, data }) {
         if (data) {
@@ -63,6 +60,11 @@ export default class LWC_CreateStudent extends LightningElement {
             
         }).then(newSCode => {
             this.showSuccessToast('Student created successfully', newSCode);
+            console.log("displatch event from create component ");
+            const successEvent = new CustomEvent('studentcreated', {
+                detail: { studentCode: newSCode }
+            });
+            this.dispatchEvent(successEvent);
         })
         .catch(error => {
             this.showSuccessToast('Error creating student record:', error);

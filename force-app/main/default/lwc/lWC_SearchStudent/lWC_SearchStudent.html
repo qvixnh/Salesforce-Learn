@@ -71,11 +71,11 @@
                         onchange={handleTypeChange}
                     ></lightning-combobox>
                 </div>
-                <div class="slds-col slds-size_2-of-4 slds-m-top_large">
-                    <lightning-button label="Search Student" class="slds-m-around_small" onclick={handleSearch}></lightning-button>
-                    <lightning-button label="Clear Search Filters" class="slds-m-around_small" onclick={handleClearFilters}></lightning-button>
-                    <lightning-button label="Create Student" class="slds-m-around_small" onclick={openModalCreate}></lightning-button>
-                    <lightning-button label="Delete Selected" class="slds-m-around_small" onclick={openModalDelSelStu} disabled={isDeleteSelectedStudentsDisabled}></lightning-button>
+                <div class="slds-col slds-size_2-of-4 slds-m-top_large "> 
+                    <button style="width:20%"  class=" slds-button  slds-button_brand slds-m-right_large" onclick={handleSearch}>Search Student</button>
+                    <button  style="width:20%" class="slds-button slds-button_outline-brand slds-m-right_large" onclick={handleClearFilters}>Clear Search Filters</button>
+                    <button  style="width:20%" class="slds-button  slds-button_success slds-m-right_large" onclick={openModalCreate}>Create Student</button>
+                    <button  style="width:20%" class="slds-button  slds-button slds-button_destructive" onclick={openModalDelSelStu} disabled={isDeleteSelectedStudentsDisabled}>Delete Selected</button>
                 </div>
             </div>
             <div class="slds-m-around_medium">
@@ -109,23 +109,23 @@
                         <tbody>
                             <template for:each={displayedStudents} for:item="student">
                                 <tr key={student.Student_Code__c}>
-                                    <td style="width:40px">
+                                    <td style="width:2%;">
                                         <div class="slds-truncate" title="Select">
                                             <input type="checkbox" value={student.Student_Code__c} checked={student.selected__c} onchange={handleSelect} />
                                         </div>
                                     </td>
-                                    <td style="width:50px">{student.index}</td>
-                                    <td style="width:110px">{student.Student_Code__c}</td>
-                                    <td>{student.First_Name__c}</td>
-                                    <td>{student.Last_Name__c}</td>
-                                    <td>{student.Class__r.Class_Name__c}</td>
+                                    <td style="width:3%;">{student.index}</td>
+                                    <td style="width:5%;">{student.Student_Code__c}</td>
+                                    <td style="width:25%;">{student.First_Name__c}</td>
+                                    <td style="width:25%;">{student.Last_Name__c}</td>
+                                    <td style="width:25%;">{student.Class__r.Class_Name__c}</td>
                                     <template if:true={student.Gender__c}>
-                                        <td style="width:80px">Male</td>
+                                        <td style="width:5%;">Male</td>
                                     </template>
                                     <template if:false={student.Gender__c}>
-                                        <td style="width:80px">Female</td>
+                                        <td style="width:5%;">Female</td>
                                     </template>
-                                    <td style="width:80px">
+                                    <td style="width:5%;">
                                             <lightning-formatted-date-time
                                               value={student.Birthdate__c}
                                               year="numeric"
@@ -133,8 +133,8 @@
                                               day="numeric"
                                             ></lightning-formatted-date-time>
                                     </td>
-                                    <td>
-                                        <lightning-button-icon
+                                    <td >
+                                        <lightning-button-icon 
                                             icon-name="utility:description"
                                             alternative-text="Details"
                                             title="Details"
@@ -167,30 +167,23 @@
                             </template>
                         </tbody>
                     </table>
-                    <div class="slds-grid slds-wrap slds-m-top_medium">
-                        <div class="slds-size_1-of-12" style="width: 50px;">
-                            <lightning-button-icon
-                                icon-name="utility:chevronleft"
-                                alternative-text="Previous"
-                                onclick={previousPage}
-                                disabled={isPreviousDisabled}>
-                            </lightning-button-icon>
+                    <div class="slds-grid slds-wrap slds-m-top_medium slds-text-align_center  ">
+                        <div class="slds-size_1-of-12 slds-m-left_small">
+                            <lightning-button label="<<" onclick={firstPage} disabled={isPreviousDisabled}>  </lightning-button>
+                            <lightning-button label="<" onclick={previousPage} disabled={isPreviousDisabled}> </lightning-button >
                         </div>
-                        <div class="slds-size_2-of-12 " style="width: 140px;">
+                        
+                        <div class="slds-size_2-of-12 " style="width: 150px;">
                             <template for:each={pageNumbers} for:item="item">
                                 <lightning-button key={item.pageNumber} label={item.pageNumber} value={item.pageNumber} disabled={item.status} onclick={goToPage}></lightning-button>
                             </template>
                         </div>
-                        <div class="slds-size_1-of-12" style="width: 50px;">
-                            <lightning-button-icon
-                                icon-name="utility:chevronright"
-                                alternative-text="Next"
-                                onclick={nextPage}
-                                disabled={isNextDisabled}>
-                            </lightning-button-icon>
+                        <div class="slds-size_1-of-12">
+                            <lightning-button label=">" onclick={nextPage} disabled={isNextDisabled}> </lightning-button>
+                            <lightning-button label=">>" onclick={lastPage} disabled={isNextDisabled}>  </lightning-button>
                         </div>
-                        <div class="slds-size_3-of-12 slds-text-body_regular slds-m-top_medium">
-                            <p>Selected: {selectedStudentIds.length} of {displayedStudents.length} total Records</p>
+                        <div class="slds-size_4-of-12 slds-text-body_regular slds-m-top_small">
+                            <p>Selected: {selectedStudentIds.length} of {students.length} total Records</p>
                         </div>
                     </div>
                 </template>
@@ -227,6 +220,7 @@
                                 Are you sure to delete {selectedStudentIds.length} students
                             </div>
                             <div class="slds-m-around_medium">
+                                <h1>Seletect students List: </h1>
                                 <lightning-card>
                                     <ul class="slds-list_ordered">
                                         <template for:each={selectedStudentIds} for:item="id">
@@ -273,7 +267,7 @@
                         <div class="slds-modal__content slds-p-around_medium">
                             <c-l-w-c_-create-student ></c-l-w-c_-create-student>
                             <div class="slds-align_absolute-center">
-                                <button class="slds-button slds-button_neutral " title="Close" onclick={closeModalCreate} >Close</button>
+                                <button class="slds-button slds-button_neutral " title="Close" onclick={closeModalCreate} onstudentcreated={handleStudentCreated}>Close</button>
                             </div>
                         </div>
                     </div>
