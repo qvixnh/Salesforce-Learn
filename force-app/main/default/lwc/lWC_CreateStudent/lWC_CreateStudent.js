@@ -161,4 +161,14 @@ export default class LWC_CreateStudent extends LightningElement {
         });
         this.dispatchEvent(event);
     }
+    
+    showErrorToast(message) {
+        const event = new ShowToastEvent({
+            title: 'Error',
+            message: message,
+            variant: 'error',
+        });
+        this.dispatchEvent(event);
+    }
+    
 }

@@ -29,9 +29,9 @@ public class CMP_CreateStudentCtrl {
             student.Birthdate__c= sBirthdate;
             student.Gender__c= sGender;
             student.Address__c = sAddress;
+            System.debug(student);
             insert student;
             return student.id;
-            
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

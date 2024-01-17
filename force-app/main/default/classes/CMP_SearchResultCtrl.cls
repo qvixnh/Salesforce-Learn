@@ -83,7 +83,6 @@ public with sharing class CMP_SearchResultCtrl {
         }
         queryString = searchByDayMonthYear(queryString,day,month,year);
         queryString += ' ORDER BY Student_Code__c ';
-        System.debug(queryString);
         return Database.query(queryString);
     }
     private static String  searchByDayMonthYear(String queryString,  Integer day, Integer month, Integer year){
