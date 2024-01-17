@@ -21,7 +21,11 @@ export default class LWC_SearchStudent extends LightningElement {
     @track birthdate = '';
     @track dayOfBirth = null;
     @track monthOfBirth = null;
-    @track yearOfBirth = 0;
+    @track yearOfBirth = null;
+    // Define select options for day and month
+    @track fieldOrderBy = 'Student_Code__c';
+    @track orderType = 'ASC';
+    
     //pagination
     @track currentPage = 1;
     @track totalPages = 1;
@@ -38,7 +42,23 @@ export default class LWC_SearchStudent extends LightningElement {
     // Variables for selecting students
     @track selectedStudentIds = [];
     @track isSelectAllChecked = false;
-    // Define select options for day and month
+
+    get fieldOrderByOptions() {
+        return [
+            { label: 'Student Code', value: 'Student_Code__c' },
+            { label: 'Student Name', value: 'First_Name__c' },
+            { label: 'Class', value: 'Class__r.Class_Name__c' },
+            { label: 'Student Birthdate', value: 'Birthdate__c' },
+            { label: 'Student Gender', value: 'Gender__c' },
+        ];
+    }
+
+    get orderTypeOptions() {
+        return [
+            { label: 'Ascendant', value: 'ASC' },
+            { label: 'Descendant', value: 'DESC' },
+        ];
+    }
     dayOptions = Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}`, value: `${i + 1}` }));
     monthOptions = [
         { label: 'January', value: '1' },
@@ -88,8 +108,8 @@ export default class LWC_SearchStudent extends LightningElement {
             month: this.monthOfBirth,
             year: this.yearOfBirth,
             birthdate: this.birthdate,
-            orderField: 'Student_Code__c',
-            orderType: 'ASC'
+            orderField: this.fieldOrderBy,
+            orderType: this.orderType
         };
         var searchJson = JSON.stringify(searchCondition);
         getStudentsByCondition({
@@ -113,6 +133,12 @@ export default class LWC_SearchStudent extends LightningElement {
     //search condition
     handleClassChange(event) {
         this.selectedClass = event.detail.value;
+    }
+    handleFieldChange(event) {
+        this.fieldOrderBy = event.detail.value;
+    }
+    handleTypeChange(event) {
+        this.orderType = event.detail.value;
     }
     handleGenderChange(event) {
         this.selectedGender = event.detail.value;
@@ -142,10 +168,14 @@ export default class LWC_SearchStudent extends LightningElement {
     }
     handleYearOfBirthChange(event) {
         this.yearOfBirth = event.detail.value;
+        if(this.yearOfBirth==''){
+            this.yearOfBirth = null;
+        }
     }
 
 
     handleSearch() {
+        console.log("Student year: ", this.yearOfBirth);
         this.currentPage = 1;
         this.loadStudents(true);
         this.updateDisplayedStudents();
@@ -157,7 +187,7 @@ export default class LWC_SearchStudent extends LightningElement {
         this.birthdate='';
         this.dayOfBirth = null;
         this.monthOfBirth = null;
-        this.yearOfBirth = 0;
+        this.yearOfBirth = null;
         this.currentPage = 1;
         this.selectedGender = 2;
         this.updateDisplayedStudents();
