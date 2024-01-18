@@ -183,7 +183,7 @@
                             <lightning-button label=">>" onclick={lastPage} disabled={isNextDisabled}>  </lightning-button>
                         </div>
                         <div class="slds-size_4-of-12 slds-text-body_regular slds-m-top_small">
-                            <p>Selected: {selectedStudentIds.length} of {students.length} total Records</p>
+                            <p>Selected: {selectionNumber} of {students.length} total Records</p>
                         </div>
                     </div>
                 </template>
@@ -217,9 +217,9 @@
                         </header>
                         <div class="slds-modal__content slds-p-around_medium ">
                             <div class="slds-m-around_medium slds-text-color_destructive slds-text-heading_large">
-                                Are you sure to delete {selectedStudentIds.length} students
+                                Are you sure to delete {selectionNumber} students
                             </div>
-                            <div class="slds-m-around_medium">
+                            <!-- <div class="slds-m-around_medium">
                                 <h1>Seletect students List: </h1>
                                 <lightning-card>
                                     <ul class="slds-list_ordered">
@@ -228,7 +228,7 @@
                                         </template>
                                     </ul>
                                 </lightning-card>
-                            </div>
+                            </div> -->
                             <div class="slds-align_absolute-center">
                                 <button  class="slds-button slds-button_destructive" title="Delete" onclick={handleDeleteSelectedStudent}>Delete</button>
                                 <button  class="slds-button slds-button_neutral " title="Close" onclick={closeModalDelSelStu} >Close</button >

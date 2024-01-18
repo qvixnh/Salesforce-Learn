@@ -39,6 +39,7 @@ export default class LWC_SearchStudent extends LightningElement {
     isDetailModalOpen=false;
     isDelSelStuModalOpen=false;
     selectedStudent;
+    selectionNumber = 0;
     // Variables for selecting students
     isSelectAllChecked = false;
     get fieldOrderByOptions() {
@@ -335,7 +336,16 @@ export default class LWC_SearchStudent extends LightningElement {
                 stu.selected__c=check;
             }
         }
-        
+        this.updateSelectNumber();
+    }
+    updateSelectNumber(){
+        var count =0;
+        for(var stu of this.students){
+            if(stu.selected__c == true){
+                count++;
+            }
+        }
+        this.selectionNumber=count;
     }
     handleSelect(event) {
         const studentCode = event.target.value;
@@ -345,9 +355,6 @@ export default class LWC_SearchStudent extends LightningElement {
             for(let i = 0; i<this.displayedStudents.length;i++ ){
                 if(this.displayedStudents[i].Student_Code__c == studentCode){
                     this.displayedStudents[i].selected__c = newcheck;
-                    // if(newcheck){
-                    //     this.selectedStudentIds.push(this.displayedStudents[i].Student_Code__c);
-                    // }
                 }
             }
         } catch (error) {
@@ -370,16 +377,15 @@ export default class LWC_SearchStudent extends LightningElement {
         }else{
             this.isSelectAllChecked=false;
         }    
-    
     }
     handleDeleteSelectedStudent(){
         this.deleteSelectedStudents();
     }
     deleteSelectedStudents() {
         this.selectedStudentIds=[];
-        for(let i = 0; i<this.displayedStudents.length;i++ ){
-            if( this.displayedStudents[i].selected__c== true){
-                this.selectedStudentIds.push(this.displayedStudents[i].Id);
+        for(let i = 0; i<this.students.length;i++ ){
+            if( this.students[i].selected__c== true){
+                this.selectedStudentIds.push(this.students[i].Id);
             }
         }
         deleteSelectedStudentsCtrl({ studentIds: this.selectedStudentIds })
@@ -387,6 +393,7 @@ export default class LWC_SearchStudent extends LightningElement {
                 this.selectedStudentIds = [];
                 this.isSelectAllChecked = false;
                 this.showSuccessToast('Multiples Student deleted successfully');
+                this.updateSelectNumber();
                 this.closeModalDelSelStu();
             })
             .catch(error => {
