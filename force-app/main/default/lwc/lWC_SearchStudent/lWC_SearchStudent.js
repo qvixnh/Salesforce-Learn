@@ -233,7 +233,7 @@ export default class LWC_SearchStudent extends LightningElement {
         return this.currentPage === this.totalPages;
     }
     get isDeleteSelectedStudentsDisabled() {
-        return this.selectedStudentIds.length==0;
+        return this.selectionNumber==0;
     }
 
     previousPage() {
@@ -380,6 +380,7 @@ export default class LWC_SearchStudent extends LightningElement {
     }
     handleDeleteSelectedStudent(){
         this.deleteSelectedStudents();
+        this.selectionNumber=0;
     }
     deleteSelectedStudents() {
         this.selectedStudentIds=[];
@@ -393,7 +394,6 @@ export default class LWC_SearchStudent extends LightningElement {
                 this.selectedStudentIds = [];
                 this.isSelectAllChecked = false;
                 this.showSuccessToast('Multiples Student deleted successfully');
-                this.updateSelectNumber();
                 this.closeModalDelSelStu();
             })
             .catch(error => {
