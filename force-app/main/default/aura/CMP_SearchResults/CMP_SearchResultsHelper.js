@@ -39,8 +39,8 @@
     /*
     when the page change or checkbox elements change, udpate the selected records number label all 
     */
-    updateSelectedRecordsNumber:function(component,allSelect=false){
-        var students = component.get("v.students");
+    updateSelectedRecordsNumber:function(component){
+        var students = component.get("v.totalStudents");
         var selectedIds = [] ;
         students.forEach(function(student){
             if(student.selected__c ==true){
@@ -48,17 +48,15 @@
             }
         });
         component.set("v.selectedRecordsNumber",selectedIds.length);
-        if(allSelect){
-            component.set("v.selectedRecordsNumber",component.get("v.pageSize"));
-        }
+        
     },
     /*when navigate to another page, uncheck all the student records*/
     uncheck:function(component){
-        var students = component.get("v.students");
-        students.forEach(function(student){
-            student.selected__c =false;
-        });
-        component.set("v.selectedRecordsNumber",0);
+        // var students = component.get("v.students");
+        // students.forEach(function(student){
+        //     student.selected__c =false;
+        // });
+        // component.set("v.selectedRecordsNumber",0);
 
     },
     /*when navigate to another page,update the display student by current page number and update the page numbers list*/
@@ -77,6 +75,8 @@
             pageNumbers.push(i);
         }
         component.set("v.pageNumbers", pageNumbers);
+        this.updateSelectAll(component);
+        this.updateSelectedRecordsNumber(component);
     
     },
     /*when click on page number, navigate to that page*/
@@ -149,7 +149,7 @@
         handle delete selected student records
     */
     helperDeleteSelectedStudents:function(component){
-        var students = component.get("v.students");
+        var students = component.get("v.totalStudents");
         var selectedIds = [] ;
         students.forEach(function(student){
             if(student.selected__c ==true){
@@ -184,5 +184,16 @@
             }
         });
         $A.enqueueAction(action);
+    },
+    checkStu: function(component, id, check){
+        var students = component.get("v.totalStudents");
+        for(var stu of students ){
+            if(stu.Id == id){
+                stu.selected__c = check;
+            }
+
+        }
+        component.set("v.totalStudents",students);
+        console.log(JSON.stringify(students));
     }
 })

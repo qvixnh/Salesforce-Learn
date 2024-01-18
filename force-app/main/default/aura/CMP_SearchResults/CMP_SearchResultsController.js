@@ -20,8 +20,9 @@
         var checked = event.getSource().get("v.checked");
         for(let i = 0; i<students.length;i++ ){
             students[i].selected__c = checked;
+            helper.checkStu(component,students[i].selected__c,checked);
         }
-        helper.updateSelectedRecordsNumber(component,checked);
+        helper.updateSelectedRecordsNumber(component);
         component.set("v.students",students); 
     },
     /*
@@ -127,14 +128,17 @@
         var checkbox = clickedRow.querySelector('[type="checkbox"]');
         var newchecked=!checkbox.checked;
         var studentId = checkbox.getAttribute("value");
+        helper.checkStu(component,studentId,newchecked);
         var students = component.get("v.students");
         for(let i = 0; i<students.length;i++ ){
             if(students[i].Id == studentId){
                 students[i].selected__c = newchecked;
+                
             }
         }
         helper.updateSelectAll(component,false);
         helper.updateSelectedRecordsNumber(component);
         component.set("v.students",students);
     }
+    
 })
