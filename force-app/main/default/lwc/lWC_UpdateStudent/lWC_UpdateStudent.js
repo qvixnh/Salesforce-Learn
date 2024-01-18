@@ -1,6 +1,6 @@
 // LWC_UpdateStudent.js
 import { LightningElement, api ,wire,track} from 'lwc';
-import getClassOptions from '@salesforce/apex/LWC_SearchStudentCtrl.getClassOptions';
+import getClassOptions  from '@salesforce/apex/LWC_CreateStudentCtrl.getClassOptionsToCreate';
 import updateStudentRec from '@salesforce/apex/LWC_UpdateStudentCtrl.updateStudentRec';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
@@ -73,9 +73,13 @@ export default class LWC_UpdateStudent extends LightningElement {
                 
             }).then(newSCode => {
                 this.showSuccessToast('Student updated successfully', newSCode);
+                const successEvent = new CustomEvent('studentupdated', {
+                    detail: { studentCode: newSCode }
+                });
+                this.dispatchEvent(successEvent);
             })
             .catch(error => {
-                this.showSuccessToast('Error updating student record:', error);
+                this.showErrorToast('Error updating student record:', error);
             });    
         } catch (error) {
             console.log("error when updating student: ", error.message);
@@ -116,7 +120,12 @@ export default class LWC_UpdateStudent extends LightningElement {
             this.addressError = 'Please enter Address';
         }
         else if (this.address) {
-            this.addressError = '';
+            if(this.address.length>=255){
+            this.addressError = 'Address is less than 255 characters';
+            }
+            else{
+                this.addressError = '';
+            }
         }
         if (this.selectedGender==null) {
             this.genderError = 'Please select Gender';
@@ -166,6 +175,14 @@ export default class LWC_UpdateStudent extends LightningElement {
             title: 'Success',
             message: message,
             variant: 'success',
+        });
+        this.dispatchEvent(event);
+    }
+    showErrorToast(message) {
+        const event = new ShowToastEvent({
+            title: 'Error',
+            message: message,
+            variant: 'error',
         });
         this.dispatchEvent(event);
     }

@@ -1,6 +1,7 @@
 // LWC_UpdateStudent.js
 import { LightningElement, api ,wire,track} from 'lwc';
 import getClassOptions from '@salesforce/apex/LWC_SearchStudentCtrl.getClassOptions';
+import getClassOptionsToCreate from '@salesforce/apex/LWC_CreateStudentCtrl.getClassOptionsToCreate';
 import createStudentRec from '@salesforce/apex/LWC_CreateStudentCtrl.createStudentRec';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
@@ -22,7 +23,7 @@ export default class LWC_CreateStudent extends LightningElement {
         {label:'Male', value:true},
         {label:'Female', value:false}        
     ];
-    @wire(getClassOptions)
+    @wire(getClassOptionsToCreate)
     wiredClasses({ error, data }) {
         if (data) {
             this.classes = data.map(option => ({
@@ -47,7 +48,6 @@ export default class LWC_CreateStudent extends LightningElement {
             return;
         }
         this.createStudent();
-        this.resetForm();
     }
     createStudent(){
         createStudentRec({
@@ -59,6 +59,7 @@ export default class LWC_CreateStudent extends LightningElement {
             sBirthdate:this.birthdate
             
         }).then(newSCode => {
+            this.resetForm();
             this.showSuccessToast('Student created successfully', newSCode);
             console.log("displatch event from create component ");
             const successEvent = new CustomEvent('studentcreated', {
@@ -102,7 +103,12 @@ export default class LWC_CreateStudent extends LightningElement {
             this.addressError = 'Please enter Address';
         }
         else if (this.address) {
-            this.addressError = '';
+            if(this.address.length>=255){
+                this.addressError = 'Address is less than 255 characters';
+                }
+                else{
+                    this.addressError = '';
+                }
         }
         if (this.selectedGender==null) {
             this.genderError = 'Please select Gender';

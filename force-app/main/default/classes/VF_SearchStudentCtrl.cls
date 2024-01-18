@@ -26,7 +26,6 @@ public with sharing class VF_SearchStudentCtrl {
     public Student__c student {get;set;}
     public Student__c selectedStudent {get;set;}
     public String selectedId {get;set;}
-    public String queryLog {get;set;}
     //PAGINATION HANDLE
         public Map<Integer,List<Student__c>> recordsByPages { get; set; }
         public Integer pageSize { get; set; }
@@ -166,7 +165,6 @@ public with sharing class VF_SearchStudentCtrl {
         }
         queryString = searchByDayMonthYear(queryString);        
         queryString += ' ORDER BY Student_Code__c';
-        this.queryLog = queryString;
         searchResults = Database.query(queryString);
 
         //PAGINATION START
@@ -175,7 +173,6 @@ public with sharing class VF_SearchStudentCtrl {
         // Calculate total pages
         totalPages = (totalRecords + pageSize - 1) / pageSize;
         setRecordsByPagesNumber();
-        System.debug(recordsByPages);
         // Reset startIndex to the beginning
         startIndex = 0;
         // Reset currentPage to 1

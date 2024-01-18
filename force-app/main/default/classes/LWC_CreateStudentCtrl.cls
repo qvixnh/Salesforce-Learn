@@ -36,4 +36,32 @@ public with sharing class LWC_CreateStudentCtrl {
             throw new AuraHandledException(e.getMessage());
         }
     }
+    //1101
+    /**
+     * getClassOptions
+     * @param    : 
+     * @return   : List<Class__c> 
+     * @created  : 2023/01/10 + Nguyen Vinh
+     * @modified : 
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<Class__c> getClassOptionsToCreate() {
+        List<Class__c> classList = new List<Class__c>();
+        try {
+            classList = [SELECT 
+                            Id
+                            , Class_Code__c
+                            , Class_Name__c
+                            , Number_Of_Student__c
+                            , MaxNumber__c
+                        FROM Class__c 
+                        WHERE Number_Of_Student__c < 100
+                        ORDER BY Class_Code__c
+                        ];
+        } catch (Exception e) {
+            throw new AuraHandledException('An error occurred when getting classes: ' + e.getMessage());
+
+    }
+        return classList;
+    }
 }

@@ -201,10 +201,6 @@ export default class LWC_SearchStudent extends LightningElement {
                 const startIndex = (this.currentPage - 1) * ITEMS_PER_PAGE;
                 const endIndex = startIndex + ITEMS_PER_PAGE;
                 this.displayedStudents = this.students.slice(startIndex, endIndex);
-                this.displayedStudents = this.displayedStudents.map(student => ({
-                    ...student,
-                    selected__c:false
-                }));
                 this.displayedStudents = this.displayedStudents.map((student, index) => ({ ...student, index: index + 1 }));
                 this.isSelectAllChecked = false;
                 var startPage = Math.max(1, this.currentPage - 1);
@@ -221,6 +217,7 @@ export default class LWC_SearchStudent extends LightningElement {
                         this.pageNumbers.push({ pageNumber: i, status: false });
                     }
                 }
+                this.updateSelectAll();
             } catch (error) {
                 console.log("error when updating student", error.message);
             }
@@ -243,7 +240,6 @@ export default class LWC_SearchStudent extends LightningElement {
             this.currentPage--;
             this.updateDisplayedStudents();
         }
-        this.uncheck();
 
     }
     nextPage() {
@@ -251,24 +247,20 @@ export default class LWC_SearchStudent extends LightningElement {
             this.currentPage++;
             this.updateDisplayedStudents();
         }
-        this.uncheck();
     }
     lastPage() {
         this.currentPage = this.totalPages;
         this.updateDisplayedStudents();
-        this.uncheck();
 
     }
     firstPage() {
         this.currentPage = 1;
         this.updateDisplayedStudents();
-        this.uncheck();
 
     }
     goToPage(event) {
         this.currentPage = event.target.value;
         this.updateDisplayedStudents();
-        this.uncheck();
 
     }
     openModalDelete(event) {
@@ -322,6 +314,9 @@ export default class LWC_SearchStudent extends LightningElement {
         this.isSelectAllChecked = event.target.checked;
         if (this.isSelectAllChecked) {
             this.selectedStudentIds = this.displayedStudents.map(student => student.Id);
+            for(var stu of this.displayedStudents){
+                this.checkStuden(stu.Student_Code__c,true);
+            }
         } else {
             this.selectedStudentIds = [];
         }
@@ -329,42 +324,45 @@ export default class LWC_SearchStudent extends LightningElement {
             ...student,
             selected__c: this.isSelectAllChecked
         }));
+        for(var stu of this.displayedStudents){
+            this.checkStuden(stu.Student_Code__c,this.isSelectAllChecked);
+        }
+        
+    }
+    checkStuden(code,check=true){
+        for(var stu of this.students){
+            if(stu.Student_Code__c == code){
+                stu.selected__c=check;
+            }
+        }
         
     }
     handleSelect(event) {
         const studentCode = event.target.value;
         const newcheck=event.target.checked;
+        this.checkStuden(studentCode,newcheck);
         try {
             for(let i = 0; i<this.displayedStudents.length;i++ ){
                 if(this.displayedStudents[i].Student_Code__c == studentCode){
                     this.displayedStudents[i].selected__c = newcheck;
-                    if(newcheck){
-                        this.selectedStudentIds.push(this.displayedStudents[i].Student_Code__c);
-                    }
+                    // if(newcheck){
+                    //     this.selectedStudentIds.push(this.displayedStudents[i].Student_Code__c);
+                    // }
                 }
             }
         } catch (error) {
             console.log("error message", error.message);
         }
+        console.log(JSON.stringify(this.students));
         this.updateSelectAll();
     }
-    uncheck() {
-        const newcheck=false;
-        for(let i = 0; i<this.displayedStudents.length;i++ ){
-            if(this.displayedStudents[i].Student_Code__c == studentCode){
-                this.displayedStudents[i].selected__c = newcheck;
-                if(newcheck){
-                    this.selectedStudentIds.push(this.displayedStudents[i].Student_Code__c);
-                }
-            }
-        }
-        this.updateSelectAll();
-    }
+    
     updateSelectAll(){
         this.selectedStudentIds=[];
         for(let i = 0; i<this.displayedStudents.length;i++ ){
             if( this.displayedStudents[i].selected__c== true){
                 this.selectedStudentIds.push(this.displayedStudents[i].Student_Code__c);
+
             }
         }
         if(this.selectedStudentIds.length == ITEMS_PER_PAGE){
