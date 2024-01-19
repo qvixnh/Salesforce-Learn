@@ -440,4 +440,15 @@ export default class LWC_SearchStudent extends LightningElement {
         });
         this.dispatchEvent(event);
     }
+    clearSelection(){
+        for(var stu of this.displayedStudents){
+            stu.selected__c=false;
+        }
+        for(var stu of this.students){
+            stu.selected__c=false;
+        }
+        this.selectedStudentIds=[];
+        this.selectionNumber=0;
+        this.isSelectAllChecked=false;
+    }
 }

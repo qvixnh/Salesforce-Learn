@@ -490,6 +490,25 @@ public with sharing class VF_SearchStudentCtrl {
         }
         
         this.selectedRecordsNumber=count;
+        updateSelectAll();
+    }
+    /**     
+     * updateSelectAll
+     * @param    : 
+     * @return   : 
+     * @created  : 2023/1/19 + Nguyen Vinh
+     * @modified : 
+     */
+    public void updateSelectAll(){
+        Integer count = 0;
+        for (Integer i=startIndex;i<startIndex+pageSize;i++) {
+            if(this.selectedIds.get(this.searchResults[i].Id)){
+                count++;
+            }
+        }
+        if(count==this.pageSize){
+            this.allSelected=true;
+        }
     }
 
 }

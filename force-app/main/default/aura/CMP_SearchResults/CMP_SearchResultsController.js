@@ -139,6 +139,21 @@
         helper.updateSelectAll(component,false);
         helper.updateSelectedRecordsNumber(component);
         component.set("v.students",students);
+    },
+    /*clear selected students*/
+    clearSelection: function(component,event, helper){
+        var students = component.get("v.students");
+        for(let i = 0; i<students.length;i++ ){
+                students[i].selected__c = false;
+        }
+        component.set("v.students",students);
+        students = component.get("v.totalStudents");
+        for(let i = 0; i<students.length;i++ ){
+                students[i].selected__c = false;
+        }
+        component.set("v.totalStudents",students);
+        component.set("v.selectedRecordsNumber",0);
+        component.set("v.allStudentChecked",false);
+        
     }
-    
 })
