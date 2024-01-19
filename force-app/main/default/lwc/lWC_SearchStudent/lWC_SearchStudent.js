@@ -15,6 +15,7 @@ export default class LWC_SearchStudent extends LightningElement {
     @track displayedStudents;
     @track pageNumbers = [];
     @track selectedStudentIds = [];
+    pageSize =10;
     error;
     //search condition
     selectedClass = null;
@@ -42,6 +43,19 @@ export default class LWC_SearchStudent extends LightningElement {
     selectionNumber = 0;
     // Variables for selecting students
     isSelectAllChecked = false;
+    
+    get pageSizeOptions() {
+        return [
+            { label: '5', value: 5 },
+            { label: '10', value: 10 },
+            { label: '20', value: 20 },
+        ];
+    }
+
+    handlePageSizeChange(event) {
+        this.pageSize = event.detail.value;
+        this.updateDisplayedStudents();
+    }
     get fieldOrderByOptions() {
         return [
             { label: 'Student Code', value: 'Student_Code__c' },

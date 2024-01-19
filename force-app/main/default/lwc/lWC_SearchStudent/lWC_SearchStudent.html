@@ -70,12 +70,23 @@
                         options={orderTypeOptions}
                         onchange={handleTypeChange}
                     ></lightning-combobox>
+                    <lightning-combobox
+                        style="width:70px;"
+                        name="progress"
+                        label="pageSize"
+                        value={pageSize}
+                        options={pageSizeOptions}
+                        onchange={handlePageSizeChange} >
+                    </lightning-combobox>
                 </div>
-                <div class="slds-col slds-size_2-of-4 slds-m-top_large "> 
-                    <button style="width:20%"  class=" slds-button  slds-button_brand slds-m-right_large" onclick={handleSearch}>Search Student</button>
-                    <button  style="width:20%" class="slds-button slds-button_outline-brand slds-m-right_large" onclick={handleClearFilters}>Clear Search Filters</button>
-                    <button  style="width:20%" class="slds-button  slds-button_success slds-m-right_large" onclick={openModalCreate}>Create Student</button>
-                    <button  style="width:20%" class="slds-button  slds-button slds-button_destructive" onclick={openModalDelSelStu} disabled={isDeleteSelectedStudentsDisabled}>Delete Selected</button>
+                
+                <div class="slds-col slds-size_2-of-4 slds-m-top_large ">
+                        
+                    <button   class=" slds-button  slds-button_brand slds-m-right_large" onclick={handleSearch}>Search Student</button>
+                    <button   class="slds-button slds-button_outline-brand slds-m-right_large" onclick={handleClearFilters}>Clear Search Filters</button>
+                    <button   class="slds-button  slds-button_success slds-m-right_large" onclick={openModalCreate}>Create Student</button>
+                    <button   class="slds-button  slds-button slds-button_destructive" onclick={openModalDelSelStu} disabled={isDeleteSelectedStudentsDisabled}>Delete Selected</button>
+                    
                 </div>
             </div>
             <div class="slds-m-around_medium">

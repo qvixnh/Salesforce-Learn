@@ -5,6 +5,13 @@
 		<name>ApexClass</name>
 	</types>
 	<types>
+		<members>VF_CreateStudent</members>
+		<members>VF_DetailStudent</members>
+		<members>VF_SearchStudent</members>
+		<members>VF_UpdateStudent</members>
+		<name>ApexPage</name>
+	</types>
+	<types>
 		<members>*</members>
 		<name>ApexTrigger</name>
 	</types>

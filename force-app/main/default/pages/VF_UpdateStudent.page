@@ -1,0 +1,77 @@
+<apex:page controller="VF_UpdateStudentCtrl">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }   
+
+        .input-container {
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            color: red;
+            font-style: italic;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .btn-container {
+            margin-top: 10px;
+        }
+    </style>
+    <apex:outputLink value="/apex/VF_SearchStudent">back to list</apex:outputLink>
+
+    <apex:form styleClass="form-container">
+        <apex:pageMessages />
+
+        <div class="input-container">
+            <label>First Name:</label>
+            <apex:inputText value="{!student.First_Name__c}" />
+        </div>
+
+        <div class="input-container">
+            <label>Last Name:</label>
+            <apex:inputText value="{!student.Last_Name__c}" />
+        </div>
+
+        <div class="input-container">
+            <label>Class:</label>
+            <apex:selectList value="{!student.Class__c}" size="1">
+                <apex:selectOptions value="{!classList}" />
+            </apex:selectList>
+        </div>
+
+        
+        <div class="input-container">
+            <label>Gender:</label>
+            <apex:selectRadio value="{!student.Gender__c}">
+                <apex:selectOption itemLabel="Male" itemValue="Male" />
+                <apex:selectOption itemLabel="Female" itemValue="Female" />
+            </apex:selectRadio>
+        </div>
+        <div class="input-container">
+            <label>Birthdate:</label>
+            <apex:inputField value="{!student.Birthdate__c}" />
+        </div>
+
+        <div class="input-container">
+            <label>Address:</label>
+            <apex:inputText value="{!student.Address__c}" />
+        </div>
+
+        <div class="btn-container">
+            <apex:commandButton value="Update" action="{!updateStudent}" />
+        </div>
+    </apex:form>
+</apex:page>

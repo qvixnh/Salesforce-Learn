@@ -1,0 +1,725 @@
+<apex:page docType="html-5.0" controller="VF_SearchStudentCtrl">
+    <style>
+        label{
+            font-weight: bold;
+        }
+        #myModalCreate {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        #myModalUpdate {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+
+        .modal-dialog {
+            margin: 50px auto;
+            max-width: 500px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .modal-content {
+            padding: 20px;
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .modal-title {
+            margin: 0;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .input-container {
+            margin-bottom: 15px;
+        }
+
+        .input-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-container input,
+        .input-container select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .input-container input[type="checkbox"],
+        .input-container input[type="radio"] {
+            width: auto;
+        }
+
+        .btn-close {
+            color: #fff;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .btn-close:focus {
+            outline: none;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .apex-messages {
+            margin-bottom: 15px;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .apex-toolbar {
+            margin-top: 15px;
+        }
+
+        .apex-btn {
+            margin-right: 10px;
+        }
+        .btn-close {
+            font-size: 1.5rem;
+            color: #000; /* Customize the color as needed */
+            background: none;
+            border: none;
+        }
+
+        .btn-close:focus {
+            outline: none;
+        }
+        * Custom CSS for button styling */
+        /* Custom CSS for button styling */
+        .custom-btn {
+            font-size: 3rem; /* Increase font size */
+            padding: 25px 30px; /* Increase padding */
+            /* Add any other custom styles as needed */
+        }
+
+        /* Center content horizontally */
+        .center-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%; /* Ensure full height */
+        }
+        .pagination-container {
+        text-align: center;
+        margin-top: 10px;
+        }
+
+        .pagination-link {
+            text-decoration: none;
+            color: #0366d6; /* Link color */
+            cursor: pointer;
+            width: 40px;
+            padding-left:10px;
+            padding-right:10px;
+            margin-left: 10px;
+        }
+        .pagination-link-focus {
+            text-decoration: none;
+            color: #9516a9; /* Link color */
+            cursor: pointer;
+            padding-left:10px;
+            padding-right:10px;
+        }
+        .gender-radio label{
+            margin-right: 30px; /* Adjust the margin as needed */
+        }
+        .errorMessage{
+            color: red;
+        }
+    </style>
+    <!-- Include Bootstrap CSS and jQuery -->
+    <apex:includeScript value="https://code.jquery.com/jquery-3.6.4.min.js"/>
+    <apex:includeScript value="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"/>
+    <apex:stylesheet value="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+
+    <apex:form >
+        <!--ASKNOTE: lam sao tat message moi khi render, ví dụ message delete thành công hi-->
+        <apex:pageMessages id="myMessages" />
+        <!--SEARCH BUTTON SECTION-->
+        <apex:pageBlock title="Search Students" id="SearchBlock">
+            <div class="container">
+
+                <!-- Search Form Section -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <apex:outputLabel value="Code: " for="searchInput" />
+                        <apex:inputText id="searchCodeInput" value="{!searchCode}" styleClass="form-control"/>
+                    </div>
+                    <div class="col-md-3">
+                        <apex:outputLabel value="Name: " for="searchInput"/>
+                        <apex:inputText id="searchInput" value="{!searchName}" styleClass="form-control"/>
+                    </div>
+
+                    <div class="col-md-3">
+                        <apex:outputLabel value="Class: " for="classInput"/>
+                        <apex:selectList value="{!searchSelectedClass}" size="1" id="classInput" styleClass="form-control">
+                            <apex:selectOptions value="{!classList}"/>
+                        </apex:selectList>
+                    </div>
+
+                    <div class="col-md-3">
+                        <apex:outputLabel value="Gender: " for="genderInput"/>
+                        <apex:selectList value="{!gender}" size="1" id="genderInput" styleClass="form-control">
+                            <apex:selectOption itemLabel="Both" itemValue="2" />
+                            <apex:selectOption itemLabel="Female" itemValue="0" />
+                            <apex:selectOption itemLabel="Male" itemValue="1" />
+                        </apex:selectList>
+                    </div>
+                </div>
+                <!-- Date Fields Section -->
+                <!-- Day - Month - Year Fields Section -->
+                <div class="row">
+                    <div class="col-md-3">
+                        <apex:outputLabel value="Student brirdate's day: "/>
+                        <apex:selectList value="{!day}" size="1"  styleClass="form-control" onchange="checkValidDateInYear()">
+                            <apex:selectOptions value="{!dayOptions}"/>
+                        </apex:selectList>
+                    </div>
+                    <div class="col-md-3">
+                        <apex:outputLabel value="Student brirdate's month: "/>
+                        <apex:selectList value="{!month}" size="1" id="monthInput" styleClass="form-control" onchange="checkValidDateInYear()">
+                            <apex:selectOptions value="{!monthOptions}"/>
+                        </apex:selectList>
+                    </div>
+                    <div class="col-md-3">
+                        <apex:outputLabel value="Student brirdate's year: "/>
+                        <apex:inputText id="yearInput" value="{!year}" styleClass="form-control"  html-placeholder="Student birthday's year must > 1980"/>
+                    </div>
+                    <div class="col-md-3">
+                        <apex:outputLabel value="Birthdate: "/>
+                        <apex:input value="{!birthdate}" type="date" styleClass="form-control"/>
+                    </div>
+                </div>
+                <!-- Birthdate Section -->
+                <div class="row">
+                    
+                    <div class="col-md-3 pt-4 center-content" >
+                        <apex:commandButton value="Search Student" action="{!performSearch}" oncomplete="checkChecked();" rerender="results" styleClass="btn btn-primary btn-xl custom-btn"/>
+                    </div>
+                    <div class="col-md-3 pt-4 center-content" >
+                        <apex:commandButton styleClass="btn btn-primary custom-btn" value="Add Student" reRender="modalbodyCreate"  onclick="showModal(); return false;"/>
+                    </div>
+                    <div class="col-md-3 pt-4 center-content" >
+                        <apex:commandButton value="Clear filters" styleClass="btn btn-danger" action="{!clearFilters}"/>
+                    </div>
+                    <div class="col-md-3 pt-4 center-content" >
+                        <apex:outputLink value="/apex/Classes">Class Page</apex:outputLink>
+                    </div>
+                </div>
+            </div>
+        </apex:pageBlock>
+        <apex:pageBlock id="results">
+            <apex:pageBlockTable value="{!searchResults}" var="student" rows="{!pageSize}" first="{!startIndex}" > <!--PAGINATION-->
+                <apex:variable var="rowNum" value="{!0 }" />
+                <apex:column >
+                    <apex:facet name="header">
+                        <apex:inputCheckbox value="{!allSelected}" onchange="checkChecked()">
+                            <apex:actionSupport event="onclick" action="{!selectAllCheckboxesTable}" rerender="results"/>
+                        </apex:inputCheckbox>
+                    </apex:facet>
+                        <apex:inputCheckbox value="{!selectedIds[student.Id]}"  onchange="checkChecked()" styleClass="checkboxes" >
+                            <apex:actionSupport event="onclick" action="{!updateSelectedRecordsNumder}" rerender="results"/>
+                        </apex:inputCheckbox>
+                    </apex:column>
+                <apex:column headerValue="Row Number">
+                    <apex:outputText value="{!rowNum}" />
+                    <apex:variable var="rowNum" value="{!rowNum + 1}" />
+                </apex:column>
+                <apex:column value="{!student.Student_Code__c}" headerValue="Student Code"/>
+                <apex:column value="{!student.First_Name__c}" headerValue="First Name"/>
+                <apex:column value="{!student.Last_Name__c}" headerValue="Last Name"/>
+                <apex:column value="{!student.Class__r.Class_Name__c}" headerValue="Class"/>
+                <apex:column headerValue="Gender">
+                    <apex:outputText value="{!IF(student.Gender__c, 'Male', 'Female')}" />
+                </apex:column>
+                <apex:column value="{!student.Birthdate__c}" headerValue="Birthdate"/>
+                <apex:column value="{!student.Address__c}" headerValue="Address"/>
+                <apex:column headerValue="Action">        
+                    <apex:commandButton styleClass="btn btn-primary" action="{!setStudent}" value="Detail" reRender="modalbodyDetail" onclick="showModalDetail();">
+                        <apex:param name="studentId" value="{!student.Id}" assignTo="{!selectedId}" />    
+                    </apex:commandButton>
+                    <apex:commandButton styleClass="btn btn-primary" action="{!setStudent}" value="Update" reRender="modalbodyUpdate" onclick="showModalUpdate();">
+                        <apex:param name="studentId" value="{!student.Id}" assignTo="{!selectedId}" />    
+                    </apex:commandButton>
+                    <apex:commandButton styleClass="btn btn-primary" action="{!setStudent}" value="Delete" reRender="modalbodyDelete" onclick="showModalDelete();">
+                        <apex:param name="studentId" value="{!student.Id}" assignTo="{!selectedId}" />    
+                    </apex:commandButton>
+                    
+                </apex:column>
+            </apex:pageBlockTable>
+            <!-- Add buttons for Select Records, Clear Records, and Delete Records -->
+            <!-- <apex:commandButton value="Select all records" action="{!selectAllCheckboxes}" rerender="results" /> -->
+            <!-- Checkbox for selecting all records -->
+            <div class="row">
+                <div class="col-md-2 mt-2">
+                    <apex:commandButton value="Clear" rerender="results" oncomplete="checkChecked()" action="{!clearRecords}" styleClass="btnClear" />
+            
+                    <apex:commandButton value="Delete" action="{!updateSelectedRecordsNumder}" reRender="modalbodyDeleteRecords" onclick="showModalDeleteRecords();" oncomplete="checkChecked();" styleClass="btnDelete"  />
+                    
+                </div>
+                <div class="col-md-6">
+                    <!-- Add a section to display total records -->
+                    <div style="text-align: center; margin-top: 10px;">
+                        Selected {!selectedRecordsNumber} of Total Records: {!totalRecords}
+                    </div>
+                </div>
+                <div class="col-md-4" >
+                    <div class="pagination-container row">
+                        <div class="col-md-2" style="{!IF(totalRecords == 0, 'display: none;', '')}">
+                            <apex:commandLink action="{!first}" oncomplete="checkChecked();" value="first" rerender="results" styleClass="pagination-link btn btn-light" />
+                        </div>
+                        <div class="col-md-1">
+                            <apex:outputPanel rendered="{!hasPrevious}" >
+                                <apex:commandButton action="{!previous}" oncomplete="checkChecked();" value="<" rerender="results" styleClass="pagination-link btn btn-light" />
+                            </apex:outputPanel>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="pagination-numbers">
+                                <apex:repeat value="{!pageNumbers}" var="pageNumber">
+                                    <apex:commandLink action="{!gotoPage}" value="{!pageNumber}" rerender="results" oncomplete="checkChecked();" styleClass="{!IF(pageNumber == currentPage, 'pagination-link-focus', 'pagination-link btn btn-light')}">
+                                        <apex:param name="selectedPage" value="{!pageNumber}" assignTo="{!currentPage}" />
+                                    </apex:commandLink>
+                                </apex:repeat>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <apex:outputPanel rendered="{!hasNext}">
+                                <apex:commandLink action="{!next}" oncomplete="checkChecked();" value=">" rerender="results" styleClass="pagination-link btn btn-light"/>
+                            </apex:outputPanel>
+                        </div>
+                        <div class="col-md-2" style="{!IF((totalRecords == 0) || (currentPage == totalPages), 'display: none;', '')}">
+                            <apex:commandLink action="{!last}" oncomplete="checkChecked();" value="last"  rerender="results" styleClass="pagination-link btn btn-light"/>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+           
+        </apex:pageBlock>
+    </apex:form>
+    <!-- Create modal section  -->
+    <div id="myModalCreate" class="modal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Create a Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body">
+                    <apex:pageBlock id="modalbodyCreate" >
+                        <apex:form styleClass="form-container" onsubmit="return handleCreate();">
+                            <div class="input-container">
+                                <label>First Name:</label>
+                                <apex:inputText value="{!studentToCreate.First_Name__c}" id="firstNameToCreate"/>
+                                <p class="errorMessage" id="firstNameErrorToCreate"></p>
+
+                            </div>
+                            <div class="input-container">
+                                <label>Last Name:</label>
+                                <apex:inputText value="{!studentToCreate.Last_Name__c}"  id="lastNameToCreate" />
+                                <p class="errorMessage" id="lastNameErrorToCreate" ></p>
+
+                            </div>
+                            <div class="input-container">
+                                <label>Class:</label>
+                                <apex:selectList value="{!studentToCreate.Class__c}" size="1">
+                                    <apex:selectOptions value="{!classListCreate}" />
+                                </apex:selectList>
+                            </div>
+                            <div class="input-container">
+
+                                <label>Gender:</label>
+                            </div>       
+                    
+                            <apex:selectRadio value="{!studentToCreate.Gender__c}" styleClass="gender-radio">
+                                <apex:selectOption itemLabel="Male" itemValue="true"  />
+                                <apex:selectOption itemLabel="Female" itemValue="false"  />
+
+                            </apex:selectRadio>
+                            <div class="input-container">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>Birthdate:</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <apex:inputField value="{!studentToCreate.Birthdate__c}"   id="birthdateToCreate" />
+                                </div>
+                                <p id="birthdateErrorToCreate" class="errorMessage"></p>
+
+                            </div>
+
+                            <div class="input-container">
+                                <label>Address:</label>
+                                <apex:inputText value="{!studentToCreate.Address__c}"   id="addressToCreate" />
+                                <p id="addressErrorToCreate" class="errorMessage"></p>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10">
+                                </div>
+                                <div class="col-md-2">
+                                    <apex:commandButton value="Save" action="{!createStudent}" onclick="handleCreate();" />
+                                </div>
+
+                            </div>
+                        </apex:form>
+                    </apex:pageBlock>
+                </div>
+            </div>
+        </div>
+    </div>
+     <!-- Detail modal section -->
+     <div id="myModalDetail" class="modal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">Student Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body">
+                    <apex:pageBlock id="modalbodyDetail" >
+                        <h1>{!student.Student_Code__c}</h1>
+                        <p><b>Class:</b> {!student.Class__r.Class_Name__c}</p>
+                        <p><b>First name:</b> {!student.First_Name__c}</p>
+                        <p><b>Last name:</b> {!student.Last_Name__c}</p>
+                        <p><b>Gender:</b> 
+                            <apex:outputText value="{!IF(student.Gender__c, 'Male', 'Female')}" />
+                            </p>
+                        <p><b>Birthdate:</b> {!student.Birthdate__c}</p>
+                        <p><b>Address:</b> {!student.Address__c}</p>
+                    </apex:pageBlock>
+                </div>
+            </div>
+        </div>
+    </div>
+     <!-- Update student modal section -->
+    <div id="myModalUpdate" class="modal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">Update Student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body">
+                    <apex:pageBlock id="modalbodyUpdate" >
+                        <apex:form styleClass="form-container" onsubmit="return handleUpdate();">
+                            <h1>{!student.Student_Code__c}</h1>
+                            <apex:pageMessages />
+                            <div class="input-container">
+                                <label>First Name:</label>
+                                <apex:inputText value="{!student.First_Name__c}" id="firstNameToUpdate"/>
+                                <p class="errorMessage" id="firstNameErrorToUpdate"></p>
+
+                            </div>
+
+                            <div class="input-container">
+                                <label>Last Name:</label>
+                                <apex:inputText value="{!student.Last_Name__c}"  id="lastNameToUpdate" />
+                                <p class="errorMessage" id="lastNameErrorToUpdate" ></p>
+
+                            </div>
+
+                            <div class="input-container">
+                                <label>Class:</label>
+                                <apex:selectList value="{!student.Class__c}" size="1">
+                                    <apex:selectOptions value="{!classListCreate}" />
+                                </apex:selectList>
+                            </div>
+                            <div class="input-container">
+                                <label>Gender:</label>
+                            </div>                        
+                            <apex:selectRadio value="{!student.Gender__c}" styleClass="gender-radio">
+                                <apex:selectOption itemLabel="Male" itemValue="true"  />
+                                <apex:selectOption itemLabel="Female" itemValue="false"  />
+                            </apex:selectRadio>
+                            
+                            
+                            <div class="input-container">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label>Birthdate:</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <apex:inputField value="{!student.Birthdate__c}"   id="birthdateToUpdate" />
+                                    <p id="birthdateErrorToUpdate" class="errorMessage"></p>
+
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <label>Address:</label>
+                                <apex:inputText value="{!student.Address__c}"   id="addressToUpdate" />
+                                <p id="addressErrorToUpdate" class="errorMessage"></p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-9">
+
+                                </div>
+                                <div class="col-md-3">
+                                    <apex:commandButton value="Update" action="{!updateStudent}" />
+                                </div>
+                            </div>
+                        </apex:form>
+                    </apex:pageBlock>
+                </div>
+            </div>
+        </div>
+    </div>  
+     <!-- Delete modal section -->
+     <div id="myModalDelete" class="modal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">Delete student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body">
+                    <apex:pageBlock id="modalbodyDelete" >
+                        <apex:form styleClass="form-container">
+                            <h1>{!student.Student_Code__c}</h1>
+                            <p><b>Class:</b> {!student.Class__r.Class_Name__c}</p>
+                            <p><b>First name:</b> {!student.First_Name__c}</p>
+                            <p><b>Last name:</b> {!student.Last_Name__c}</p>
+                            <p><b>Gender:</b>                             <apex:outputText value="{!IF(student.Gender__c, 'Male', 'Female')}" />
+                            </p>
+                            <p><b>Birthdate:</b> {!student.Birthdate__c}</p>
+                            <p><b>Address:</b> {!student.Address__c}</p>
+                            <apex:commandButton value="Delete" action="{!deleteStudent}" />
+                        </apex:form>
+                    </apex:pageBlock>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete multiples records modal section -->
+    <div id="myModalDeleteRecords" class="modal" tabindex="-1" role="dialog" aria-labelledby="deleteRecordsModalLabel" aria-hidden="true" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel">Are you sure to delete this student</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                </div>
+                <div class="modal-body">
+                    <apex:pageBlock id="modalbodyDeleteRecords" >
+                        <apex:form styleClass="form-container">
+                        <p>Student id: {!selectedRecordsNumber}</p>
+                        <apex:commandButton value="Delete" action="{!deleteSelectedRecords}" />
+                    </apex:form>
+                    </apex:pageBlock>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showModal() {
+            $('#myModalCreate').modal('show');
+        }
+        function showModalDetail() {
+            $('#myModalDetail').modal('show');
+        }
+        function showModalUpdate() {
+            $('#myModalUpdate').modal('show');
+        }
+        function showModalDelete() {
+            $('#myModalDelete').modal('show');
+        }
+        function showModalDeleteRecords() {
+            $('#myModalDeleteRecords').modal('show');
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            // Set a timeout to hide the messages after 10 seconds
+            setTimeout(function() {
+                // Get the pageMessages element and hide it
+                var pageMessages = document.getElementById('{!$Component.myMessages}');
+                if (pageMessages) {
+                    pageMessages.style.display = 'none';
+                }
+            }, 10000); // 10 seconds in milliseconds
+        });
+        function checkChecked(){
+            isChecked = false;
+            $(".checkboxes:checked").each(function() {
+                $('.btnDelete').prop('disabled', false);
+                $('.btnClear').prop('disabled', false);
+                isChecked = true;
+                return;
+            });
+            if(isChecked == false){
+                $('.btnDelete').prop('disabled', true);
+                $('.btnClear').prop('disabled', true);
+            }
+        }
+        $(document).ready(function() {
+            checkChecked();
+        });
+        function scrollToTop() {
+            window.scrollTo(0, 0);
+        }
+        function checkValidDateInYear() {
+            var dayInput = document.getElementById('{!$Component.dayInput}');
+            var monthInput = document.getElementById('{!$Component.monthInput}');
+            var selectedDay = parseInt(dayInput.value, 10);
+            var selectedMonth = parseInt(monthInput.value, 10);
+            var isValidDate = checkValidDate(selectedDay, selectedMonth);
+            if (!isValidDate) {
+                alert('Invalid date. Please select a valid combination of day and month.');
+            }
+        }
+
+        function handleCreate() {
+            // Basic validation example
+            var firstName = document.querySelector("[id$='firstNameToCreate']");
+            var lastName = document.querySelector("[id$='lastNameToCreate']");
+            var birthdate = document.querySelector("[id$='birthdateToCreate']");
+            var address = document.querySelector("[id$='addressToCreate']");
+
+            var firstNameError = document.getElementById("firstNameErrorToCreate");
+            var lastNameError = document.getElementById("lastNameErrorToCreate");
+            var birthdateError = document.getElementById("birthdateErrorToCreate");
+            var addressError = document.getElementById("addressErrorToCreate");
+
+            // Reset error messages
+            firstNameError.innerText = "";
+            lastNameError.innerText = "";
+            birthdateError.innerText = "";
+            addressError.innerText = "";
+
+            // Check if required fields are not empty
+            if (!firstName.value.trim()) {
+                firstNameError.innerText = "Please enter First Name.";
+            }
+
+            if (!lastName.value.trim()) {
+                lastNameError.innerText = "Please enter Last Name.";
+            }
+
+            
+            if (!address.value.trim()) {
+                addressError.innerText = "Please enter Address.";
+            }
+            if (!birthdate.value.trim()) {
+                birthdateError.innerText = "Please enter Birthdate.";
+            }
+            else if(birthdate.value.trim()) {
+                var dateParts = birthdate.value.split("/"); // Assuming birthdate.value is in "DD/MM/YYYY" format
+                var formattedDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
+                var bd = new Date(formattedDate);
+                var today = new Date();
+                var age = today.getFullYear() - bd.getFullYear();
+                if (today.getMonth() < bd.getMonth() || (today.getMonth() === bd.getMonth() && today.getDate() < bd.getDate())) {
+                    age--;
+                }
+                console.log(age);
+                if (age <= 17) {
+                    birthdateError.innerText = "Student must be atleast 17 years old";
+                }
+            }
+            if (firstNameError.innerText || lastNameError.innerText || birthdateError.innerText || addressError.innerText ) {
+                return false;
+            }
+            console.log("handle create");
+            return true; 
+        }
+        function handleUpdate() {
+            // Basic validation example
+            var firstName = document.querySelector("[id$='firstNameToUpdate']");
+            var lastName = document.querySelector("[id$='lastNameToUpdate']");
+            var birthdate = document.querySelector("[id$='birthdateToUpdate']");
+            var address = document.querySelector("[id$='addressToUpdate']");
+
+            var firstNameError = document.getElementById("firstNameErrorToUpdate");
+            var lastNameError = document.getElementById("lastNameErrorToUpdate");
+            var birthdateError = document.getElementById("birthdateErrorToUpdate");
+            var addressError = document.getElementById("addressErrorToUpdate");
+
+            // Reset error messages
+            firstNameError.innerText = "";
+            lastNameError.innerText = "";
+            birthdateError.innerText = "";
+            addressError.innerText = "";
+
+            // Check if required fields are not empty
+            if (!firstName.value.trim()) {
+                firstNameError.innerText = "Please enter First Name.";
+            }
+
+            if (!lastName.value.trim()) {
+                lastNameError.innerText = "Please enter Last Name.";
+            }
+
+            
+            if (!address.value.trim()) {
+                addressError.innerText = "Please enter Address.";
+            }
+            if (!birthdate.value.trim()) {
+                birthdateError.innerText = "Please enter Birthdate.";
+            }
+            else if(birthdate.value.trim()) {
+                var dateParts = birthdate.value.split("/"); // Assuming birthdate.value is in "DD/MM/YYYY" format
+                var formattedDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
+                var bd = new Date(formattedDate);
+                var today = new Date();
+                var age = today.getFullYear() - bd.getFullYear();
+                if (today.getMonth() < bd.getMonth() || (today.getMonth() === bd.getMonth() && today.getDate() < bd.getDate())) {
+                    age--;
+                }
+                console.log(age);
+                if (age <= 17) {
+                    birthdateError.innerText = "Student must be atleast 17 years old";
+                }
+            }
+            if (firstNameError.innerText || lastNameError.innerText || birthdateError.innerText || addressError.innerText ) {
+                return false;
+            }
+            console.log("handle create");
+            return true; 
+        }
+    </script>
+</apex:page>

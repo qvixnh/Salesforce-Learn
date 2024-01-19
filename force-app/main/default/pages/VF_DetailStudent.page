@@ -1,0 +1,44 @@
+<apex:page controller="VF_DetailStudentCtrl" action="{!loadStudentDetails}">
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #008080;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        /* Customize the link style */
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <apex:outputLink value="/apex/VF_SearchStudent">back to list</apex:outputLink><br/>
+    <apex:pageMessages />
+    <h2>Show Student Details</h2>
+    <p>Student code: {!student.Student_Code__c}</p>
+    <p>First Name: {!student.First_Name__c}</p>
+    <p>Last Name: {!student.Last_Name__c}</p>
+    <p>Class: {!student.Class__r.Class_Name__c}</p>
+    <p>Gender: {!student.Gender__c}</p>
+    <p>Birthdate:</p>
+    <apex:outputText value="{0,date,dd/MM/yyyy}">
+        <apex:param value="{!student.Birthdate__c}" />
+    </apex:outputText>
+    <p>Address: {!student.Address__c}</p>
+    <!-- Add the Update button -->
+    <apex:outputLink value="/apex/VF_UpdateStudent?id={!student.Id}">Update</apex:outputLink>
+</apex:page>

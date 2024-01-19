@@ -172,17 +172,11 @@ public with sharing class CMP_SearchStudentCtrl {
      */
     public static List<Student__c> getStudents(String classId, Integer gender, String searchName, String searchCode, Integer day, Integer month, Integer year, String birthdate, String orderField, String orderType) {
         try {
-            String queryString = 'SELECT Id';
-            queryString += ', Student_Code__c';
-            queryString +=', First_Name__c';
-            queryString +=', Last_Name__c';
-            queryString +=', selected__c';
-            queryString +=', Class__r.Class_Name__c';
-            queryString +=', Gender__c';
-            queryString +=', Birthdate__c';
-            queryString +=', Address__c';
-            queryString += ' FROM Student__c';
-        
+            List<String> selectedFields = new List<String>{
+                'Id', 'Student_Code__c', 'First_Name__c', 'Last_Name__c', 'selected__c',
+                'Class__r.Class_Name__c', 'Gender__c', 'Birthdate__c', 'Address__c'
+            };
+            String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
             List<String> conditions = new List<String>();
         
             if (!String.isBlank(searchName)) {
