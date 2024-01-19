@@ -508,6 +508,9 @@ public with sharing class VF_SearchStudentCtrl {
         }
         if(count==this.pageSize){
             this.allSelected=true;
+        }else{
+            this.allSelected=false;
+            
         }
     }
 
