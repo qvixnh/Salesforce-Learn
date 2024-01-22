@@ -274,7 +274,7 @@
                 <apex:column value="{!student.Student_Code__c}" headerValue="Student Code"/>
                 <apex:column value="{!student.First_Name__c}" headerValue="First Name"/>
                 <apex:column value="{!student.Last_Name__c}" headerValue="Last Name"/>
-                <apex:column value="{!student.Class__r.Class_Name__c}" headerValue="Class"/>
+                <apex:column value="{!student.Class__r.Name}" headerValue="Class"/>
                 <apex:column headerValue="Gender">
                     <apex:outputText value="{!IF(student.Gender__c, 'Male', 'Female')}" />
                 </apex:column>
@@ -426,7 +426,7 @@
                 <div class="modal-body">
                     <apex:pageBlock id="modalbodyDetail" >
                         <h1>{!student.Student_Code__c}</h1>
-                        <p><b>Class:</b> {!student.Class__r.Class_Name__c}</p>
+                        <p><b>Class:</b> {!student.Class__r.Name}</p>
                         <p><b>First name:</b> {!student.First_Name__c}</p>
                         <p><b>Last name:</b> {!student.Last_Name__c}</p>
                         <p><b>Gender:</b> 
@@ -524,7 +524,7 @@
                     <apex:pageBlock id="modalbodyDelete" >
                         <apex:form styleClass="form-container">
                             <h1>{!student.Student_Code__c}</h1>
-                            <p><b>Class:</b> {!student.Class__r.Class_Name__c}</p>
+                            <p><b>Class:</b> {!student.Class__r.Name}</p>
                             <p><b>First name:</b> {!student.First_Name__c}</p>
                             <p><b>Last name:</b> {!student.Last_Name__c}</p>
                             <p><b>Gender:</b>                             <apex:outputText value="{!IF(student.Gender__c, 'Male', 'Female')}" />

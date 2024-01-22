@@ -52,7 +52,7 @@
             <lightning:select name="classSelect" label="Select Class" value="{!v.selectedClass}">
                 <option value="null">None</option>
                 <aura:iteration items="{!v.classList}" var="item">
-                    <option value="{!item.Id}">{!item.Class_Name__c}</option>
+                    <option value="{!item.Id}">{!item.Name}</option>
                 </aura:iteration>
             </lightning:select>
         </div>

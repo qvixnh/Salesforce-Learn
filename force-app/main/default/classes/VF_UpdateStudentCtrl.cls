@@ -68,11 +68,11 @@ public with sharing class VF_UpdateStudentCtrl {
         List<Class__c> classes = [
             SELECT 
                 Id
-                , Class_Name__c 
+                , Name 
             FROM Class__c
         ];
         for (Class__c cls : classes) {
-            options.add(new SelectOption(cls.Id, cls.Class_Name__c));
+            options.add(new SelectOption(cls.Id, cls.Name));
         }
         return options;
     }

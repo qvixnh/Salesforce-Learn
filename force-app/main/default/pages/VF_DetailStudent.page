@@ -32,7 +32,7 @@
     <p>Student code: {!student.Student_Code__c}</p>
     <p>First Name: {!student.First_Name__c}</p>
     <p>Last Name: {!student.Last_Name__c}</p>
-    <p>Class: {!student.Class__r.Class_Name__c}</p>
+    <p>Class: {!student.Class__r.Name}</p>
     <p>Gender: {!student.Gender__c}</p>
     <p>Birthdate:</p>
     <apex:outputText value="{0,date,dd/MM/yyyy}">

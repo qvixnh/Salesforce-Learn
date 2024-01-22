@@ -78,7 +78,7 @@
                     <td style="width:5%;" data-label="Student Code" >{!student.Student_Code__c}</td>
                     <td style="width:25%;" data-label="First Name"  >{!student.First_Name__c}</td>
                     <td style="width:25%;" data-label="Last Name"  >{!student.Last_Name__c}</td>
-                    <td style="width:25%;" data-label="Class"  >{!student.Class__r.Class_Name__c}</td>
+                    <td style="width:25%;" data-label="Class"  >{!student.Class__r.Name}</td>
                     <td style="width:5%;" data-label="Gender">
                         {!IF(student.Gender__c, 'Male', 'Female')}
                     </td>

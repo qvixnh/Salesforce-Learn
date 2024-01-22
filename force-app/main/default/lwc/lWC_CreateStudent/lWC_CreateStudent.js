@@ -27,7 +27,7 @@ export default class LWC_CreateStudent extends LightningElement {
     wiredClasses({ error, data }) {
         if (data) {
             this.classes = data.map(option => ({
-                label: option.Class_Name__c,
+                label: option.Name,
                 value: option.Id
             }));
             this.classes.unshift({ label: 'All Classes', value: null });

@@ -49,7 +49,7 @@ public class CMP_CreateStudentCtrl {
             return[SELECT 
                     Id
                     , Class_Code__c
-                    , Class_Name__c
+                    , Name
                     , Number_Of_Student__c 
                     FROM Class__c 
                     ORDER BY Class_Code__c];

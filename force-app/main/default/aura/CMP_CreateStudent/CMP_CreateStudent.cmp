@@ -22,7 +22,7 @@
                 <lightning:select name="classList" label="Select Class" value="{!v.selectedClass}">
                     <option value="">Select class</option>
                     <aura:iteration items="{!v.classList}" var="item">
-                        <option value="{!item.Id}">{!item.Class_Name__c}</option>
+                        <option value="{!item.Id}">{!item.Name}</option>
                     </aura:iteration>
                 </lightning:select>
                 <p id="sClassError" class="slds-text-color_destructive"></p>

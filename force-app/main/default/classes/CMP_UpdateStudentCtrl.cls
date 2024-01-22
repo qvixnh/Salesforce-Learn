@@ -45,7 +45,7 @@ public with sharing class CMP_UpdateStudentCtrl {
    @AuraEnabled
    public static List<Class__c>  getClasses(){
        try { 
-           return[SELECT Id, Class_Code__c, Class_Name__c, Number_Of_Student__c FROM Class__c ORDER BY Class_Code__c];
+           return[SELECT Id, Class_Code__c, Name, Number_Of_Student__c FROM Class__c ORDER BY Class_Code__c];
 
        } catch (Exception e) {
            throw new AuraHandledException(e.getMessage());

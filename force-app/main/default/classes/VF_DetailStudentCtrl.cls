@@ -23,7 +23,7 @@ public with sharing class VF_DetailStudentCtrl {
                             Student_Code__c
                             , First_Name__c
                             , Last_Name__c
-                            , Class__r.Class_Name__c
+                            , Class__r.Name
                             , Gender__c
                             , Birthdate__c
                             , Address__c 

@@ -60,7 +60,7 @@ export default class LWC_SearchStudent extends LightningElement {
         return [
             { label: 'Student Code', value: 'Student_Code__c' },
             { label: 'Student Name', value: 'First_Name__c' },
-            { label: 'Class', value: 'Class__r.Class_Name__c' },
+            { label: 'Class', value: 'Class__r.Name' },
             { label: 'Student Birthdate', value: 'Birthdate__c' },
             { label: 'Student Gender', value: 'Gender__c' },
         ];
@@ -105,7 +105,7 @@ export default class LWC_SearchStudent extends LightningElement {
     wiredClasses({ error, data }) {
         if (data) {
             this.classes = data.map(option => ({
-                label: option.Class_Name__c,
+                label: option.Name,
                 value: option.Id
             }));
             this.classes.unshift({ label: 'All Classes', value: null });
