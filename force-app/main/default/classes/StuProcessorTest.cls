@@ -4,7 +4,7 @@ public class StuProcessorTest {
     private static void testBatchClass(){
         List<Student__c> stuList = new List<Student__c>();
         for(integer i=0;i<200;i++){
-            stuList.add(new Student__c(Name='Test', First_Name__c='Test', Last_Name__c='Test',Class__c='a035j00000WuersAAB', Gender__c=false,Birthdate__c=Date.valueOf('2001-01-01'),Address__c='Test' ));
+            stuList.add(new Student__c(Name='Test', Firstname__c='Test', Lastname__c='Test',Class__c='a035j00000WuersAAB', Gender__c=false,Birthday__c=Date.valueOf('2001-01-01'),Address__c='Test' ));
         }
         insert stuList;
         Test.startTest();

@@ -36,9 +36,9 @@
         ]);
         component.set("v.FieldOrderByList",[
             {label:"Student Code", value:"Student_Code__c"},
-            {label:"Student Name", value:"First_Name__c"},
+            {label:"Student Name", value:"Firstname__c"},
             {label:"Class", value:"Class__r.Name"},
-            {label:"Student Birthdate", value:"Birthdate__c"},
+            {label:"Student Birthdate", value:"Birthday__c"},
             {label:"Student Gender", value:"Gender__c"},
         ])
         component.set("v.OrderTypeList",[

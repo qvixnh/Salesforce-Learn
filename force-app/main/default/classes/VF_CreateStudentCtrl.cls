@@ -14,12 +14,12 @@ public with sharing class VF_CreateStudentCtrl {
     public PageReference saveStudent() {
         try {
             //isBlank check validation
-            if (String.isBlank(this.student.First_Name__c)) {
+            if (String.isBlank(this.student.Firstname__c)) {
                 // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'First Name cannot be blank.'));
                 this.firstNameError='First Name cannot be blank.';
                 return null;
             }
-            if (String.isBlank(this.student.Last_Name__c)) {
+            if (String.isBlank(this.student.Lastname__c)) {
                 // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Last Name cannot be blank.'));
                 this.lastNameError='Last Name cannot be blank.';
                 return null;
@@ -29,12 +29,12 @@ public with sharing class VF_CreateStudentCtrl {
                 this.addressError='Address cannot be blank.';
                 return null;
             }
-            if(this.student.Birthdate__c ==null){
+            if(this.student.Birthday__c ==null){
                 // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Birthdate cannot be blank.'));
                 this.birthdateError='Birthdate cannot be blank.';
                 return null;
             }
-            Integer age =getAge(this.student.Birthdate__c);
+            Integer age =getAge(this.student.Birthday__c);
             if (age < 17) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Student must be at least 17 years old.'));
                 return null;

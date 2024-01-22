@@ -23,10 +23,10 @@ public class CMP_CreateStudentCtrl {
         try {
             Student__c student = new Student__c();
             student.Name = sFirstName + ' ' + sLastName;
-            student.First_Name__c = sFirstName;
-            student.Last_Name__c = slastName;
+            student.Firstname__c = sFirstName;
+            student.Lastname__c = slastName;
             student.Class__c = sClassId ;
-            student.Birthdate__c= sBirthdate;
+            student.Birthday__c= sBirthdate;
             student.Gender__c= sGender;
             student.Address__c = sAddress;
             System.debug(student);

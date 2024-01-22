@@ -272,13 +272,13 @@
                     <apex:variable var="rowNum" value="{!rowNum + 1}" />
                 </apex:column>
                 <apex:column value="{!student.Student_Code__c}" headerValue="Student Code"/>
-                <apex:column value="{!student.First_Name__c}" headerValue="First Name"/>
-                <apex:column value="{!student.Last_Name__c}" headerValue="Last Name"/>
+                <apex:column value="{!student.Firstname__c}" headerValue="First Name"/>
+                <apex:column value="{!student.Lastname__c}" headerValue="Last Name"/>
                 <apex:column value="{!student.Class__r.Name}" headerValue="Class"/>
                 <apex:column headerValue="Gender">
                     <apex:outputText value="{!IF(student.Gender__c, 'Male', 'Female')}" />
                 </apex:column>
-                <apex:column value="{!student.Birthdate__c}" headerValue="Birthdate"/>
+                <apex:column value="{!student.Birthday__c}" headerValue="Birthdate"/>
                 <apex:column value="{!student.Address__c}" headerValue="Address"/>
                 <apex:column headerValue="Action">        
                     <apex:commandButton styleClass="btn btn-primary" action="{!setStudent}" value="Detail" reRender="modalbodyDetail" onclick="showModalDetail();">
@@ -356,13 +356,13 @@
                         <apex:form styleClass="form-container" onsubmit="return handleCreate();">
                             <div class="input-container">
                                 <label>First Name:</label>
-                                <apex:inputText value="{!studentToCreate.First_Name__c}" id="firstNameToCreate"/>
+                                <apex:inputText value="{!studentToCreate.Firstname__c}" id="firstNameToCreate"/>
                                 <p class="errorMessage" id="firstNameErrorToCreate"></p>
 
                             </div>
                             <div class="input-container">
                                 <label>Last Name:</label>
-                                <apex:inputText value="{!studentToCreate.Last_Name__c}"  id="lastNameToCreate" />
+                                <apex:inputText value="{!studentToCreate.Lastname__c}"  id="lastNameToCreate" />
                                 <p class="errorMessage" id="lastNameErrorToCreate" ></p>
 
                             </div>
@@ -389,7 +389,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-5">
-                                    <apex:inputField value="{!studentToCreate.Birthdate__c}"   id="birthdateToCreate" />
+                                    <apex:inputField value="{!studentToCreate.Birthday__c}"   id="birthdateToCreate" />
                                 </div>
                                 <p id="birthdateErrorToCreate" class="errorMessage"></p>
 
@@ -427,12 +427,12 @@
                     <apex:pageBlock id="modalbodyDetail" >
                         <h1>{!student.Student_Code__c}</h1>
                         <p><b>Class:</b> {!student.Class__r.Name}</p>
-                        <p><b>First name:</b> {!student.First_Name__c}</p>
-                        <p><b>Last name:</b> {!student.Last_Name__c}</p>
+                        <p><b>First name:</b> {!student.Firstname__c}</p>
+                        <p><b>Last name:</b> {!student.Lastname__c}</p>
                         <p><b>Gender:</b> 
                             <apex:outputText value="{!IF(student.Gender__c, 'Male', 'Female')}" />
                             </p>
-                        <p><b>Birthdate:</b> {!student.Birthdate__c}</p>
+                        <p><b>Birthdate:</b> {!student.Birthday__c}</p>
                         <p><b>Address:</b> {!student.Address__c}</p>
                     </apex:pageBlock>
                 </div>
@@ -454,14 +454,14 @@
                             <apex:pageMessages />
                             <div class="input-container">
                                 <label>First Name:</label>
-                                <apex:inputText value="{!student.First_Name__c}" id="firstNameToUpdate"/>
+                                <apex:inputText value="{!student.Firstname__c}" id="firstNameToUpdate"/>
                                 <p class="errorMessage" id="firstNameErrorToUpdate"></p>
 
                             </div>
 
                             <div class="input-container">
                                 <label>Last Name:</label>
-                                <apex:inputText value="{!student.Last_Name__c}"  id="lastNameToUpdate" />
+                                <apex:inputText value="{!student.Lastname__c}"  id="lastNameToUpdate" />
                                 <p class="errorMessage" id="lastNameErrorToUpdate" ></p>
 
                             </div>
@@ -488,7 +488,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-5">
-                                    <apex:inputField value="{!student.Birthdate__c}"   id="birthdateToUpdate" />
+                                    <apex:inputField value="{!student.Birthday__c}"   id="birthdateToUpdate" />
                                     <p id="birthdateErrorToUpdate" class="errorMessage"></p>
 
                                 </div>
@@ -525,11 +525,11 @@
                         <apex:form styleClass="form-container">
                             <h1>{!student.Student_Code__c}</h1>
                             <p><b>Class:</b> {!student.Class__r.Name}</p>
-                            <p><b>First name:</b> {!student.First_Name__c}</p>
-                            <p><b>Last name:</b> {!student.Last_Name__c}</p>
+                            <p><b>First name:</b> {!student.Firstname__c}</p>
+                            <p><b>Last name:</b> {!student.Lastname__c}</p>
                             <p><b>Gender:</b>                             <apex:outputText value="{!IF(student.Gender__c, 'Male', 'Female')}" />
                             </p>
-                            <p><b>Birthdate:</b> {!student.Birthdate__c}</p>
+                            <p><b>Birthdate:</b> {!student.Birthday__c}</p>
                             <p><b>Address:</b> {!student.Address__c}</p>
                             <apex:commandButton value="Delete" action="{!deleteStudent}" />
                         </apex:form>

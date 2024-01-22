@@ -76,14 +76,14 @@
                     </td>
                     <td style="width:3%;" data-label="Row">{!rowIndex +1 }</td>
                     <td style="width:5%;" data-label="Student Code" >{!student.Student_Code__c}</td>
-                    <td style="width:25%;" data-label="First Name"  >{!student.First_Name__c}</td>
-                    <td style="width:25%;" data-label="Last Name"  >{!student.Last_Name__c}</td>
+                    <td style="width:25%;" data-label="First Name"  >{!student.Firstname__c}</td>
+                    <td style="width:25%;" data-label="Last Name"  >{!student.Lastname__c}</td>
                     <td style="width:25%;" data-label="Class"  >{!student.Class__r.Name}</td>
                     <td style="width:5%;" data-label="Gender">
                         {!IF(student.Gender__c, 'Male', 'Female')}
                     </td>
                     <td style="width:5%;" data-label="Birthdate">
-                        <lightning:formattedDateTime value="{!student.Birthdate__c}" 
+                        <lightning:formattedDateTime value="{!student.Birthday__c}" 
                                                       year="numeric" 
                                                       month="short" 
                                                       day="2-digit" />

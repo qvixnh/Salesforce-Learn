@@ -43,13 +43,13 @@ public with sharing class LWC_SearchStudentCtrl {
             SearchConditionDTO searchCondition = (SearchConditionDTO) JSON.deserialize(searchConditionJSON, SearchConditionDTO.class);
             List<String> conditions = new List<String>();
             List<String> selectedFields = new List<String>{
-                'Id', 'Student_Code__c', 'First_Name__c', 'Last_Name__c', 'selected__c',
-                'Class__r.Name', 'Gender__c', 'Birthdate__c', 'Address__c'
+                'Id', 'Student_Code__c', 'Firstname__c', 'Lastname__c', 'selected__c',
+                'Class__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
 
             if (!String.isBlank(searchCondition.searchName)) {
-                conditions.add('First_Name__c LIKE \'%' + searchCondition.searchName + '%\'');
+                conditions.add('Firstname__c LIKE \'%' + searchCondition.searchName + '%\'');
             }
             if (!String.isBlank(searchCondition.searchCode)) {
                 conditions.add('Student_Code__c LIKE \'%' + searchCondition.searchCode + '%\'');
@@ -61,23 +61,23 @@ public with sharing class LWC_SearchStudentCtrl {
                 conditions.add('Gender__c = ' + (searchCondition.gender == 1 ? 'True' : 'False'));
             }
             if (!String.isBlank(searchCondition.birthdate)) {
-                conditions.add('Birthdate__c = ' + searchCondition.birthdate);
+                conditions.add('Birthday__c = ' + searchCondition.birthdate);
             }
             if (searchCondition.day > 0) {
-                conditions.add('DAY_IN_MONTH(Birthdate__c) = ' + searchCondition.day);
+                conditions.add('DAY_IN_MONTH(Birthday__c) = ' + searchCondition.day);
             }
             if (searchCondition.month > 0) {
-                conditions.add('CALENDAR_MONTH(Birthdate__c) = ' + searchCondition.month);
+                conditions.add('CALENDAR_MONTH(Birthday__c) = ' + searchCondition.month);
             }
             if (searchCondition.year > 0) {
-                conditions.add('CALENDAR_YEAR(Birthdate__c) = ' + searchCondition.year);
+                conditions.add('CALENDAR_YEAR(Birthday__c) = ' + searchCondition.year);
             }
             queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ')  : '';
             if(searchCondition.orderField =='Student_Code__c'){
                 queryString +=' ORDER BY Student_Code__c';
             }
-            else if(searchCondition.orderField=='First_Name__c'){
-                queryString +=' ORDER BY First_Name__c';
+            else if(searchCondition.orderField=='Firstname__c'){
+                queryString +=' ORDER BY Firstname__c';
 
             }
             else if(searchCondition.orderField=='Class__r.Name'){
@@ -87,8 +87,8 @@ public with sharing class LWC_SearchStudentCtrl {
             else if(searchCondition.orderField=='Gender__c'){
                 queryString +=' ORDER BY Gender__c';
             }
-            else if(searchCondition.orderField=='Birthdate__c'){
-                queryString +=' ORDER BY Birthdate__c';
+            else if(searchCondition.orderField=='Birthday__c'){
+                queryString +=' ORDER BY Birthday__c';
             }
             if(searchCondition.orderType=='ASC'){
                 queryString+= ' ASC'; 

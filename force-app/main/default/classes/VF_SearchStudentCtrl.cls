@@ -75,11 +75,11 @@ public with sharing class VF_SearchStudentCtrl {
         this.student = new Student__c();
         searchResults = [SELECT Id
                                 , Student_Code__c
-                                , First_Name__c
-                                , Last_Name__c
+                                , Firstname__c
+                                , Lastname__c
                                 , selected__c,Class__r.Name
                                 , Gender__c
-                                , Birthdate__c
+                                , Birthday__c
                                 , Address__c 
                         FROM Student__C] ;
         classList = getClassOptions();
@@ -105,12 +105,12 @@ public with sharing class VF_SearchStudentCtrl {
             List<String> conditions = new List<String>();
     
             List<String> selectedFields = new List<String>{
-                'Id', 'Student_Code__c', 'First_Name__c', 'Last_Name__c', 'selected__c',
-                'Class__r.Name', 'Gender__c', 'Birthdate__c', 'Address__c'
+                'Id', 'Student_Code__c', 'Firstname__c', 'Lastname__c', 'selected__c',
+                'Class__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
             if (!String.isBlank(searchName)) {
-                conditions.add('First_Name__c LIKE \'%' + searchName + '%\'');
+                conditions.add('Firstname__c LIKE \'%' + searchName + '%\'');
             }
             if (!String.isBlank(searchCode)) {
                 conditions.add('Student_Code__c LIKE \'%' + searchCode + '%\'');
@@ -123,16 +123,16 @@ public with sharing class VF_SearchStudentCtrl {
             }
             if (birthdate != null) {
                 String formattedDate = birthdate.year() + '-' + pad(birthdate.month()) + '-' + pad(birthdate.day());
-                conditions.add('Birthdate__c = ' + formattedDate);
+                conditions.add('Birthday__c = ' + formattedDate);
             }
             if (day > 0) {
-                conditions.add('DAY_IN_MONTH(Birthdate__c) = ' + day);
+                conditions.add('DAY_IN_MONTH(Birthday__c) = ' + day);
             }
             if (month > 0) {
-                conditions.add('CALENDAR_MONTH(Birthdate__c) = ' + month);
+                conditions.add('CALENDAR_MONTH(Birthday__c) = ' + month);
             }
             if (year > 0) {
-                conditions.add('CALENDAR_YEAR(Birthdate__c) = ' + year);
+                conditions.add('CALENDAR_YEAR(Birthday__c) = ' + year);
             }
             queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ') + ' ORDER BY Student_Code__c' : ' ORDER BY Student_Code__c';
             searchResults = Database.query(queryString);
@@ -235,7 +235,7 @@ public with sharing class VF_SearchStudentCtrl {
      */
     public void createStudent() {
         try {
-                this.studentToCreate.Name = studentToCreate.First_Name__c.left(39) + ' ' + studentToCreate.Last_Name__c.left(39);
+                this.studentToCreate.Name = studentToCreate.Firstname__c.left(39) + ' ' + studentToCreate.Lastname__c.left(39);
                 insert studentToCreate;
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Student created successfully.'));
                 selectedIds.put(student.Id, false);
@@ -256,7 +256,7 @@ public with sharing class VF_SearchStudentCtrl {
      */
     public PageReference updateStudent() {
         try {
-            this.student.Name = student.First_Name__c.left(39) + ' ' + student.Last_Name__c.left(39);
+            this.student.Name = student.Firstname__c.left(39) + ' ' + student.Lastname__c.left(39);
             update student;
             this.student=new Student__c();
             searchResults = new List<Student__c>();
@@ -440,11 +440,11 @@ public with sharing class VF_SearchStudentCtrl {
                 SELECT 
                     Id
                     , Student_Code__c
-                    , First_Name__c
-                    , Last_Name__c
+                    , Firstname__c
+                    , Lastname__c
                     , Class__r.Name
                     , Gender__c
-                    , Birthdate__c
+                    , Birthday__c
                     , Address__c
                 FROM Student__c
                 WHERE Id = :selectedId

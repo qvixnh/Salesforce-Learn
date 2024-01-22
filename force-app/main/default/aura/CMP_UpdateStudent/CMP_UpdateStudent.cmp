@@ -17,9 +17,9 @@
         
         <div class="slds-grid slds-gutters">
             <div class="slds-col slds-size_1-of-2">
-                <lightning:input type="text" label="Enter First Name" aura:id="sFirstName" value="{!v.student.First_Name__c}"/>
+                <lightning:input type="text" label="Enter First Name" aura:id="sFirstName" value="{!v.student.Firstname__c}"/>
                 <p id="sFirstNameError" class="slds-text-color_destructive"></p>
-                <lightning:input type="text" label="Enter Last Name" aura:id="sLastName" value="{!v.student.Last_Name__c}"/>
+                <lightning:input type="text" label="Enter Last Name" aura:id="sLastName" value="{!v.student.Lastname__c}"/>
                 <p id="sLastNameError" class="slds-text-color_destructive"></p>
                 <lightning:select name="classList" label="Select Class" value="{!v.selectedClass}">
                     <option value="{!v.student.Class_c}">{!v.student.Class__r.Name}</option>
@@ -31,7 +31,7 @@
             <div class="slds-col slds-size_1-of-2">
                 <lightning:input type="text" label="Enter Address" aura:id="sAddress" value="{!v.student.Address__c}"/>
                 <p id="sAddressError" class="slds-text-color_destructive"></p>
-                <lightning:input type="date" name="BirthdateInput" label="Enter Birthdate" aura:id="sBirthdate" value="{!v.student.Birthdate__c}"/>
+                <lightning:input type="date" name="BirthdateInput" label="Enter Birthdate" aura:id="sBirthdate" value="{!v.student.Birthday__c}"/>
                 <p id="sBirthdateError" class="slds-text-color_destructive"></p>
                 <lightning:radioGroup name="gender" label="Gender" aura:id="sGender" options="{!v.genderOptions}" value="{!v.student.Gender__c}" />
             </div>

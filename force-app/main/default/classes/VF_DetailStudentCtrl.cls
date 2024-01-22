@@ -21,11 +21,11 @@ public with sharing class VF_DetailStudentCtrl {
                     student = [
                         SELECT
                             Student_Code__c
-                            , First_Name__c
-                            , Last_Name__c
+                            , Firstname__c
+                            , Lastname__c
                             , Class__r.Name
                             , Gender__c
-                            , Birthdate__c
+                            , Birthday__c
                             , Address__c 
                         FROM Student__c 
                         WHERE Id = :selectedStudentId 

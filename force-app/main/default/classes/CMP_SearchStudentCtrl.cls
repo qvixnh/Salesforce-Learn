@@ -41,13 +41,13 @@ public with sharing class CMP_SearchStudentCtrl {
             studentDetails = [SELECT 
                                 Id
                                 , Student_Code__c
-                                , First_Name__c
-                                , Last_Name__c
+                                , Firstname__c
+                                , Lastname__c
                                 , selected__c
                                 , Class__c
                                 , Class__r.Name
                                 , Gender__c
-                                , Birthdate__c
+                                , Birthday__c
                                 , Address__c
                             FROM Student__c 
                             WHERE Id = :studentId];
@@ -138,7 +138,7 @@ public with sharing class CMP_SearchStudentCtrl {
             }
             Student__c studentToDelete = 
             [SELECT Id
-            , First_Name__c
+            , Firstname__c
             , Student_Code__c
             FROM Student__c 
             WHERE Id = :studentId ];
@@ -172,14 +172,14 @@ public with sharing class CMP_SearchStudentCtrl {
     public static List<Student__c> getStudents(String classId, Integer gender, String searchName, String searchCode, Integer day, Integer month, Integer year, String birthdate, String orderField, String orderType) {
         try {
             List<String> selectedFields = new List<String>{
-                'Id', 'Student_Code__c', 'First_Name__c', 'Last_Name__c', 'selected__c',
-                'Class__r.Name', 'Gender__c', 'Birthdate__c', 'Address__c'
+                'Id', 'Student_Code__c', 'Firstname__c', 'Lastname__c', 'selected__c',
+                'Class__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
             List<String> conditions = new List<String>();
         
             if (!String.isBlank(searchName)) {
-                conditions.add('First_Name__c LIKE \'%' + searchName + '%\'');
+                conditions.add('Firstname__c LIKE \'%' + searchName + '%\'');
             }
             if (!String.isBlank(searchCode)) {
                 conditions.add('Student_Code__c LIKE \'%' + searchCode + '%\'');
@@ -191,16 +191,16 @@ public with sharing class CMP_SearchStudentCtrl {
                 conditions.add('Gender__c = ' + (gender == 1 ? 'True' : 'False'));
             }
             if (!String.isBlank(birthdate)) {
-                conditions.add('Birthdate__c = ' + birthdate);
+                conditions.add('Birthday__c = ' + birthdate);
             }
             if (day > 0) {
-                conditions.add('DAY_IN_MONTH(Birthdate__c) = ' + day);
+                conditions.add('DAY_IN_MONTH(Birthday__c) = ' + day);
             }
             if (month > 0) {
-                conditions.add('CALENDAR_MONTH(Birthdate__c) = ' + month);
+                conditions.add('CALENDAR_MONTH(Birthday__c) = ' + month);
             }
             if (year > 0) {
-                conditions.add('CALENDAR_YEAR(Birthdate__c) = ' + year);
+                conditions.add('CALENDAR_YEAR(Birthday__c) = ' + year);
             }
             queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ') + ' ORDER BY ' + orderField + ' ' + orderType :' ORDER BY ' + orderField + ' ' + orderType;
             return Database.query(queryString);

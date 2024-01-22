@@ -128,8 +128,8 @@
                                     </td>
                                     <td style="width:3%;">{student.index}</td>
                                     <td style="width:5%;">{student.Student_Code__c}</td>
-                                    <td style="width:25%;">{student.First_Name__c}</td>
-                                    <td style="width:25%;">{student.Last_Name__c}</td>
+                                    <td style="width:25%;">{student.Firstname__c}</td>
+                                    <td style="width:25%;">{student.Lastname__c}</td>
                                     <td style="width:25%;">{student.Class__r.Name}</td>
                                     <template if:true={student.Gender__c}>
                                         <td style="width:5%;">Male</td>
@@ -139,7 +139,7 @@
                                     </template>
                                     <td style="width:5%;">
                                             <lightning-formatted-date-time
-                                              value={student.Birthdate__c}
+                                              value={student.Birthday__c}
                                               year="numeric"
                                               month="numeric"
                                               day="numeric"

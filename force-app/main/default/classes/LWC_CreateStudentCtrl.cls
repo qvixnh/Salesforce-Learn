@@ -23,10 +23,10 @@ public with sharing class LWC_CreateStudentCtrl {
         try {
             Student__c student = new Student__c();
             student.Name = sFirstName + ' ' + sLastName;
-            student.First_Name__c = sFirstName;
-            student.Last_Name__c = sLastName;
+            student.Firstname__c = sFirstName;
+            student.Lastname__c = sLastName;
             student.Class__c = sClassId ;
-            student.Birthdate__c= sBirthdate;
+            student.Birthday__c= sBirthdate;
             student.Gender__c= sGender;
             student.Address__c = sAddress;
             insert student;

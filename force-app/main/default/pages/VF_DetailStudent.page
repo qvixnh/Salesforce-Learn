@@ -30,13 +30,13 @@
     <apex:pageMessages />
     <h2>Show Student Details</h2>
     <p>Student code: {!student.Student_Code__c}</p>
-    <p>First Name: {!student.First_Name__c}</p>
-    <p>Last Name: {!student.Last_Name__c}</p>
+    <p>First Name: {!student.Firstname__c}</p>
+    <p>Last Name: {!student.Lastname__c}</p>
     <p>Class: {!student.Class__r.Name}</p>
     <p>Gender: {!student.Gender__c}</p>
     <p>Birthdate:</p>
     <apex:outputText value="{0,date,dd/MM/yyyy}">
-        <apex:param value="{!student.Birthdate__c}" />
+        <apex:param value="{!student.Birthday__c}" />
     </apex:outputText>
     <p>Address: {!student.Address__c}</p>
     <!-- Add the Update button -->

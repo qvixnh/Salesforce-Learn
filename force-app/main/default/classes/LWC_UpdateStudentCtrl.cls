@@ -22,10 +22,10 @@ public with sharing class LWC_UpdateStudentCtrl {
     public static String updateStudentRec(Student__c student, String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate) {
         try {
             student.Name = sFirstName + ' ' + sLastName;
-            student.First_Name__c = sFirstName;
-            student.Last_Name__c = slastName;
+            student.Firstname__c = sFirstName;
+            student.Lastname__c = slastName;
             student.Class__c = sClassId ;
-            student.Birthdate__c= sBirthdate;
+            student.Birthday__c= sBirthdate;
             student.Gender__c= sGender;
             student.Address__c = sAddress;
             update student;

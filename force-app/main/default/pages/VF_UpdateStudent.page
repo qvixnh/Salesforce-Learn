@@ -37,12 +37,12 @@
 
         <div class="input-container">
             <label>First Name:</label>
-            <apex:inputText value="{!student.First_Name__c}" />
+            <apex:inputText value="{!student.Firstname__c}" />
         </div>
 
         <div class="input-container">
             <label>Last Name:</label>
-            <apex:inputText value="{!student.Last_Name__c}" />
+            <apex:inputText value="{!student.Lastname__c}" />
         </div>
 
         <div class="input-container">
@@ -62,7 +62,7 @@
         </div>
         <div class="input-container">
             <label>Birthdate:</label>
-            <apex:inputField value="{!student.Birthdate__c}" />
+            <apex:inputField value="{!student.Birthday__c}" />
         </div>
 
         <div class="input-container">
