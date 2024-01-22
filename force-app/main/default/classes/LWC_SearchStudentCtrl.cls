@@ -36,7 +36,7 @@ public with sharing class LWC_SearchStudentCtrl {
      * @param    : String searchConditionJSON
      * @return   : List<Student__c> 
      * @created  : 2023/01/10 + Nguyen Vinh
-     * @modified : 2023/01/1    2 + Nguyen Vinh
+     * @modified : 2023/01/12 + Nguyen Vinh
      */
     @AuraEnabled
     public static List<Student__c> getStudentsByCondition(String searchConditionJSON) {
@@ -73,7 +73,24 @@ public with sharing class LWC_SearchStudentCtrl {
             if (searchCondition.year > 0) {
                 conditions.add('CALENDAR_YEAR(Birthdate__c) = ' + searchCondition.year);
             }
-            queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ') + ' ORDER BY ' + searchCondition.orderField : ' ORDER BY ' + searchCondition.orderField;
+            queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ')  : '';
+            if(searchCondition.orderField =='Student_Code__c'){
+                queryString +=' ORDER BY Student_Code__c';
+            }
+            else if(searchCondition.orderField=='First_Name__c'){
+                queryString +=' ORDER BY First_Name__c';
+
+            }
+            else if(searchCondition.orderField=='Class__r.Class_Name__c'){
+                queryString +=' ORDER BY Class__r.Class_Name__c';
+                
+            }
+            else if(searchCondition.orderField=='Gender__c'){
+                queryString +=' ORDER BY Gender__c';
+            }
+            else if(searchCondition.orderField=='Birthdate__c'){
+                queryString +=' ORDER BY Birthdate__c';
+            }
             if(searchCondition.orderType=='ASC'){
                 queryString+= ' ASC'; 
             }else{

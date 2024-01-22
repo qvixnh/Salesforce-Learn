@@ -52,17 +52,10 @@
             var selectedGender = document.querySelector("[id$='Gender__c']").value;
             var birthdate = document.querySelector("[id$='Birthdate__c']").value;
             var address = document.querySelector("[id$='Address__c']").value;
-
-            // Perform your validation logic here
-            // For example, you can check if the required fields are not empty
             if (firstName.trim() === '' || lastName.trim() === '' || selectedClass.trim() === '' || selectedGender.trim() === '' || birthdate.trim() === '' || address.trim() === '') {
                 alert('Please fill in all required fields.');
-                return false; // Prevent form submission
+                return false; 
             }
-
-            // You can add more validation rules as needed
-
-            // If all validations pass, allow form submission
             return true;
         }
     </script>

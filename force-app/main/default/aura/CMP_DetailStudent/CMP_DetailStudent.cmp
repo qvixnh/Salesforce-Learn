@@ -4,7 +4,7 @@
 
     <aura:if isTrue="{!v.childStatus}">
         <div class="slds-card slds-p-around_medium">
-            <h1 class="slds-text-heading_medium">{!v.student.Student_Code__c}</h1>
+            <h1 class="slds-text-heading_medium">Student: {!v.student.Student_Code__c}</h1>
             <dl class="slds-list_horizontal slds-wrap">
                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="First Name">First Name:</dt>
                 <dd class="slds-item_detail slds-truncate">{!v.student.First_Name__c}</dd>
@@ -16,10 +16,7 @@
                 <dd class="slds-item_detail slds-truncate">{!v.student.Class__r.Class_Name__c}</dd>
                 
                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Gender">Gender:</dt>
-                <dd class="slds-item_detail slds-truncate">{!v.student.Gender__c}</dd>
-                
-                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Selected">Selected:</dt>
-                <dd class="slds-item_detail slds-truncate">{!v.student.selected__c}</dd>
+                <dd class="slds-item_detail slds-truncate"> {!IF(student.Gender__c, 'Male', 'Female')}</dd>
                 
                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Birthdate">Birthdate:</dt>
                 <dd class="slds-item_detail slds-truncate">{!v.student.Birthdate__c}</dd>
