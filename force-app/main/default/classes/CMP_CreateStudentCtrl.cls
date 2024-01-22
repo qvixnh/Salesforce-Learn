@@ -48,11 +48,10 @@ public class CMP_CreateStudentCtrl {
         try { 
             return[SELECT 
                     Id
-                    , Class_Code__c
                     , Name
                     , NumberOfStudent__c 
                     FROM Class__c 
-                    ORDER BY Class_Code__c];
+                    ORDER BY Name];
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

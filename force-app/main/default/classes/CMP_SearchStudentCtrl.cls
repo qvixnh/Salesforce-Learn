@@ -18,11 +18,10 @@ public with sharing class CMP_SearchStudentCtrl {
         try {
             classList = [SELECT 
                             Id
-                            , Class_Code__c
                             , Name
                             , NumberOfStudent__c
                         FROM Class__c 
-                        ORDER BY Class_Code__c];
+                        ORDER BY Name];
             return classList;
         } catch (Exception e) {
             throw new CustomException('An error occurred when getting classes: ' + e.getMessage());
