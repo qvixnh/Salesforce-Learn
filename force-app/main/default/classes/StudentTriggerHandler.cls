@@ -4,16 +4,16 @@ public class StudentTriggerHandler {
         for (Student__c student : students) {
             classIds.add(student.Class__c);
         }
-        List<Class__c> classesToUpdate = [SELECT Id, Number_Of_Student__c FROM Class__c WHERE Id IN :classIds];
+        List<Class__c> classesToUpdate = [SELECT Id, NumberOfStudent__c FROM Class__c WHERE Id IN :classIds];
         List<Class__c> classesToUpdateList = new List<Class__c>();
         for (Class__c cls : classesToUpdate) {
-            Integer numberOfStudents = cls.Number_Of_Student__c != null ? cls.Number_Of_Student__c.intValue() : 0;
+            Integer numberOfStudents = cls.NumberOfStudent__c != null ? cls.NumberOfStudent__c.intValue() : 0;
             for (Student__c student : students) {
                 if (student.Class__c == cls.Id) {
                     numberOfStudents++;
                 }
             }
-            cls.Number_Of_Student__c = Decimal.valueOf(numberOfStudents);
+            cls.NumberOfStudent__c = Decimal.valueOf(numberOfStudents);
             classesToUpdateList.add(cls);
         }
         if (!classesToUpdateList.isEmpty()) {
@@ -45,16 +45,16 @@ public class StudentTriggerHandler {
             classIds.add(student.Class__c);
         }
         try {
-            List<Class__c> classesToUpdate = [SELECT Id, Number_Of_Student__c FROM Class__c WHERE Id IN :classIds];
+            List<Class__c> classesToUpdate = [SELECT Id, NumberOfStudent__c FROM Class__c WHERE Id IN :classIds];
             List<Class__c> classesToUpdateList = new List<Class__c>();
             for (Class__c cls : classesToUpdate) {
-                Integer numberOfStudents = cls.Number_Of_Student__c != null ? cls.Number_Of_Student__c.intValue() : 0;
+                Integer numberOfStudents = cls.NumberOfStudent__c != null ? cls.NumberOfStudent__c.intValue() : 0;
                 for (Student__c student : students) {
                     if (student.Class__c == cls.Id) {
                         numberOfStudents--;
                     }
                 }
-                cls.Number_Of_Student__c = Decimal.valueOf(numberOfStudents); 
+                cls.NumberOfStudent__c = Decimal.valueOf(numberOfStudents); 
                 classesToUpdateList.add(cls);
             }
             if (!classesToUpdateList.isEmpty()) {

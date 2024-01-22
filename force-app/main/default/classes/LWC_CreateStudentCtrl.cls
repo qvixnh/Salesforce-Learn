@@ -52,9 +52,9 @@ public with sharing class LWC_CreateStudentCtrl {
                             Id
                             , Class_Code__c
                             , Name
-                            , Number_Of_Student__c
+                            , NumberOfStudent__c
                         FROM Class__c 
-                        WHERE Number_Of_Student__c < 100
+                        WHERE NumberOfStudent__c < 100
                         ORDER BY Class_Code__c
                         ];
         } catch (Exception e) {
