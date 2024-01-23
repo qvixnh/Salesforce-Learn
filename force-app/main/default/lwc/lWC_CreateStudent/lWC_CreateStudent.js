@@ -68,7 +68,7 @@ export default class LWC_CreateStudent extends LightningElement {
             this.dispatchEvent(successEvent);
         })
         .catch(error => {
-            this.showSuccessToast('Error creating student record:', error);
+            this.showErrorToast('Error creating student record:', error);
         });    
        
     }

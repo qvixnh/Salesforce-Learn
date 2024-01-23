@@ -3,40 +3,24 @@ trigger T01_StudentTrigger on Student__c (
     ,before insert
     ,before update
     ,after update
-    ,after delete
-    ) {
-    // if (Trigger.isAfter && Trigger.isInsert) {
-    //     StudentTriggerHandler.afterInsert(Trigger.new);
-    // }
-    // if (Trigger.isAfter && Trigger.isUpdate) {
-    //     StudentTriggerHandler.afterUpdate(Trigger.old,Trigger.new);
-    // }
-    // if (Trigger.isAfter && Trigger.isDelete) {
-    //     StudentTriggerHandler.afterDelete(Trigger.old);
-    // }
+    ,after delete) {
     if (Trigger.isBefore) {
         if (Trigger.isInsert) {
             T01_StudentTriggerHandler.onBeforeInsert(Trigger.new);
+        }
+        if (Trigger.isUpdate) {
+            T01_StudentTriggerHandler.onBeforeUpdate(Trigger.new);
         }
     }
     if (Trigger.isAfter) {
         if (Trigger.isInsert) {
             T01_StudentTriggerHandler.onAfterInsert(Trigger.new);
         }
+        if (Trigger.isUpdate) {
+            T01_StudentTriggerHandler.onAfterUpdate(Trigger.new,Trigger.old);
+        }
+        if (Trigger.isDelete) {
+            T01_StudentTriggerHandler.onAfterDelete(Trigger.old);
+        }
     }
-    //after insert, Tạo hàm count
-    //không 
-    // without  sharing
-    // onAffterInsser@TestSetup
-    // static void 
-    // (){
-        
-    // }
-    // priva@TestSetup
-    // static void makeData(){
-        
-    // }
-    // count() Student
-    // hàm public thì thêm try catch
-    //select () hàm ccount SOQL salseforce 
 }

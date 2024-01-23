@@ -45,6 +45,8 @@ public with sharing class CMP_SearchStudentCtrl {
                                 , Lastname__c
                                 , selected__c
                                 , Class__c
+                                , Class_look__c
+
                                 , Class__r.Name
                                 , Gender__c
                                 , Birthday__c

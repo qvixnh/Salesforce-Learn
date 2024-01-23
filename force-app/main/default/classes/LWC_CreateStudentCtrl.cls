@@ -26,6 +26,7 @@ public with sharing class LWC_CreateStudentCtrl {
             student.Firstname__c = sFirstName;
             student.Lastname__c = sLastName;
             student.Class__c = sClassId ;
+            student.Class_look__c = sClassId ;
             student.Birthday__c= sBirthdate;
             student.Gender__c= sGender;
             student.Address__c = sAddress;
@@ -51,9 +52,7 @@ public with sharing class LWC_CreateStudentCtrl {
             classList = [SELECT 
                             Id
                             , Name
-                            , NumberOfStudent__c
                         FROM Class__c 
-                        WHERE NumberOfStudent__c < 100
                         ORDER BY Name
                         ];
         } catch (Exception e) {

@@ -42,7 +42,7 @@ public with sharing class LWC_SearchStudentCtrl {
             SearchConditionDTO searchCondition = (SearchConditionDTO) JSON.deserialize(searchConditionJSON, SearchConditionDTO.class);
             List<String> conditions = new List<String>();
             List<String> selectedFields = new List<String>{
-                'Id', 'Student_Code__c', 'Firstname__c', 'Lastname__c', 'selected__c','Class__c',
+                'Id', 'Student_Code__c', 'Firstname__c', 'Lastname__c', 'selected__c',
                 'Class__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';

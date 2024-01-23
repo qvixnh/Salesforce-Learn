@@ -7,11 +7,10 @@
 
 public without sharing class T01_StudentTriggerHandler {
     /**
-     * 
-     * @param    : 
-     *            
-     * @return   : String 
-     * @created  : 2023/12/26 + Nguyen Vinh
+     * onBeforeInsert
+     * @param    : List<Student__c> newStudents
+     * @return   :  
+     * @created  : 2023/01/23 + Nguyen Vinh
      * @modified : 
      */
     public static void  onBeforeInsert(List<Student__c> newStudents){
@@ -22,24 +21,80 @@ public without sharing class T01_StudentTriggerHandler {
         
         }
     }
-    public static void  onAfterInsert(List<Student__c> newStudents){
+    /**
+     * onBeforeUpdate
+     * @param    : List<Student__c> newStudents
+     * @return   :  
+     * @created  : 2023/01/23 + Nguyen Vinh
+     * @modified : 
+     */
+    public static void  onBeforeUpdate(List<Student__c> newStudents){
         try {
-            count(newStudents);
+            validateFields(newStudents);
         } catch (Exception e) {
-            throw new CustomException('An error occurred onBeforeInsert : ' + e.getMessage());
+            throw new CustomException('An error occurred onBeforeUpdate : ' + e.getMessage());
+        
         }
     }
-    
-    private static void count(List<Student__c> newStudents){
+    /**
+     * onAfterInsert
+     * @param    : List<Student__c> newStudents
+     * @return   :  
+     * @created  : 2023/01/23 + Nguyen Vinh
+     * @modified : 
+     */
+    public static void  onAfterInsert(List<Student__c> newStudents){
+        try {
+            countNew(newStudents);
+        } catch (Exception e) {
+            throw new CustomException('An error occurred onAfterInsert : ' + e.getMessage());
+        }
+    }
+    /**
+     * onAfterDelete
+     * @param    : List<Student__c> newStudents
+     * @return   :  
+     * @created  : 2023/01/23 + Nguyen Vinh
+     * @modified : 
+     */
+    public static void  onAfterDelete(List<Student__c> oldStudents){
+        try {
+            countNew(oldStudents);
+        } catch (Exception e) {
+            throw new CustomException('An error occurred onAfterDelete : ' + e.getMessage());
+        }
+    }
+    /**
+     * onAfterUpdate
+     * @param    : List<Student__c> newStudents,List<Student__c> oldStudents
+     * @return   :  
+     * @created  : 2023/01/23 + Nguyen Vinh
+     * @modified : 
+     */
+    public static void  onAfterUpdate(List<Student__c> newStudents,List<Student__c> oldStudents){
+        try {
+            countNew(newStudents);
+            countOld(oldStudents);
+        } catch (Exception e) {
+            throw new CustomException('An error occurred onAfterUpdate : ' + e.getMessage());
+        }
+    }
+    /**
+     * countNew
+     * @param    : List<Student__c> newStudents
+     * @return   :  
+     * @created  : 2023/01/23 + Nguyen Vinh
+     * @modified : 
+     */
+    private static void countNew(List<Student__c> newStudents){
         Set<Id> classIds = new Set<Id>();
-        //lấy danh sách lớp Id của student cần udpate 
         for (Student__c student : newStudents) {
             classIds.add(student.Class__c);
         }
-        //lấy ra count cũ của student 
+        
         Map<Id, Integer> countMap = new Map<Id, Integer>();
-        for (AggregateResult result : [SELECT Class__c, COUNT(Id) FROM Student__c WHERE Class__c IN :classIds GROUP BY Class__c]) {
-            Id classId = (Id) result.get('Class__c');
+        for (AggregateResult result : [SELECT Class_look__c, COUNT(Id) FROM Student__c WHERE Class_look__c IN :classIds GROUP BY Class_look__c]) {
+            Id classId = (Id) result.get('Class_look__c');
             Integer count = (Integer) result.get('expr0');
             countMap.put(classId, count);
         }
@@ -47,11 +102,6 @@ public without sharing class T01_StudentTriggerHandler {
         List<Class__c> classesToUpdateList = new List<Class__c>();
         for(Class__c cls : classesToUpdate){
             Integer numberOfStudents = countMap.get(cls.Id);
-            for (Student__c student : newStudents) {
-                if (student.Class__c == cls.Id) {
-                    numberOfStudents++;
-                }
-            }
             cls.NumberOfStudent__c = numberOfStudents;
             classesToUpdateList.add(cls);
         }
@@ -60,8 +110,44 @@ public without sharing class T01_StudentTriggerHandler {
         }
         
     }
-    private static void validateFields(List<Student__c> students) {
-        for (Student__c student : students) {
+    /**
+     * countOld
+     * @param    : List<Student__c> oldStudents
+     * @return   :  
+     * @created  : 2023/01/23 + Nguyen Vinh
+     * @modified : 
+     */
+    private static void countOld(List<Student__c> oldStudents){
+        Set<Id> classIds = new Set<Id>();
+        for (Student__c student : oldStudents) {
+            classIds.add(student.Class__c);
+        }
+        Map<Id, Integer> countMap = new Map<Id, Integer>();
+        for (AggregateResult result : [SELECT Class_look__c, COUNT(Id) FROM Student__c WHERE Class_look__c IN :classIds GROUP BY Class_look__c]) {
+            Id classId = (Id) result.get('Class_look__c');
+            Integer count = (Integer) result.get('expr0');
+            countMap.put(classId, count);
+        }
+        List<Class__c> classesToUpdate = [SELECT Id, NumberOfStudent__c FROM Class__c WHERE Id IN :classIds];
+        List<Class__c> classesToUpdateList = new List<Class__c>();
+        for(Class__c cls : classesToUpdate){
+            Integer numberOfStudents = countMap.get(cls.Id);
+            cls.NumberOfStudent__c = numberOfStudents;
+            classesToUpdateList.add(cls);
+        }
+        if (!classesToUpdateList.isEmpty()) {
+            update classesToUpdateList;
+        }
+    }
+    /**
+     * validateFields
+     * @param    : List<Student__c> newStudents
+     * @return   :  
+     * @created  : 2023/01/23 + Nguyen Vinh
+     * @modified : 
+     */
+    private static void validateFields(List<Student__c> newStudents) {
+        for (Student__c student : newStudents) {
             if (String.isBlank(student.Firstname__c)) {
                 student.addError('First Name cannot be null.');
             }
@@ -85,6 +171,13 @@ public without sharing class T01_StudentTriggerHandler {
             }
         }
     }
+    /**
+     * calculateAge
+     * @param    : Date birthdate
+     * @return   :  Integer
+     * @created  : 2023/01/23 + Nguyen Vinh
+     * @modified : 
+     */
     private static Integer calculateAge(Date birthdate) {
         Date currentDate = Date.today();
         Integer birthYear = birthdate.year();
