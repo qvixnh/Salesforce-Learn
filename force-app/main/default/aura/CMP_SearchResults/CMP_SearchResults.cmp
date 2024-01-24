@@ -75,7 +75,7 @@
                         <lightning:input type="checkbox"  aura:id="checkboxes" value="{!student.Id}" checked="{!student.selected__c}"/>
                     </td>
                     <td style="width:3%;" data-label="Row">{!rowIndex +1 }</td>
-                    <td style="width:5%;" data-label="Student Code" >{!student.Student_Code__c}</td>
+                    <td style="width:5%;" data-label="Student Code" >{!student.StudentCode__c}</td>
                     <td style="width:25%;" data-label="First Name"  >{!student.Firstname__c}</td>
                     <td style="width:25%;" data-label="Last Name"  >{!student.Lastname__c}</td>
                     <td style="width:25%;" data-label="Class"  >{!student.Class__r.Name}</td>

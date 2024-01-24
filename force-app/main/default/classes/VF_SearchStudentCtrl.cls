@@ -74,7 +74,7 @@ public with sharing class VF_SearchStudentCtrl {
         this.studentToCreate= new Student__c();
         this.student = new Student__c();
         searchResults = [SELECT Id
-                                , Student_Code__c
+                                , StudentCode__c
                                 , Firstname__c
                                 , Lastname__c
                                 , selected__c,Class__r.Name
@@ -105,7 +105,7 @@ public with sharing class VF_SearchStudentCtrl {
             List<String> conditions = new List<String>();
     
             List<String> selectedFields = new List<String>{
-                'Id', 'Student_Code__c', 'Firstname__c', 'Lastname__c', 'selected__c',
+                'Id', 'StudentCode__c', 'Firstname__c', 'Lastname__c', 'selected__c',
                 'Class__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
@@ -113,7 +113,7 @@ public with sharing class VF_SearchStudentCtrl {
                 conditions.add('Firstname__c LIKE \'%' + searchName + '%\'');
             }
             if (!String.isBlank(searchCode)) {
-                conditions.add('Student_Code__c LIKE \'%' + searchCode + '%\'');
+                conditions.add('StudentCode__c LIKE \'%' + searchCode + '%\'');
             }
             if (searchSelectedClass != '1') {
                 conditions.add('Class__c = \'' + searchSelectedClass + '\'');
@@ -134,7 +134,7 @@ public with sharing class VF_SearchStudentCtrl {
             if (year > 0) {
                 conditions.add('CALENDAR_YEAR(Birthday__c) = ' + year);
             }
-            queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ') + ' ORDER BY Student_Code__c' : ' ORDER BY Student_Code__c';
+            queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ') + ' ORDER BY StudentCode__c' : ' ORDER BY StudentCode__c';
             searchResults = Database.query(queryString);
         } catch (Exception e) {
             System.debug(e);
@@ -439,7 +439,7 @@ public with sharing class VF_SearchStudentCtrl {
             this.student = [
                 SELECT 
                     Id
-                    , Student_Code__c
+                    , StudentCode__c
                     , Firstname__c
                     , Lastname__c
                     , Class__r.Name

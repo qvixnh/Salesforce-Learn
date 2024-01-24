@@ -43,12 +43,12 @@ public without sharing class T02_ScoreTriggerHandler {
         ];
         for(SubjectScore__c subjectScore : subjectScores){
             //count gpa here
-            Decimal gpa = getGPA();
-            if(gpa>0){
-                if(gpa>5){
-                    subjectScore.Status__c = '' 
-                }
-            }
+            // Decimal gpa = getGPA();
+            // if(gpa>0){
+            //     if(gpa>5){
+            //         //subjectScore.Status__c = '' 
+            //     }
+            // }
         }
     } 
     private static Boolean isCount(SubjectScore__c subjectScore){
@@ -87,52 +87,52 @@ public without sharing class T02_ScoreTriggerHandler {
         return isPractical && isPractical && isMidterm && isFinal;
     } 
     private static Decimal getGPA(SubjectScore__c subjectScore){
-        Decimal GPA = 0;
-        List<Score__c > ScoresBySubject = [
-            SELECT Id
-            , SubjectScore_look__c										
-            , ExamType__c										
-            , Score__c										
-            FROM Score__c
-            WHERE SubjectScore_look__c = :subjectScore.Id
-        ];
-        Boolean isProgress =false;
-        Boolean isPractical = false;
-        Boolean isMidterm =false;
-        Boolean isFinal =false;
-        Decimal[] gpaArray = new Decimal[]{0, 0, 0, 0};
-        for(Score__c score:  ScoresBySubject){
-            /*
-            "'進捗' - 'Progress'
-            '実技' - 'Practical'
-            '中間試験' - 'Midterm Exam'
-            ' 期末試験' - 'FinalTerm Exam'"													
-            */
-            if(score.ExamType__c == 'Progress'){
-                isProgress=true;
-                gpaArray[0] = score.Score__c * 0.1;
-            }
-            if(score.ExamType__c == 'Practical'){
-                isPractical=true;
-                gpaArray[1] = score.Score__c * 0.2;
+        // Decimal GPA = 0;
+        // List<Score__c > ScoresBySubject = [
+        //     SELECT Id
+        //     , SubjectScore_look__c										
+        //     , ExamType__c										
+        //     , Score__c										
+        //     FROM Score__c
+        //     WHERE SubjectScore_look__c = :subjectScore.Id
+        // ];
+        // Boolean isProgress =false;
+        // Boolean isPractical = false;
+        // Boolean isMidterm =false;
+        // Boolean isFinal =false;
+        // Decimal[] gpaArray = new Decimal[]{0, 0, 0, 0};
+        // for(Score__c score:  ScoresBySubject){
+        //     /*
+        //     "'進捗' - 'Progress'
+        //     '実技' - 'Practical'
+        //     '中間試験' - 'Midterm Exam'
+        //     ' 期末試験' - 'FinalTerm Exam'"													
+        //     */
+        //     if(score.ExamType__c == 'Progress'){
+        //         isProgress=true;
+        //         gpaArray[0] = score.Score__c * 0.1;
+        //     }
+        //     if(score.ExamType__c == 'Practical'){
+        //         isPractical=true;
+        //         gpaArray[1] = score.Score__c * 0.2;
 
-            }
-            if(score.ExamType__c == 'Midterm Exam'){
-                isMidterm=true;
-                gpaArray[2] = score.Score__c * 0.2;
-            }
-            if(score.ExamType__c == 'FinalTerm Exam'){
-                isFinal=true;
-                gpaArray[3] = score.Score__c * 0.5;
-            }
+        //     }
+        //     if(score.ExamType__c == 'Midterm Exam'){
+        //         isMidterm=true;
+        //         gpaArray[2] = score.Score__c * 0.2;
+        //     }
+        //     if(score.ExamType__c == 'FinalTerm Exam'){
+        //         isFinal=true;
+        //         gpaArray[3] = score.Score__c * 0.5;
+        //     }
             
-        }
-        if(isPractical && isPractical && isMidterm && isFinal){
-            for (Decimal gpa : gpaArray) {
-                GPA += gpa;
-            }
-            return GPA;
-        }
+        // }
+        // if(isPractical && isPractical && isMidterm && isFinal){
+        //     for (Decimal item : gpaArray) {
+        //         GPA += item;
+        //     }
+        //     return GPA;
+        // }
         return -1;
     } 
     public  class  CustomException extends Exception {

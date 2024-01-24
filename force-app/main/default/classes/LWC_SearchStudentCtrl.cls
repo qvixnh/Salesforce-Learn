@@ -42,7 +42,7 @@ public with sharing class LWC_SearchStudentCtrl {
             SearchConditionDTO searchCondition = (SearchConditionDTO) JSON.deserialize(searchConditionJSON, SearchConditionDTO.class);
             List<String> conditions = new List<String>();
             List<String> selectedFields = new List<String>{
-                'Id', 'Student_Code__c', 'Firstname__c', 'Lastname__c', 'selected__c',
+                'Id', 'StudentCode__c', 'Firstname__c', 'Lastname__c', 'selected__c',
                 'Class_look__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
@@ -51,7 +51,7 @@ public with sharing class LWC_SearchStudentCtrl {
                 conditions.add('Firstname__c LIKE \'%' + searchCondition.searchName + '%\'');
             }
             if (!String.isBlank(searchCondition.searchCode)) {
-                conditions.add('Student_Code__c LIKE \'%' + searchCondition.searchCode + '%\'');
+                conditions.add('StudentCode__c LIKE \'%' + searchCondition.searchCode + '%\'');
             }
             if (searchCondition.classId != null && searchCondition.classId != 'null' && !String.isBlank(searchCondition.classId)) {
                 conditions.add('Class__c = \'' + searchCondition.classId + '\'');
@@ -72,8 +72,8 @@ public with sharing class LWC_SearchStudentCtrl {
                 conditions.add('CALENDAR_YEAR(Birthday__c) = ' + searchCondition.year);
             }
             queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ')  : '';
-            if(searchCondition.orderField =='Student_Code__c'){
-                queryString +=' ORDER BY Student_Code__c';
+            if(searchCondition.orderField =='StudentCode__c'){
+                queryString +=' ORDER BY StudentCode__c';
             }
             else if(searchCondition.orderField=='Firstname__c'){
                 queryString +=' ORDER BY Firstname__c';

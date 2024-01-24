@@ -12,7 +12,7 @@
     <aura:attribute name="monthOptions" type="List"/>
     <aura:attribute name="searchYearOfBirth" type="Integer" default="0"/>
     <aura:attribute name="pageSize" type="Integer" default="4" />
-    <aura:attribute name="FieldOrderBy" type="String" default="Student_Code__c"/>
+    <aura:attribute name="FieldOrderBy" type="String" default="StudentCode__c"/>
     <aura:attribute name="FieldOrderByList" type="List" />
     <aura:attribute name="OrderType" type="String" default="ASC"/>
     <aura:attribute name="OrderTypeList" type="List" />

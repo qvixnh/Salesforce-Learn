@@ -30,7 +30,7 @@ public with sharing class LWC_UpdateStudentCtrl {
             student.Gender__c= sGender;
             student.Address__c = sAddress;
             update student;
-            return student.Student_Code__c;
+            return student.StudentCode__c;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

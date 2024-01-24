@@ -29,7 +29,7 @@
     <apex:outputLink value="/apex/VF_SearchStudent">back to list</apex:outputLink><br/>
     <apex:pageMessages />
     <h2>Show Student Details</h2>
-    <p>Student code: {!student.Student_Code__c}</p>
+    <p>Student code: {!student.StudentCode__c}</p>
     <p>First Name: {!student.Firstname__c}</p>
     <p>Last Name: {!student.Lastname__c}</p>
     <p>Class: {!student.Class__r.Name}</p>

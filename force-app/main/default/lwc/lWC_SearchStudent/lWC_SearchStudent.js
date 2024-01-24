@@ -27,7 +27,7 @@ export default class LWC_SearchStudent extends LightningElement {
     monthOfBirth = null;
     yearOfBirth = null;
     // Define select options for day and month
-    fieldOrderBy = 'Student_Code__c';
+    fieldOrderBy = 'StudentCode__c';
     orderType = 'ASC';
     //pagination
     currentPage = 1;
@@ -58,7 +58,7 @@ export default class LWC_SearchStudent extends LightningElement {
     }
     get fieldOrderByOptions() {
         return [
-            { label: 'Student Code', value: 'Student_Code__c' },
+            { label: 'Student Code', value: 'StudentCode__c' },
             { label: 'Student Name', value: 'Firstname__c' },
             { label: 'Student Birthdate', value: 'Birthday__c' },
             { label: 'Student Gender', value: 'Gender__c' },
@@ -330,7 +330,7 @@ export default class LWC_SearchStudent extends LightningElement {
         if (this.isSelectAllChecked) {
             this.selectedStudentIds = this.displayedStudents.map(student => student.Id);
             for(var stu of this.displayedStudents){
-                this.checkStuden(stu.Student_Code__c,true);
+                this.checkStuden(stu.StudentCode__c,true);
             }
         } else {
             this.selectedStudentIds = [];
@@ -340,13 +340,13 @@ export default class LWC_SearchStudent extends LightningElement {
             selected__c: this.isSelectAllChecked
         }));
         for(var stu of this.displayedStudents){
-            this.checkStuden(stu.Student_Code__c,this.isSelectAllChecked);
+            this.checkStuden(stu.StudentCode__c,this.isSelectAllChecked);
         }
         
     }
     checkStuden(code,check=true){
         for(var stu of this.students){
-            if(stu.Student_Code__c == code){
+            if(stu.StudentCode__c == code){
                 stu.selected__c=check;
             }
         }
@@ -367,7 +367,7 @@ export default class LWC_SearchStudent extends LightningElement {
         this.checkStuden(studentCode,newcheck);
         try {
             for(let i = 0; i<this.displayedStudents.length;i++ ){
-                if(this.displayedStudents[i].Student_Code__c == studentCode){
+                if(this.displayedStudents[i].StudentCode__c == studentCode){
                     this.displayedStudents[i].selected__c = newcheck;
                 }
             }
@@ -382,7 +382,7 @@ export default class LWC_SearchStudent extends LightningElement {
         this.selectedStudentIds=[];
         for(let i = 0; i<this.displayedStudents.length;i++ ){
             if( this.displayedStudents[i].selected__c== true){
-                this.selectedStudentIds.push(this.displayedStudents[i].Student_Code__c);
+                this.selectedStudentIds.push(this.displayedStudents[i].StudentCode__c);
 
             }
         }

@@ -120,14 +120,14 @@
                         </thead>
                         <tbody>
                             <template for:each={displayedStudents} for:item="student">
-                                <tr key={student.Student_Code__c}>
+                                <tr key={student.StudentCode__c}>
                                     <td style="width:2%;">
                                         <div class="slds-truncate" title="Select">
-                                            <input type="checkbox" value={student.Student_Code__c} checked={student.selected__c} onchange={handleSelect} />
+                                            <input type="checkbox" value={student.StudentCode__c} checked={student.selected__c} onchange={handleSelect} />
                                         </div>
                                     </td>
                                     <td style="width:3%;">{student.index}</td>
-                                    <td style="width:5%;">{student.Student_Code__c}</td>
+                                    <td style="width:5%;">{student.StudentCode__c}</td>
                                     <td style="width:25%;">{student.Firstname__c}</td>
                                     <td style="width:25%;">{student.Lastname__c}</td>
                                     <td style="width:25%;">{student.Class_look__r.Name}</td>

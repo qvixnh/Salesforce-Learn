@@ -271,7 +271,7 @@
                     <apex:outputText value="{!rowNum}" />
                     <apex:variable var="rowNum" value="{!rowNum + 1}" />
                 </apex:column>
-                <apex:column value="{!student.Student_Code__c}" headerValue="Student Code"/>
+                <apex:column value="{!student.StudentCode__c}" headerValue="Student Code"/>
                 <apex:column value="{!student.Firstname__c}" headerValue="First Name"/>
                 <apex:column value="{!student.Lastname__c}" headerValue="Last Name"/>
                 <apex:column value="{!student.Class__r.Name}" headerValue="Class"/>
@@ -425,7 +425,7 @@
                 </div>
                 <div class="modal-body">
                     <apex:pageBlock id="modalbodyDetail" >
-                        <h1>{!student.Student_Code__c}</h1>
+                        <h1>{!student.StudentCode__c}</h1>
                         <p><b>Class:</b> {!student.Class__r.Name}</p>
                         <p><b>First name:</b> {!student.Firstname__c}</p>
                         <p><b>Last name:</b> {!student.Lastname__c}</p>
@@ -450,7 +450,7 @@
                 <div class="modal-body">
                     <apex:pageBlock id="modalbodyUpdate" >
                         <apex:form styleClass="form-container" onsubmit="return handleUpdate();">
-                            <h1>{!student.Student_Code__c}</h1>
+                            <h1>{!student.StudentCode__c}</h1>
                             <apex:pageMessages />
                             <div class="input-container">
                                 <label>First Name:</label>
@@ -523,7 +523,7 @@
                 <div class="modal-body">
                     <apex:pageBlock id="modalbodyDelete" >
                         <apex:form styleClass="form-container">
-                            <h1>{!student.Student_Code__c}</h1>
+                            <h1>{!student.StudentCode__c}</h1>
                             <p><b>Class:</b> {!student.Class__r.Name}</p>
                             <p><b>First name:</b> {!student.Firstname__c}</p>
                             <p><b>Last name:</b> {!student.Lastname__c}</p>

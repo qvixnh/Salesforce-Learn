@@ -35,7 +35,7 @@
             { label: "December", value: "12" }
         ]);
         component.set("v.FieldOrderByList",[
-            {label:"Student Code", value:"Student_Code__c"},
+            {label:"Student Code", value:"StudentCode__c"},
             {label:"Student Name", value:"Firstname__c"},
             {label:"Class", value:"Class__r.Name"},
             {label:"Student Birthdate", value:"Birthday__c"},

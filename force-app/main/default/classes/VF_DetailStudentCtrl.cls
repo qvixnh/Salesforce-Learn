@@ -20,7 +20,7 @@ public with sharing class VF_DetailStudentCtrl {
                 if(studentExists(selectedStudentId)){
                     student = [
                         SELECT
-                            Student_Code__c
+                            StudentCode__c
                             , Firstname__c
                             , Lastname__c
                             , Class__r.Name
