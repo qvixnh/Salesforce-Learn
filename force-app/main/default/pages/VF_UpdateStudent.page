@@ -47,7 +47,7 @@
 
         <div class="input-container">
             <label>Class:</label>
-            <apex:selectList value="{!student.Class__c}" size="1">
+            <apex:selectList value="{!student.Class_look__c}" size="1">
                 <apex:selectOptions value="{!classList}" />
             </apex:selectList>
         </div>

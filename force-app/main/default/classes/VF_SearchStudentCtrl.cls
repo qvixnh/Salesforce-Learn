@@ -116,7 +116,7 @@ public with sharing class VF_SearchStudentCtrl {
                 conditions.add('StudentCode__c LIKE \'%' + searchCode + '%\'');
             }
             if (searchSelectedClass != '1') {
-                conditions.add('Class__c = \'' + searchSelectedClass + '\'');
+                conditions.add('Class_look__c = \'' + searchSelectedClass + '\'');
             }
             if (gender == 1 || gender == 0) {
                 conditions.add('Gender__c = ' + (gender == 1 ? 'True' : 'False'));

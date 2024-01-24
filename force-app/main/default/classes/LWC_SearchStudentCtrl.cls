@@ -54,7 +54,7 @@ public with sharing class LWC_SearchStudentCtrl {
                 conditions.add('StudentCode__c LIKE \'%' + searchCondition.searchCode + '%\'');
             }
             if (searchCondition.classId != null && searchCondition.classId != 'null' && !String.isBlank(searchCondition.classId)) {
-                conditions.add('Class__c = \'' + searchCondition.classId + '\'');
+                conditions.add('Class_look__c = \'' + searchCondition.classId + '\'');
             }
             if (searchCondition.gender == 1 || searchCondition.gender == 0) {
                 conditions.add('Gender__c = ' + (searchCondition.gender == 1 ? 'True' : 'False'));

@@ -9,7 +9,7 @@ public with sharing class VF_UpdateStudentCtrl {
                 Id
                 , Firstname__c
                 , Lastname__c
-                , Class__c
+                , Class_look__c
                 , Gender__c
                 , Birthday__c
                 , Address__c 

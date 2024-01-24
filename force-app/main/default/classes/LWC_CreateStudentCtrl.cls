@@ -25,7 +25,6 @@ public with sharing class LWC_CreateStudentCtrl {
             student.Name = sFirstName + ' ' + sLastName;
             student.Firstname__c = sFirstName;
             student.Lastname__c = sLastName;
-            student.Class__c = sClassId ;
             student.Class_look__c = sClassId ;
             student.Birthday__c= sBirthdate;
             student.Gender__c= sGender;

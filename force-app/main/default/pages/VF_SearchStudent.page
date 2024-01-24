@@ -368,7 +368,7 @@
                             </div>
                             <div class="input-container">
                                 <label>Class:</label>
-                                <apex:selectList value="{!studentToCreate.Class__c}" size="1">
+                                <apex:selectList value="{!studentToCreate.Class_look__c}" size="1">
                                     <apex:selectOptions value="{!classListCreate}" />
                                 </apex:selectList>
                             </div>
@@ -468,7 +468,7 @@
 
                             <div class="input-container">
                                 <label>Class:</label>
-                                <apex:selectList value="{!student.Class__c}" size="1">
+                                <apex:selectList value="{!student.Class_look__c}" size="1">
                                     <apex:selectOptions value="{!classListCreate}" />
                                 </apex:selectList>
                             </div>

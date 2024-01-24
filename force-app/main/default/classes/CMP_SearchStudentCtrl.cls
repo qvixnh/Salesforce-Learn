@@ -44,7 +44,6 @@ public with sharing class CMP_SearchStudentCtrl {
                                 , Firstname__c
                                 , Lastname__c
                                 , selected__c
-                                , Class__c
                                 , Class_look__c
                                 , Class_look__r.Name
                                 , Gender__c
@@ -186,7 +185,7 @@ public with sharing class CMP_SearchStudentCtrl {
                 conditions.add('StudentCode__c LIKE \'%' + searchCode + '%\'');
             }
             if (classId != null && classId != 'null') {
-                conditions.add('Class__c = \'' + classId + '\'');
+                conditions.add('Class_look__c = \'' + classId + '\'');
             }
             if (gender == 1 || gender == 0 ) {
                 conditions.add('Gender__c = ' + (gender == 1 ? 'True' : 'False'));

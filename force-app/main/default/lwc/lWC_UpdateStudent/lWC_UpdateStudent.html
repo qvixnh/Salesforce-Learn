@@ -8,7 +8,7 @@
                     <p id="sFirstNameError" class="slds-text-color_destructive">{firstNameError}</p>
                     <lightning-input type="text" label="Enter Last Name" data-id="sLastName" value={student.Lastname__c}></lightning-input>
                     <p id="sLastNameError" class="slds-text-color_destructive">{lastNameError}</p>
-                    <lightning-combobox label="Select Class" data-id="sClass" value={student.Class__c} options={classes} onchange={handleChangeClass}></lightning-combobox>
+                    <lightning-combobox label="Select Class" data-id="sClass" value={student.Class___c} options={classes} onchange={handleChangeClass}></lightning-combobox>
                     <p id="sClassError" class="slds-text-color_destructive">{classError}</p>
                 </div>
                 <div class="slds-col slds-size_1-of-2">

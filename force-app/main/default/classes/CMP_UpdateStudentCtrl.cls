@@ -24,7 +24,6 @@ public with sharing class CMP_UpdateStudentCtrl {
            student.Name = sFirstName + ' ' + sLastName;
            student.Firstname__c = sFirstName;
            student.Lastname__c = slastName;
-           student.Class__c = sClassId ;
            student.Class_look__c = sClassId ;
            student.Birthday__c= sBirthdate;
            student.Gender__c= sGender;

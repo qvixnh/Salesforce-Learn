@@ -30,7 +30,7 @@
     <div class="slds-m-top_medium slds-grid slds-gutters slds-m-left_xxx-small">
         <lightning:button label="Create Student" onclick="{!c.openCreate}" class="slds-button slds-button_success" name="createStudent" />
         <lightning:button label="Delete Selected Records" onclick="{!c.openDeleteMultipleStudents}"  class="slds-button slds-button_text-destructive" name="detleSelectedStudent" disabled="{!v.selectedRecordsNumber == 0}"/>
-        <lightning:button label="Clear Selected Records" onclick="{!c.clearSelection}"  class="slds-button slds-button_text-brand" name="detleSelectedStudent" disabled="{!v.selectedRecordsNumber == 0}"/>
+        <lightning:button label="Clear Selected Records" onclick="{!c.clearSelection}"  class="slds-button slds-button_success" name="detleSelectedStudent" disabled="{!v.selectedRecordsNumber == 0}"/>
 
     </div>
     <!-- Student Table -->
