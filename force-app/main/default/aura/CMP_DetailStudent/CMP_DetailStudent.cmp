@@ -13,7 +13,7 @@
                 <dd class="slds-item_detail slds-truncate">{!v.student.Lastname__c}</dd>
                 
                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Class">Class:</dt>
-                <dd class="slds-item_detail slds-truncate">{!v.student.Class__r.Name}</dd>
+                <dd class="slds-item_detail slds-truncate">{!v.student.Class_look__r.Name}</dd>
                 
                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Gender">Gender:</dt>
                 <dd class="slds-item_detail slds-truncate"> {!IF(student.Gender__c, 'Male', 'Female')}</dd>

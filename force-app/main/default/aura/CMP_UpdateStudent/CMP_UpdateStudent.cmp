@@ -22,7 +22,7 @@
                 <lightning:input type="text" label="Enter Last Name" aura:id="sLastName" value="{!v.student.Lastname__c}"/>
                 <p id="sLastNameError" class="slds-text-color_destructive"></p>
                 <lightning:select name="classList" label="Select Class" value="{!v.selectedClass}">
-                    <option value="{!v.student.Class_c}">{!v.student.Class__r.Name}</option>
+                    <option value="{!v.student.Class_c}">{!v.student.Class_look__r.Name}</option>
                     <aura:iteration items="{!v.classList}" var="item">
                         <option value="{!item.Id}">{!item.Name}</option>
                     </aura:iteration>

@@ -46,8 +46,7 @@ public with sharing class CMP_SearchStudentCtrl {
                                 , selected__c
                                 , Class__c
                                 , Class_look__c
-
-                                , Class__r.Name
+                                , Class_look__r.Name
                                 , Gender__c
                                 , Birthday__c
                                 , Address__c
@@ -175,7 +174,7 @@ public with sharing class CMP_SearchStudentCtrl {
         try {
             List<String> selectedFields = new List<String>{
                 'Id', 'StudentCode__c', 'Firstname__c', 'Lastname__c', 'selected__c',
-                'Class__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
+                'Class_look__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
             List<String> conditions = new List<String>();

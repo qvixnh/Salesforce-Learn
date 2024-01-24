@@ -4,7 +4,7 @@
     <aura:attribute name="classList" type="List" />
     <aura:attribute name="selectedGender" type="Integer" />
     <aura:attribute name="searchName" type="String"  default=""/>
-    <aura:attribute name="searchCode" type="String" default="ST-"/>
+    <aura:attribute name="searchCode" type="String" default="SV_"/>
     <aura:attribute name="birthdate" type="String" default=""/>
     <aura:attribute name="searchDayOfBirth" type="Integer" default="0"/>
     <aura:attribute name="dayOptions" type="List"/>

@@ -20,7 +20,7 @@ export default class LWC_SearchStudent extends LightningElement {
     //search condition
     selectedClass = null;
     selectedGender  = null;
-    searchCode = 'ST-';
+    searchCode = 'SV_';
     searchName = '';
     birthdate = '';
     dayOfBirth = null;
@@ -199,7 +199,7 @@ export default class LWC_SearchStudent extends LightningElement {
     }
     handleClearFilters() {
         this.selectedClass = null;
-        this.searchCode = 'ST-';
+        this.searchCode = 'SV_';
         this.searchName = '';
         this.birthdate='';
         this.dayOfBirth = null;

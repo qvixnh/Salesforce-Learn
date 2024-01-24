@@ -39,7 +39,7 @@
         component.set("v.selectedClass", "null");
         component.set("v.selectedGender", "2");
         component.set("v.searchName", "");
-        component.set("v.searchCode", "ST-");
+        component.set("v.searchCode", "SV_");
         component.set("v.birthdate", "");
         component.set("v.searchDayOfBirth",0 )
         component.set("v.searchMonthOfBirth",0)
