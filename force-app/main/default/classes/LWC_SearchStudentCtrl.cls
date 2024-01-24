@@ -43,7 +43,7 @@ public with sharing class LWC_SearchStudentCtrl {
             List<String> conditions = new List<String>();
             List<String> selectedFields = new List<String>{
                 'Id', 'Student_Code__c', 'Firstname__c', 'Lastname__c', 'selected__c',
-                'Class__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
+                'Class_look__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
 
@@ -79,8 +79,8 @@ public with sharing class LWC_SearchStudentCtrl {
                 queryString +=' ORDER BY Firstname__c';
 
             }
-            else if(searchCondition.orderField=='Class__r.Name'){
-                queryString +=' ORDER BY Class__r.Name';
+            else if(searchCondition.orderField=='Class_look__r.Name'){
+                queryString +=' ORDER BY Class_look__r.Name';
                 
             }
             else if(searchCondition.orderField=='Gender__c'){
