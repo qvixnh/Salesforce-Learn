@@ -97,22 +97,39 @@ public without sharing class T01_StudentTriggerHandler {
      * @created  : 2023/01/23 + Nguyen Vinh
      * @modified :
      */
-    public static void onAfterUpdate(List<Student__c> newStudents,List<Student__c> oldStudents){
+    public static void onAfterUpdate(Map<Id,Student__c> mapNewStudents,Map<Id,Student__c> mapOldStudents){
         try {
-            Set<Id> classIds = new Set<Id>();
-            for (Student__c student : oldStudents) {
-                classIds.add(student.Class_look__c);
-            }
-            for (Student__c student : newStudents) {
-                classIds.add(student.Class_look__c);
-            }
-            List<Class__c> classesToUpdateList = updateNumberOfStudentByClassIds(classIds);
-            if (!classesToUpdateList.isEmpty()) {
-                update classesToUpdateList;
+            if(isClassUpdated(mapNewStudents, mapOldStudents)){
+                Set<Id> classIds = new Set<Id>();
+                for (Student__c student : mapOldStudents.values()) {
+                    classIds.add(student.Class_look__c);
+                }
+                for (Student__c student : mapNewStudents.values()) {
+                    classIds.add(student.Class_look__c);
+                }
+                List<Class__c> classesToUpdateList = updateNumberOfStudentByClassIds(classIds);
+                if (!classesToUpdateList.isEmpty()) {
+                    update classesToUpdateList;
+                }
             }
         } catch (Exception e) {
             throw new CustomException('An error occurred onAfterUpdate : ' + e.getMessage());
         }
+    }
+    /**
+     * isClassUpdated
+     * @param    : Map<Id,Student__c> mapNewStudents,Map<Id,Student__c> mapOldStudents
+     * @return   : Boolean
+     * @created  : 2023/01/24 + Nguyen Vinh
+     * @modified :
+     */
+    private static Boolean isClassUpdated(Map<Id,Student__c> mapNewStudents,Map<Id,Student__c> mapOldStudents){
+        for (Id id : mapNewStudents.keySet()) {
+            if(mapNewStudents.get(id).Class_look__c != mapOldStudents.get(id).Class_look__c){
+                return false;
+            }
+        }
+        return true;
     }
     /**
      * updateNumberOfStudentByClassIds

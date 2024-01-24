@@ -101,24 +101,22 @@ public without sharing class T02_ScoreTriggerHandler {
         Boolean isFinal = false;
         Decimal[] gpaArray = new Decimal[]{0, 0, 0, 0};
         for(Score__c score:  ScoresBySubject){
-            if(score.ExamType__c == 'Progress'){
+            if(score.ExamType__c.equals('Progress')){
                 isProgress = true;
                 gpaArray[0] = score.Score__c * 0.1;
             }
-            if(score.ExamType__c == 'Practical'){
+            if(score.ExamType__c.equals('Practical')){
                 isPractical = true;
                 gpaArray[1] = score.Score__c * 0.2;
-
             }
-            if(score.ExamType__c == 'Midterm Exam'){
+            if(score.ExamType__c.equals('Midterm Exam')){
                 isMidterm = true;
                 gpaArray[2] = score.Score__c * 0.2;
             }
-            if(score.ExamType__c == 'FinalTerm Exam'){
+            if(score.ExamType__c.equals('FinalTerm Exam')){
                 isFinal = true;
                 gpaArray[3] = score.Score__c * 0.5;
             }
-
         }
         if(isPractical && isPractical && isMidterm && isFinal){
             for (Decimal item : gpaArray) {
