@@ -2,16 +2,16 @@
  * クラス名：   T01_StudentTriggerHandler.cls
  * クラス概要： Create Student Controller
  * @created： 2023/01/22 + Nguyen Vinh
- * @modified: 
+ * @modified:
  */
 
 public without sharing class T01_StudentTriggerHandler {
     /**
      * onBeforeInsert
      * @param    : List<Student__c> newStudents
-     * @return   :  
+     * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 
+     * @modified :
      */
     public static void  onBeforeInsert(List<Student__c> newStudents){
         try {
@@ -23,9 +23,9 @@ public without sharing class T01_StudentTriggerHandler {
     /**
      * onBeforeUpdate
      * @param    : List<Student__c> newStudents
-     * @return   :  
+     * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 
+     * @modified :
      */
     public static void  onBeforeUpdate(List<Student__c> newStudents){
         try {
@@ -37,16 +37,13 @@ public without sharing class T01_StudentTriggerHandler {
     /**
      * onAfterInsert
      * @param    : List<Student__c> newStudents
-     * @return   :  
+     * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 
+     * @modified :
      */
     public static void  onAfterInsert(List<Student__c> newStudents){
         try {
-            List<Class__c> classesToUpdateList = count(newStudents);
-            if (!classesToUpdateList.isEmpty()) {
-                update classesToUpdateList;
-            }
+            getNumberOfStudent(newStudents);
         } catch (Exception e) {
             throw new CustomException('An error occurred onAfterInsert : ' + e.getMessage());
         }
@@ -55,13 +52,13 @@ public without sharing class T01_StudentTriggerHandler {
     /**
      * onBeforeDelete
      * @param    : List<Student__c> oldStudents
-     * @return   :  
+     * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 
+     * @modified :
      */
-    public static void  onBeforeDelete(List<Student__c> oldStudents){
+    public static void  onBeforeDelete(Map<Id,Student__c> mapOldStudents){
         try {
-            deleteSubjectScore(oldStudents);
+            deleteSubjectScore(mapOldStudents.keySet());
         } catch (Exception e) {
             throw new CustomException('An error occurred onAfterDelete : ' + e.getMessage());
         }
@@ -69,16 +66,13 @@ public without sharing class T01_StudentTriggerHandler {
     /**
      * onAfterDelete
      * @param    : List<Student__c> newStudents
-     * @return   :  
+     * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 
+     * @modified :
      */
     public static void  onAfterDelete(List<Student__c> oldStudents){
         try {
-            List<Class__c> classesToUpdateList = count(oldStudents);
-            if (!classesToUpdateList.isEmpty()) {
-                update classesToUpdateList;
-            }
+            getNumberOfStudent(oldStudents);
         } catch (Exception e) {
             throw new CustomException('An error occurred onAfterDelete : ' + e.getMessage());
         }
@@ -86,73 +80,89 @@ public without sharing class T01_StudentTriggerHandler {
     /**
      * onAfterUpdate
      * @param    : List<Student__c> newStudents,List<Student__c> oldStudents
-     * @return   :  
+     * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 
+     * @modified :
      */
     public static void  onAfterUpdate(List<Student__c> newStudents,List<Student__c> oldStudents){
         try {
-            List<Class__c> Old_classesToUpdateList = count(oldStudents);
-            List<Class__c> New_classesToUpdateList= count(newStudents);
-            List<Class__c> classesToUpdateList =new List<Class__c>();   
-            classesToUpdateList.addAll(Old_classesToUpdateList);
-            classesToUpdateList.addAll(New_classesToUpdateList);
-
-            if (!classesToUpdateList.isEmpty()) {
-                update classesToUpdateList;
-            }
+            getNumberOfStudentAfterUpdate(newStudents,oldStudents);
         } catch (Exception e) {
             throw new CustomException('An error occurred onAfterUpdate : ' + e.getMessage());
         }
     }
-    
+
     /**
      * count
      * @param    : List<Student__c> students
-     * @return   :  
+     * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 
+     * @modified :
      */
-    private static List<Class__c> count(List<Student__c> students){
+    private static void getNumberOfStudentAfterUpdate(List<Student__c> newStudents,List<Student__c> oldStudents){
+        Set<Id> oldClassIds = new Set<Id>();
+        for (Student__c student : oldStudents) {
+            oldClassIds.add(student.Class_look__c);
+        }
+        Set<Id> newClassIds = new Set<Id>();
+        for (Student__c student : newStudents) {
+            newClassIds.add(student.Class_look__c);
+        }
+        newClassIds.addAll(oldClassIds);
+        // uniqueClassIds giờ chứa các ID duy nhất từ cả newClassIds và oldClassIds
+        Set<Id> uniqueClassIds = new Set<Id>(newClassIds);
+        updateNumberOfStudentByClassIds(uniqueClassIds);
+    }
+    /**
+     * count
+     * @param    : List<Student__c> students
+     * @return   :
+     * @created  : 2023/01/23 + Nguyen Vinh
+     * @modified :
+     */
+    private static void getNumberOfStudent(List<Student__c> students){
         Set<Id> classIds = new Set<Id>();
         for (Student__c student : students) {
             classIds.add(student.Class_look__c);
         }
+        updateNumberOfStudentByClassIds(classIds);
+    }
+    private static void updateNumberOfStudentByClassIds(Set<Id> classIds){
         Map<Id, Integer> countMap = new Map<Id, Integer>();
         List<AggregateResult> results = [
-            SELECT Class_look__c, COUNT(Id) 
-            FROM Student__c 
-            WHERE Class_look__c IN :classIds 
+            SELECT Class_look__c classLook
+                , COUNT(Id) countId
+            FROM Student__c
+            WHERE Class_look__c IN :classIds
             GROUP BY Class_look__c
         ];
         for (AggregateResult result : results) {
-            Id classId = (Id) result.get('Class_look__c');
-            Integer count = (Integer) result.get('expr0');
+            Id classId = (Id) result.get('classLook');
+            Integer count = (Integer) result.get('countId');
             countMap.put(classId, count);
         }
-        List<Class__c> classesToUpdate = [
-            SELECT Id, NumberOfStudent__c 
-            FROM Class__c 
-            WHERE Id IN :classIds
-        ];
         List<Class__c> classesToUpdateList = new List<Class__c>();
-        for(Class__c cls : classesToUpdate){
-            cls.NumberOfStudent__c = countMap.get(cls.Id);
-            classesToUpdateList.add(cls);
+        for(Id classId : classIds){
+            Class__c obClass = new Class__c();
+            obClass.ID = classId;
+            obClass.NumberOfStudent__c =  countMap.get(classId);
+            classesToUpdateList.add(obClass);
         }
-        return classesToUpdateList;
+        if (!classesToUpdateList.isEmpty()) {
+            update classesToUpdateList;
+        }
     }
     
     /**
      * validateFields
      * @param    : List<Student__c> newStudents
-     * @return   :  
+     * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 
+     * @modified :
      */
     private static void validateFields(List<Student__c> newStudents) {
         String messageTemplate = '値を入力してください:{0}';
-        List<Object> fields=new List<Object>(); 
+        List<String> fields = new List<String>();
         for (Student__c student : newStudents) {
             if (String.isBlank(student.Firstname__c)) {
                 fields.add('Firstname__c');
@@ -166,7 +176,7 @@ public without sharing class T01_StudentTriggerHandler {
             if (student.Gender__c == null) {
                 fields.add('Gender__c');
             }
-            else if(student.Birthday__c!=null){
+            else if(student.Birthday__c != null){
                 Date birthday = student.Birthday__c;
                 if (calculateAge(birthday) <= 17) {
                     student.addError('学生の年齢が無効です。有効な年齢は18歳以上です (Age must be greater than 17)');
@@ -179,36 +189,36 @@ public without sharing class T01_StudentTriggerHandler {
                 fields.add('Class__c');
             }
             if(!fields.isEmpty()){
-                String formatted = String.format(messageTemplate, fields);
+                String fieldErrorMessage = String.join(fields,', ');
+                String formatted = String.format(messageTemplate , new List<String> {fieldErrorMessage});
                 System.debug(formatted);
+                student.addError(formatted);
             }
         }
     }
-    
     /**
      * deleteSubjectScore
      * @param    : List<Student__c> oldStudents
-     * @return   :  
+     * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 
+     * @modified :
      */
-    private static void deleteSubjectScore(List<Student__c> oldStudents) {
-        Set<Id> studentIds = new Set<Id>();
-        for (Student__c student : oldStudents) {
-            studentIds.add(student.Id);
-        }
-        List<SubjectScore__c> subjectScoresToDelete = [SELECT Id FROM SubjectScore__c WHERE Student_look__c IN :studentIds];
+    private static void deleteSubjectScore(Set<Id> studentIds) {
+        List<SubjectScore__c> subjectScoresToDelete = [
+            SELECT Id
+            FROM SubjectScore__c
+            WHERE Student_look__c IN :studentIds
+        ];
         if (!subjectScoresToDelete.isEmpty()) {
             delete subjectScoresToDelete;
         }
     }
-    
     /**
      * calculateAge
      * @param    : Date birthdate
      * @return   :  Integer
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 
+     * @modified :
      */
     private static Integer calculateAge(Date birthdate) {
         Date currentDate = Date.today();
@@ -217,8 +227,6 @@ public without sharing class T01_StudentTriggerHandler {
         return currentYear - birthYear;
     }
 
-    public  class  CustomException extends Exception {
-        
+    public class CustomException extends Exception {
     }
-    
 }

@@ -7,7 +7,7 @@ trigger T01_StudentTrigger on Student__c (after insert,before insert,before upda
             T01_StudentTriggerHandler.onBeforeUpdate(Trigger.new);
         }
         if (Trigger.isDelete) {
-            T01_StudentTriggerHandler.onBeforeDelete(Trigger.old);
+            T01_StudentTriggerHandler.onBeforeDelete(Trigger.oldMap);
         }
     }
     if (Trigger.isAfter) {
