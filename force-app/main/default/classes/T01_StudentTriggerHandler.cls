@@ -5,6 +5,9 @@
  * @modified:
  */
 public without sharing class T01_StudentTriggerHandler {
+    private static final String ERROR_TEMPLATE = 'T01_StudentTriggerHandler: An error occurred {0}: {1} ';
+    private static final String ENROLLED = 'Enrolled';
+
     /**
      * onBeforeInsert
      * @param    : List<Student__c> newStudents
@@ -16,7 +19,8 @@ public without sharing class T01_StudentTriggerHandler {
         try {
             validateFields(newStudents);
         } catch (Exception e) {
-            throw new CustomException('An error occurred onBeforeInsert : ' + e.getMessage());
+            String formatted = String.format(ERROR_TEMPLATE , new List<String> {'onBeforeInsert',e.getMessage()});
+            throw new CustomException(formatted);
         }
     }
     /**
@@ -30,7 +34,8 @@ public without sharing class T01_StudentTriggerHandler {
         try {
             validateFields(newStudents);
         } catch (Exception e) {
-            throw new CustomException('An error occurred onBeforeUpdate : ' + e.getMessage());
+            String formatted = String.format(ERROR_TEMPLATE , new List<String> {'onBeforeUpdate',e.getMessage()});
+            throw new CustomException(formatted);
         }
     }
     /**
@@ -51,7 +56,8 @@ public without sharing class T01_StudentTriggerHandler {
                 update classesToUpdateList;
             }
             } catch (Exception e) {
-            throw new CustomException('An error occurred onAfterInsert : ' + e.getMessage());
+            String formatted = String.format(ERROR_TEMPLATE , new List<String> {'onAfterInsert',e.getMessage()});
+            throw new CustomException(formatted);
         }
     }
 
@@ -66,7 +72,8 @@ public without sharing class T01_StudentTriggerHandler {
         try {
             deleteSubjectScore(mapOldStudents.keySet());
         } catch (Exception e) {
-            throw new CustomException('An error occurred onAfterDelete : ' + e.getMessage());
+            String formatted = String.format(ERROR_TEMPLATE , new List<String> {'onBeforeDelete',e.getMessage()});
+            throw new CustomException(formatted);
         }
     }
     /**
@@ -87,7 +94,8 @@ public without sharing class T01_StudentTriggerHandler {
                 update classesToUpdateList;
             }
         } catch (Exception e) {
-            throw new CustomException('An error occurred onAfterDelete : ' + e.getMessage());
+            String formatted = String.format(ERROR_TEMPLATE , new List<String> {'onAfterDelete',e.getMessage()});
+            throw new CustomException(formatted);
         }
     }
     /**
@@ -99,6 +107,7 @@ public without sharing class T01_StudentTriggerHandler {
      */
     public static void onAfterUpdate(Map<Id,Student__c> mapNewStudents,Map<Id,Student__c> mapOldStudents){
         try {
+            System.debug(isClassUpdated(mapNewStudents, mapOldStudents));
             if(isClassUpdated(mapNewStudents, mapOldStudents)){
                 Set<Id> classIds = new Set<Id>();
                 for (Student__c student : mapOldStudents.values()) {
@@ -113,7 +122,8 @@ public without sharing class T01_StudentTriggerHandler {
                 }
             }
         } catch (Exception e) {
-            throw new CustomException('An error occurred onAfterUpdate : ' + e.getMessage());
+            String formatted = String.format(ERROR_TEMPLATE , new List<String> {'onAfterUpdate',e.getMessage()});
+            throw new CustomException(formatted);
         }
     }
     /**
@@ -124,12 +134,13 @@ public without sharing class T01_StudentTriggerHandler {
      * @modified :
      */
     private static Boolean isClassUpdated(Map<Id,Student__c> mapNewStudents,Map<Id,Student__c> mapOldStudents){
+        
         for (Id id : mapNewStudents.keySet()) {
             if(mapNewStudents.get(id).Class_look__c != mapOldStudents.get(id).Class_look__c){
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
     /**
      * updateNumberOfStudentByClassIds
@@ -145,6 +156,7 @@ public without sharing class T01_StudentTriggerHandler {
                 , COUNT(Id) countId
             FROM Student__c
             WHERE Class_look__c IN :classIds
+                AND LearningStatus__c = :ENROLLED
             GROUP BY Class_look__c
         ];
         for (AggregateResult result : results) {
@@ -169,7 +181,7 @@ public without sharing class T01_StudentTriggerHandler {
      * @modified :
      */
     private static void validateFields(List<Student__c> newStudents) {
-        String messageTemplate = '値を入力してください:{0}';
+        String messageTemplate = '値を入力してください:{0}.';
         List<String> fields = new List<String>();
         for (Student__c student : newStudents) {
             if (String.isBlank(student.Firstname__c)) {
@@ -233,7 +245,12 @@ public without sharing class T01_StudentTriggerHandler {
         Integer currentYear = currentDate.year();
         return currentYear - birthYear;
     }
-
+    /**
+     * クラス名：   CustomException
+     * クラス概要： Custom Exception
+     * @created： 2023/01/24 + Nguyen Vinh
+     * @modified:
+     */
     public class CustomException extends Exception {
     }
 }

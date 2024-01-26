@@ -146,10 +146,10 @@ export default class LWC_CreateStudent extends LightningElement {
         return true;
     }
     resetForm() {
-        this.firstName = '';
-        this.lastName = '';
-        this.address = '';
-        this.birthdate = '';
+        // this.firstName = '';
+        // this.lastName = '';
+        // this.address = '';
+        // this.birthdate = '';
     }
     clearErrors() {
         this.firstNameError = '';

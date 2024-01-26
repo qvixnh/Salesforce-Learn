@@ -5,18 +5,27 @@
  * @modified:
  */
 public without sharing class T02_ScoreTriggerHandler {
+    private static final String PROGRESS = 'Progress';
+    private static final String PRACTICAL = 'Practical';
+    private static final String MIDTERM = 'Midterm Exam';
+    private static final String FINALTERM = 'FinalTerm Exam';
+    private static final String PASS = 'Passed';
+    private static final String NOTPASS = 'Not Passed';
+    private static final String ERROR_TEMPLATE = 'T02_ScoreTriggerHandler: An error occurred {0}: {1}';
+    private static final List<String> EXAM_TYPE_LIST = new List<String> {PROGRESS, PRACTICAL,MIDTERM,FINALTERM};
     /**
      * onAfterInsert
      * @param    : List<Score__c> newScores
      * @return   :
      * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified :
+     * @modified : 2023/01/25 + Nguyen Vinh
      */
     public static void  onAfterInsert(List<Score__c> newScores){
         try {
             updateStatusAndGPA(newScores);
         } catch (Exception e) {
-            throw new CustomException('T02_ScoreTriggerHandler: An error occurred onAfterInsert : ' + e.getMessage());
+            String formatted = String.format(ERROR_TEMPLATE , new List<String> {'onAfterInsert',e.getMessage()});
+            throw new CustomException(formatted);
         }
     }
     /**
@@ -24,13 +33,14 @@ public without sharing class T02_ScoreTriggerHandler {
      * @param    : List<Score__c> newScores
      * @return   :
      * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified :
+     * @modified : 2023/01/25 + Nguyen Vinh
      */
     public static void  onAfterUpdate(List<Score__c> newScores){
         try {
             updateStatusAndGPA(newScores);
         } catch (Exception e) {
-            throw new CustomException('T02_ScoreTriggerHandler: An error occurred onAfterUpdate : ' + e.getMessage());
+            String formatted = String.format(ERROR_TEMPLATE , new List<String> {'onAfterUpdate',e.getMessage()});
+            throw new CustomException(formatted);
         }
     }
     /**
@@ -38,95 +48,108 @@ public without sharing class T02_ScoreTriggerHandler {
      * @param    : List<Score__c> newScores
      * @return   :
      * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified :
+     * @modified : 2023/01/25 + Nguyen Vinh
      */
     private static void updateStatusAndGPA(List<Score__c> newScores){
         Set<Id> subjectScoreIDs = new Set<Id>();
         for (Score__c score : newScores) {
             subjectScoreIDs.add(score.SubjectScore_look__c);
         }
+        Map<Id, List<Score__c>> scoreMap = getScoreMap(subjectScoreIDs);
+        List<SubjectScore__c> subjectScoresToUpdate = new List<SubjectScore__c>();
+        for(Id subjectScoreId : subjectScoreIDs){
+            Decimal gpa = getGPA(scoreMap.get(subjectScoreId));
+            if(gpa != null){
+                SubjectScore__c objectSubjectScore =  new SubjectScore__c();
+                objectSubjectScore.AverageScore__c = gpa;
+                objectSubjectScore.Id = subjectScoreId;
+                if(gpa >= 5){
+                    objectSubjectScore.Status__c = PASS;
+                }
+                else{
+                    objectSubjectScore.Status__c = NOTPASS;
+                }
+                subjectScoresToUpdate.add(objectSubjectScore);
+            }
+        }
+        update subjectScoresToUpdate;
+    }
+
+    /**
+     * getScoreMap
+     * @param    : Set<Id> subjectScoreIDs
+     * @return   : Map<Id, List<Score__c>> getScoreMap
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified :
+     */
+    private static Map<Id, List<Score__c>> getScoreMap(Set<Id> subjectScoreIDs){
+        Map<Id, List<Score__c>> scoreMap = new Map<Id, List<Score__c>>();
         List<Score__c> totalScores=  [
             SELECT Id
             , SubjectScore_look__c
             , ExamType__c
             , Score__c
             FROM Score__c
+            WHERE SubjectScore_look__c IN :subjectScoreIDs
+                AND Score__c <> NULL
+                AND ExamType__c IN :EXAM_TYPE_LIST
+            ORDER BY Score__c DESC NULLS LAST
         ];
-        Map<Id, List<Score__c>> scoreMap = new Map<Id, List<Score__c>>();
-        for (Id id: subjectScoreIDs){
-            List<Score__c> scoreList = new List<Score__c>();
-            for(Score__c score: totalScores){
-                if(score.SubjectScore_look__c == id){
-                    scoreList.add(score);
-                }
+        for(Score__c score: totalScores){
+            if(!scoreMap.containsKey(score.SubjectScore_look__c)){
+                scoreMap.put(score.SubjectScore_look__c, new List<Score__c>{score});
             }
-            scoreMap.put(id, scoreList);
-        }
-        List<SubjectScore__c> subjectScores = [
-            SELECT Id
-            , Student_look__c
-            , Semester_look__c
-            , Subject_look__c
-            , AverageScore__c
-            , Status__c
-            FROM SubjectScore__c
-            WHERE Id IN :subjectScoreIDs
-        ];
-        for(SubjectScore__c subjectScore : subjectScores){
-            Decimal gpa = getGPA(scoreMap.get(subjectScore.Id));
-            if(gpa!=null){
-                subjectScore.AverageScore__c = gpa;
-                if(gpa >= 5){
-                    subjectScore.Status__c = 'Passed';
-                }
-                else{
-                    subjectScore.Status__c = 'Not Passed';
-                }
+            else{
+                scoreMap.get(score.SubjectScore_look__c).add(score);
             }
         }
-        update subjectScores;
+        return scoreMap;
     }
+
     /**
      * getGPA
      * @param    : List<Score__c > ScoresBySubject
      * @return   : Decimal
      * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified :
+     * @modified : 2023/01/25 + Nguyen Vinh
      */
     private static Decimal getGPA(List<Score__c> ScoresBySubject){
         Decimal GPA = 0;
-        Boolean isProgress = false;
-        Boolean isPractical = false;
-        Boolean isMidterm = false;
-        Boolean isFinal = false;
+        Set<String> typeSet = new Set<String>();
         Decimal[] gpaArray = new Decimal[]{0, 0, 0, 0};
         for(Score__c score:  ScoresBySubject){
-            if(score.ExamType__c.equals('Progress')){
-                isProgress = true;
+            if(PROGRESS.equals(score.ExamType__c)){
+                typeSet.add(PROGRESS);
                 gpaArray[0] = score.Score__c * 0.1;
             }
-            if(score.ExamType__c.equals('Practical')){
-                isPractical = true;
+            else if(PRACTICAL.equals(score.ExamType__c)){
+                typeSet.add(PRACTICAL);
                 gpaArray[1] = score.Score__c * 0.2;
             }
-            if(score.ExamType__c.equals('Midterm Exam')){
-                isMidterm = true;
+            else if(MIDTERM.equals(score.ExamType__c)){
+                typeSet.add(MIDTERM);
                 gpaArray[2] = score.Score__c * 0.2;
             }
-            if(score.ExamType__c.equals('FinalTerm Exam')){
-                isFinal = true;
+            else if(FINALTERM.equals(score.ExamType__c)){
+                typeSet.add(FINALTERM);
                 gpaArray[3] = score.Score__c * 0.5;
             }
-        }
-        if(isPractical && isPractical && isMidterm && isFinal){
-            for (Decimal item : gpaArray) {
-                GPA += item;
+            if(typeSet.size() == 4){
+                for (Decimal item : gpaArray) {
+                    GPA += item;
+                }
+                return GPA;
             }
-            return GPA;
         }
         return null;
     }
-    public  class  CustomException extends Exception {
+    /**
+     * クラス名：   CustomException
+     * クラス概要： Custom Exception
+     * @created： 2023/01/24 + Nguyen Vinh
+     * @modified:
+     */
+    public class CustomException extends Exception {
 
     }
 }
