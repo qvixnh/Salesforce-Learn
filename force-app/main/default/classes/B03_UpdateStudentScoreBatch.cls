@@ -1,3 +1,9 @@
+/**
+ * クラス名：   B03_UpdateStudentScoreBatch.cls
+ * クラス概要： Update StudentScore Batch
+ * @created： 2023/01/25 + Nguyen Vinh
+ * @modified:
+ */
 public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batchable<SObject>, Database.Stateful {
     private static final String ENROLLED = 'Enrolled';
     private static final String BATCHNAME = 'B03_学生得点更新バッチ';
@@ -6,47 +12,51 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
     private BatchLog__c batchLogObj = new BatchLog__c();
     private List<Semester__c> semestersList = new List<Semester__c>();
     private List<Subject__C> subjectsList = new List<Subject__C>();
-    
+
+    /**
+     * start
+     * @param    : Database.BatchableContext BC
+     * @return   : Database.QueryLocator
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified :
+     */
     public Database.QueryLocator start(Database.BatchableContext BC) {
-        this.batchLogObj= createBatchLog();
-        this.semestersList = [
-            SELECT Id
-            , Name 
-            FROM Semester__c 
-        ];
-        this.subjectsList = [
-            SELECT Id
-            , Name 
-            , CourseCredit__c
-            FROM Subject__c
-        ];
-        return Database.getQueryLocator([
-            SELECT Id
-            , TotalCredit__c
-            , GPAScore__c
-            , LearningStatus__c
-            FROM Student__c 
-            WHERE LearningStatus__c = :ENROLLED
-            LIMIT 100
-        ]);
+        try {
+            this.batchLogObj= createBatchLog();
+            this.semestersList = [
+                SELECT Id
+                , Name
+                FROM Semester__c
+            ];
+            this.subjectsList = [
+                SELECT Id
+                , Name
+                , CourseCredit__c
+                FROM Subject__c
+            ];
+            return Database.getQueryLocator([
+                SELECT Id
+                , TotalCredit__c
+                , GPAScore__c
+                , LearningStatus__c
+                FROM Student__c
+                WHERE LearningStatus__c = :ENROLLED
+            ]);
+        } catch (Exception e) {
+            updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
+            return null;
+        }
     }
-    private static BatchLog__c createBatchLog(){
-        BatchLog__c batchLog = new BatchLog__c();
-        batchLog.Name = BATCHNAME;
-        batchLog.StartTime__c = DateTime.now();
-        insert batchLog;
-        return batchLog;
-    }
-    private static void updateBatchLog(Id id,String err, String result){
-        BatchLog__c batchLog = new BatchLog__c();
-        batchLog.Id = id; 
-        batchLog.ErrorMessage__c = err;
-        batchLog.EndTime__c = DateTime.now();
-        update batchLog;
-    }
+    /**
+     * execute
+     * @param    : Database.BatchableContext BC, List<Student__c> studentsList
+     * @return   :
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified :
+     */
     public void execute(Database.BatchableContext BC, List<Student__c> studentsList) {
-        List<Student__c> studentsListUpdate = new List<Student__c>(); 
-        Map<Id, List<SubjectScore__c>> subjectScoreByStudentsMap = getSubjectScoreByStudentsMap( studentsList); 
+        List<Student__c> studentsListUpdate = new List<Student__c>();
+        Map<Id, List<SubjectScore__c>> subjectScoreByStudentsMap = getSubjectScoreByStudentsMap( studentsList);
         for(Student__c student: studentsList){
             List<SubjectScore__c> subjectScoreList = subjectScoreByStudentsMap.get(student.Id);
             if (!subjectScoreList.isEmpty()) {
@@ -56,8 +66,71 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
         }
         update studentsListUpdate;
     }
+
+     /**
+     * finish
+     * @param    : Database.BatchableContext BC
+     * @return   :
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified :
+     */
+    public void finish(Database.BatchableContext BC) {
+        try {
+            AsyncApexJob jobInfo = [
+                SELECT Id
+                , Status
+                , NumberOfErrors
+                , ExtendedStatus
+                FROM AsyncApexJob
+                WHERE Id = :BC.getJobId()
+            ];
+            if (jobInfo.NumberOfErrors > 0) {
+                updateBatchLog(this.batchLogObj.id, jobInfo.ExtendedStatus, ERROR);
+            } else {
+                updateBatchLog(this.batchLogObj.id, '', SUCCESS);
+
+            }
+        } catch (Exception e) {
+            updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
+        }
+    }
+    /**
+     * createBatchLog
+     * @param    : BatchLog__c
+     * @return   : BatchLog__c
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified :
+     */
+    private static BatchLog__c createBatchLog(){
+        BatchLog__c batchLog = new BatchLog__c();
+        batchLog.Name = BATCHNAME;
+        batchLog.StartTime__c = DateTime.now();
+        insert batchLog;
+        return batchLog;
+    }
+    /**
+     * updateBatchLog
+     * @param    : Id id,String err, String result
+     * @return   :
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified :
+     */
+    private static void updateBatchLog(Id id,String err, String result){
+        BatchLog__c batchLog = new BatchLog__c();
+        batchLog.Id = id;
+        batchLog.ErrorMessage__c = err;
+        batchLog.EndTime__c = DateTime.now();
+        update batchLog;
+    }
+    /**
+     * getSubjectScoreByStudentsMap
+     * @param    : List<Student__c> studentList
+     * @return   : Map<Id, List<SubjectScore__c>>
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified :
+     */
     private static Map<Id, List<SubjectScore__c>> getSubjectScoreByStudentsMap(List<Student__c> studentList){
-        Map<Id, List<SubjectScore__c>> subjectScoreByStudentsMap = new Map<Id, List<SubjectScore__c>>(); 
+        Map<Id, List<SubjectScore__c>> subjectScoreByStudentsMap = new Map<Id, List<SubjectScore__c>>();
         List<SubjectScore__c> subjectScoreList = [
             SELECT Id
                 , Semester_look__c
@@ -66,7 +139,7 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
                 , AverageScore__c
                 , Subject_look__r.CourseCredit__c
             FROM SubjectScore__c
-            ORDER BY AverageScore__c DESC NULLS LAST 
+            ORDER BY AverageScore__c DESC NULLS LAST
         ];
         for(SubjectScore__c subjectScore: subjectScoreList){
             if(!subjectScoreByStudentsMap.containsKey(subjectScore.Student_look__c)){
@@ -78,6 +151,13 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
         }
         return subjectScoreByStudentsMap;
     }
+     /**
+     * getStudentGPA_Credit
+     * @param    : List<SubjectScore__c> subjectScoreList, Student__c student
+     * @return   : Student__c
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified :
+     */
     private static Student__c getStudentGPA_Credit(List<SubjectScore__c> subjectScoreList, Student__c student){
         subjectScoreList = filterSSList(subjectScoreList);
         Decimal totalCredits = 0;
@@ -92,6 +172,13 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
         student.GPAScore__c = weightedAverageCredit;
         return student;
     }
+    /**
+     * getStudentGPA_Credit
+     * @param    : List<SubjectScore__c> subjectScoreList, Student__c student
+     * @return   : Student__c
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified :
+     */
     private static List<SubjectScore__c>  filterSSList(List<SubjectScore__c> subjectScoreList){
         Map<String, SubjectScore__c> highestScoresMap = new Map<String, SubjectScore__c>();
         for (SubjectScore__c subjectScore : subjectScoreList) {
@@ -101,22 +188,5 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
             }
         }
         return new List<SubjectScore__c>(highestScoresMap.values());
-    }
-
-    public void finish(Database.BatchableContext BC) {
-        AsyncApexJob jobInfo = [
-            SELECT Id
-            , Status
-            , NumberOfErrors
-            , ExtendedStatus
-            FROM AsyncApexJob 
-            WHERE Id = :BC.getJobId()
-        ];
-        if (jobInfo.NumberOfErrors > 0) {
-            updateBatchLog(this.batchLogObj.id, jobInfo.ExtendedStatus, ERROR);
-        } else {
-            updateBatchLog(this.batchLogObj.id, '', SUCCESS);
-
-        }
     }
 }

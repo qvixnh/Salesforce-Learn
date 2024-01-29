@@ -138,6 +138,7 @@ public without sharing class T02_ScoreTriggerHandler {
                 for (Decimal item : gpaArray) {
                     GPA += item;
                 }
+                GPA = Math.round(GPA * 100) / 100;
                 return GPA;
             }
         }

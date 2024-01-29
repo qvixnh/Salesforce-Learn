@@ -25,54 +25,31 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
      * @modified : 2023/01/25 + Nguyen Vinh
      */
     public Database.QueryLocator start(Database.BatchableContext BC) {
-        this.batchLogObj= createBatchLog();
-        this.semestersList = [
-            SELECT Id
-            , Name 
-            FROM Semester__c 
-        ];
-        this.subjectsList = [
-            SELECT Id
-            , Name 
-            , CourseCredit__c
-            FROM Subject__c
-        ];
-        return Database.getQueryLocator([
-            SELECT Id
-                , LearningStatus__c
-            FROM Student__c 
-            WHERE LearningStatus__c = :ENROLLED
-            LIMIT 100
-        ]);
+        try {
+            this.batchLogObj= createBatchLog();
+            this.semestersList = [
+                SELECT Id
+                , Name 
+                FROM Semester__c 
+            ];
+            this.subjectsList = [
+                SELECT Id
+                , Name 
+                , CourseCredit__c
+                FROM Subject__c
+            ];
+            return Database.getQueryLocator([
+                SELECT Id
+                    , LearningStatus__c
+                FROM Student__c 
+                WHERE LearningStatus__c = :ENROLLED
+            ]);
+        } catch (Exception e) {
+            updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
+            return null;
+        }
     }
-    /**
-     * createBatchLog
-     * @param    : BatchLog__c
-     * @return   : BatchLog__c
-     * @created  : 2023/01/25 + Nguyen Vinh
-     * @modified : 
-     */
-    private static BatchLog__c createBatchLog(){
-        BatchLog__c batchLog = new BatchLog__c();
-        batchLog.Name = BATCHNAME;
-        batchLog.StartTime__c = DateTime.now();
-        insert batchLog;
-        return batchLog;
-    }
-    /**
-     * updateBatchLog
-     * @param    : Id id,String err, String result
-     * @return   : 
-     * @created  : 2023/01/25 + Nguyen Vinh
-     * @modified : 
-     */
-    private static void updateBatchLog(Id id,String err, String result){
-        BatchLog__c batchLog = new BatchLog__c();
-        batchLog.Id = id; 
-        batchLog.ErrorMessage__c = err;
-        batchLog.EndTime__c = DateTime.now();
-        update batchLog;
-    }
+    
     /**
      * execute
      * @param    : Database.BatchableContext BC, List<SubjectScore__c> subjectScoresToDelete
@@ -106,8 +83,6 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
         }
         insert subjectScoreObjList;
         List<Score__c> scoreList = new List<Score__c>();
-        System.debug(subjectScoreObjList);
-        System.debug(studentsList);
         for(SubjectScore__c subjectScoreObj: subjectScoreObjList){
             List<Score__c> scoreListBySubScoreId = getScoreListBySubId(subjectScoreObj.Id);
             if(!scoreListBySubScoreId.isEmpty()){
@@ -115,7 +90,61 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
             }
         }
         insert scoreList;
-        System.debug(scoreList);
+    }
+    /**
+     * finish
+     * @param    : Database.BatchableContext BC
+     * @return   : 
+     * @created  : 2023/01/24 + Nguyen Vinh
+     * @modified : 2023/01/25 + Nguyen Vinh
+     */
+    public void finish(Database.BatchableContext BC) {
+        try {
+            AsyncApexJob jobInfo = [
+                SELECT Id
+                , NumberOfErrors
+                , ExtendedStatus
+                FROM AsyncApexJob 
+                WHERE Id = :BC.getJobId()
+            ];
+            if (jobInfo.NumberOfErrors > 0) {
+                updateBatchLog(this.batchLogObj.id, jobInfo.ExtendedStatus, ERROR);
+            } else {
+                B03_UpdateStudentScoreBatch b03UpdateStudentScoreBatch = new B03_UpdateStudentScoreBatch();
+                Database.executeBatch(b03UpdateStudentScoreBatch);
+                updateBatchLog(this.batchLogObj.id, '', SUCCESS);
+            }
+        } catch (Exception e) {
+            updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
+        }
+    }
+    /**
+     * createBatchLog
+     * @param    : BatchLog__c
+     * @return   : BatchLog__c
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified : 
+     */
+    private static BatchLog__c createBatchLog(){
+        BatchLog__c batchLog = new BatchLog__c();
+        batchLog.Name = BATCHNAME;
+        batchLog.StartTime__c = DateTime.now();
+        insert batchLog;
+        return batchLog;
+    }
+    /**
+     * updateBatchLog
+     * @param    : Id id,String err, String result
+     * @return   : 
+     * @created  : 2023/01/25 + Nguyen Vinh
+     * @modified : 
+     */
+    private static void updateBatchLog(Id id,String err, String result){
+        BatchLog__c batchLog = new BatchLog__c();
+        batchLog.Id = id; 
+        batchLog.ErrorMessage__c = err;
+        batchLog.EndTime__c = DateTime.now();
+        update batchLog;
     }
     /**
      * getRandomNumber
@@ -177,27 +206,6 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
         scoreList.add(finalTermScore);
         return scoreList;
     }
-    /**
-     * finish
-     * @param    : Database.BatchableContext BC
-     * @return   : 
-     * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified : 2023/01/25 + Nguyen Vinh
-     */
-    public void finish(Database.BatchableContext BC) {
-        AsyncApexJob jobInfo = [
-            SELECT Id
-            , NumberOfErrors
-            , ExtendedStatus
-            FROM AsyncApexJob 
-            WHERE Id = :BC.getJobId()
-        ];
-        if (jobInfo.NumberOfErrors > 0) {
-            updateBatchLog(this.batchLogObj.id, jobInfo.ExtendedStatus, ERROR);
-        } else {
-            B03_UpdateStudentScoreBatch b03UpdateStudentScoreBatch = new B03_UpdateStudentScoreBatch();
-            Database.executeBatch(b03UpdateStudentScoreBatch);
-            updateBatchLog(this.batchLogObj.id, '', SUCCESS);
-        }
-    }
+    
+    
 }
