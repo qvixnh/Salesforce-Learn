@@ -28,7 +28,31 @@ public with sharing class LWC_SearchStudentCtrl {
     }
         return classList;
     }
-    
+    //1101
+    /**
+     * getSemesterOptions
+     * @param    : 
+     * @return   : List<Semester__c> 
+     * @created  : 2023/01/10 + Nguyen Vinh
+     * @modified : 
+     */
+    @AuraEnabled(cacheable=true)
+    public static List<Semester__c> getSemesterOptions() {
+        List<Semester__c> semesterList = new List<Semester__c>();
+        try {
+            semesterList = [SELECT 
+                            Id
+                            , Name
+                            , StartDate__c
+                            , EndDate__c 
+                        FROM Semester__c 
+                        ORDER BY Name];
+        } catch (Exception e) {
+            throw new CustomException('An error occurred when getting semesters: ' + e.getMessage());
+        }
+        return semesterList;
+    }
+
     /**
      * getStudentsByCondition
      * @param    : String searchConditionJSON
@@ -42,7 +66,7 @@ public with sharing class LWC_SearchStudentCtrl {
             SearchConditionDTO searchCondition = (SearchConditionDTO) JSON.deserialize(searchConditionJSON, SearchConditionDTO.class);
             List<String> conditions = new List<String>();
             List<String> selectedFields = new List<String>{
-                'Id', 'StudentCode__c', 'Firstname__c', 'Lastname__c', 'selected__c',
+                'Id', 'StudentCode__c', 'Firstname__c', 'Lastname__c', 'selected__c','TotalCredit__c','GPAScore__c',
                 'Class_look__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';

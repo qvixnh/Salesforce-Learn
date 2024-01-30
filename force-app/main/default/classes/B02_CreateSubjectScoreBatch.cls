@@ -25,14 +25,6 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
      * @modified : 2023/01/25 + Nguyen Vinh
      */
     public Database.QueryLocator start(Database.BatchableContext BC) {
-        AsyncApexJob jobInfo = [
-                SELECT Id
-                , Status
-                , NumberOfErrors
-                , ExtendedStatus
-                FROM AsyncApexJob
-                WHERE Id = :BC.getJobId()
-            ];
         try {
             this.batchLogObj= createBatchLog();
             this.semestersList = [
@@ -54,7 +46,9 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
             ]);
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            System.abortJob(jobInfo.Id);
+            if(BC != null){
+                System.abortJob(BC.getJobId());
+            }
             return null;
         }
     }
@@ -78,12 +72,10 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
                     while (subjectSet.size() < 5) {
                         Subject__c currentSubject = subjectsList[getRandomNumber(this.subjectsList.size())];
                         if (!subjectSet.contains(currentSubject)){
-                            // if((totalCredit + currentSubject.CourseCredit__c) <= 25){
-                                SubjectScore__c subjectScoreObj = createSubjectScore(currentSubject.Id, currentSemester.Id, student.Id);
-                                subjectScoreObjList.add(subjectScoreObj);
-                                totalCredit+=currentSubject.CourseCredit__c;
-                                subjectSet.add(currentSubject);
-                            // }
+                            SubjectScore__c subjectScoreObj = createSubjectScore(currentSubject.Id, currentSemester.Id, student.Id);
+                            subjectScoreObjList.add(subjectScoreObj);
+                            totalCredit+=currentSubject.CourseCredit__c;
+                            subjectSet.add(currentSubject);
                         }
                     }
                     semesterSet.add(currentSemester);

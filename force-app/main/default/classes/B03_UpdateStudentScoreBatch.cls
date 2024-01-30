@@ -10,8 +10,6 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
     private static final String SUCCESS = 'Success';
     private static final String ERROR = 'Error';
     private BatchLog__c batchLogObj = new BatchLog__c();
-    private List<Semester__c> semestersList = new List<Semester__c>();
-    private List<Subject__C> subjectsList = new List<Subject__C>();
 
     /**
      * start
@@ -21,27 +19,9 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
      * @modified : 2023/01/30 + Nguyen Vinh
      */
     public Database.QueryLocator start(Database.BatchableContext BC) {
-        AsyncApexJob jobInfo = [
-                SELECT Id
-                , Status
-                , NumberOfErrors
-                , ExtendedStatus
-                FROM AsyncApexJob
-                WHERE Id = :BC.getJobId()
-            ];
+        
         try {
             this.batchLogObj= createBatchLog();
-            this.semestersList = [
-                SELECT Id
-                , Name
-                FROM Semester__c
-            ];
-            this.subjectsList = [
-                SELECT Id
-                , Name
-                , CourseCredit__c
-                FROM Subject__c
-            ];
             return Database.getQueryLocator([
                 SELECT Id
                 , TotalCredit__c
@@ -52,7 +32,9 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
             ]);
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            System.abortJob(jobInfo.Id);
+            if(BC != null){
+                System.abortJob(BC.getJobId());
+            }
             return null;
         }
     }
@@ -64,16 +46,23 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
      * @modified : 2023/01/25 + Nguyen Vinh
      */
     public void execute(Database.BatchableContext BC, List<Student__c> studentsList) {
-        List<Student__c> studentsListUpdate = new List<Student__c>();
-        Map<Id, List<SubjectScore__c>> subjectScoreByStudentsMap = getSubjectScoreByStudentsMap( studentsList);
-        for(Student__c student: studentsList){
-            List<SubjectScore__c> subjectScoreList = subjectScoreByStudentsMap.get(student.Id);
-            if (!subjectScoreList.isEmpty()) {
-                Student__c stu = getStudentGPA_Credit(subjectScoreList, student);
-                studentsListUpdate.add(stu);
+        try {
+            List<Student__c> studentsListUpdate = new List<Student__c>();
+            Map<Id, List<SubjectScore__c>> subjectScoreByStudentsMap = getSubjectScoreByStudentsMap( studentsList);
+            for(Student__c student: studentsList){
+                List<SubjectScore__c> subjectScoreList = subjectScoreByStudentsMap.get(student.Id);
+                if (!subjectScoreList.isEmpty()) {
+                    Student__c stu = getStudentGPA_Credit(subjectScoreList, student);
+                    studentsListUpdate.add(stu);
+                }
+            }
+            update studentsListUpdate;
+        } catch (Exception e) {
+            updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
+            if(BC != null){
+                System.abortJob(BC.getJobId());
             }
         }
-        update studentsListUpdate;
     }
 
      /**
@@ -134,12 +123,14 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
     /**
      * getSubjectScoreByStudentsMap
      * @param    : List<Student__c> studentList
-     * @return   : Map<Id, List<SubjectScore__c>>
+     * @return   : Map<String, List<SubjectScore__c>>
      * @created  : 2023/01/25 + Nguyen Vinh
      * @modified : 2023/01/25 + Nguyen Vinh
      */
     private static Map<Id, List<SubjectScore__c>> getSubjectScoreByStudentsMap(List<Student__c> studentList){
-        Map<Id, List<SubjectScore__c>> subjectScoreByStudentsMap = new Map<Id, List<SubjectScore__c>>();
+        Set<String> subStuKeySet =new Set<String>();
+        Map<Id, List<SubjectScore__c>> subjectScoreByStudentsMapById = new Map<Id, List<SubjectScore__c>>();
+
         List<SubjectScore__c> subjectScoreList = [
             SELECT Id
                 , Semester_look__c
@@ -148,14 +139,21 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
                 , AverageScore__c
                 , Subject_look__r.CourseCredit__c
             FROM SubjectScore__c
-            ORDER BY Student_look__r.Name, Subject_look__r.Name, AverageScore__c DESC NULLS LAST
+            ORDER BY Student_look__c, Subject_look__c, AverageScore__c DESC NULLS LAST
         ];
         for(SubjectScore__c subjectScore: subjectScoreList){
-            if(!subjectScoreByStudentsMap.containsKey(subjectScore.Student_look__c)){
-                subjectScoreByStudentsMap.put(subjectScore.Student_look__c, new List<SubjectScore__c>{subjectScore});
+            String subStuKey = subjectScore.Student_look__c + '_' + subjectScore.Subject_look__c; 
+            if(!subStuKeySet.contains(subStuKey)){
+                subStuKeySet.add(subStuKey);
+                if(!subjectScoreByStudentsMapById.containsKey(subjectScore.Student_look__c)){
+                    subjectScoreByStudentsMapById.put(subjectScore.Student_look__c, new List<SubjectScore__c>{subjectScore});
+                }
+                else{
+                    subjectScoreByStudentsMapById.get(subjectScore.Student_look__c).add(subjectScore);
+                }
             }
         }
-        return subjectScoreByStudentsMap;
+        return subjectScoreByStudentsMapById;
     }
      /**
      * getStudentGPA_Credit
@@ -169,19 +167,18 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
         Decimal totalWeightedAverage = 0;
     
         for (SubjectScore__c subjectScore : subjectScoreList) {
-            if (subjectScore.Subject_look__r != null && subjectScore.Subject_look__r.CourseCredit__c != null) {
+            if (subjectScore.Subject_look__c != null && subjectScore.Subject_look__r.CourseCredit__c != null && subjectScore.AverageScore__c != null) {
                 Decimal courseCredit = subjectScore.Subject_look__r.CourseCredit__c;
                 totalCredits += courseCredit;
-                if (subjectScore.AverageScore__c != null) {
-                    totalWeightedAverage += subjectScore.AverageScore__c * courseCredit;
-                }
+                totalWeightedAverage += subjectScore.AverageScore__c * courseCredit;
             }
         }
-    
-        Decimal weightedAverageCredit = totalCredits != 0 ? totalWeightedAverage / totalCredits : 0;
-        
+        Decimal weightedAverageCredit = 0 ;
+        if(totalCredits != 0 ){
+            weightedAverageCredit = (totalWeightedAverage / totalCredits).setScale(2, System.RoundingMode.HALF_UP);
+        }
         student.TotalCredit__c = totalCredits;
-        student.GPAScore__c = weightedAverageCredit.setScale(2, System.RoundingMode.HALF_UP);
+        student.GPAScore__c = weightedAverageCredit;
         
         return student;
     }

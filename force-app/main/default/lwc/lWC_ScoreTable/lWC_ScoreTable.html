@@ -1,0 +1,88 @@
+<template>
+    <div class="slds-grid">
+        <div class="slds-col  slds-p-top_medium">
+            Tổng tín chỉ: {student.TotalCredit__c}
+        </div>
+        <div class="slds-col slds-p-top_medium">
+            Điểm tích lũy: {student.GPAScore__c}
+        </div>
+        <div class="slds-col">
+            <lightning-combobox  value={selectedSemester} options={semesterOptions} onchange={handleChangeClass}></lightning-combobox>
+        </div>
+    </div>
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
+        <caption>hoc ki: </caption>
+        <thead>
+            <tr>
+                <th scope="col"> ma mon hoc</th>
+                <th scope="col">ten mon hoc </th>
+                <th scope="col" >tinh chi</th>
+                <th scope="col">qt1</th>
+                <th scope="col">qt2</th>
+                <th scope="col">giua ki</th>
+                <th scope="col">cuoi ki</th>
+                <th scope="col">trung binh mon</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- <template for:each={displayedStudents} for:item="student">
+                <tr key={student.StudentCode__c}>
+                    <td style="width:2%;">
+                        <div class="slds-truncate" title="Select">
+                            <input type="checkbox" value={student.StudentCode__c} checked={student.selected__c} onchange={handleSelect} />
+                        </div>
+                    </td>
+                    <td style="width:3%;">{student.index}</td>
+                    <td style="width:5%;">{student.StudentCode__c}</td>
+                    <td style="width:25%;">{student.Firstname__c}</td>
+                    <td style="width:25%;">{student.Lastname__c}</td>
+                    <td style="width:25%;">{student.Class_look__r.Name}</td>
+                    <template if:true={student.Gender__c}>
+                        <td style="width:5%;">Male</td>
+                    </template>
+                    <template if:false={student.Gender__c}>
+                        <td style="width:5%;">Female</td>
+                    </template>
+                    <td style="width:5%;">
+                            <lightning-formatted-date-time
+                              value={student.Birthday__c}
+                              year="numeric"
+                              month="numeric"
+                              day="numeric"
+                            ></lightning-formatted-date-time>
+                    </td>
+                    <td >
+                        <lightning-button-icon 
+                            icon-name="utility:description"
+                            alternative-text="Details"
+                            title="Details"
+                            onclick={openModalDetail} 
+                            data-student-id={student.Id}
+                            >
+                        </lightning-button-icon>
+                    </td>
+                    <td><lightning-button-icon
+                        icon-name="utility:delete"
+                        alternative-text="Delete"
+                        title="Delete"
+                        onclick={openModalDelete}
+                        data-student-id={student.Id}
+                        
+                        >
+                    </lightning-button-icon></td>
+                    <td>
+                        <lightning-button-icon
+                            icon-name="utility:settings"
+                            alternative-text="settings"
+                            title="Delete"
+                            onclick={openModalUpdate}
+                            data-student-id={student.Id}
+                            >
+                            
+                        </lightning-button-icon>
+                    </td>
+                </tr>
+            </template> -->
+        </tbody>
+    </table>
+</template>

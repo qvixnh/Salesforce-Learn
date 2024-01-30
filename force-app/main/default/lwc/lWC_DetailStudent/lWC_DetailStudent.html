@@ -1,5 +1,5 @@
 <template>
-    <lightning-card title={student.StudentCode__c} icon-name="standard:account">
+    <div style="width: 940px;">
         <div class="slds-m-around_medium">
             <table class="slds-table slds-table_cell-buffer slds-no-row-hover">
                 <tbody>
@@ -39,5 +39,6 @@
             <p style="word-wrap: break-word; width:400px;margin-left:23px">ADDRESS:  {student.Address__c}</p>
         </div>
         
-    </lightning-card>
+    </div>
+    <c-l-w-c_-score-table student={student}  ></c-l-w-c_-score-table>
 </template>

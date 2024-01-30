@@ -17,14 +17,7 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
      * @modified : 2023/01/25 + Nguyen Vinh
      */
     public Database.QueryLocator start(Database.BatchableContext BC) {
-        AsyncApexJob jobInfo = [
-                SELECT Id
-                , Status
-                , NumberOfErrors
-                , ExtendedStatus
-                FROM AsyncApexJob
-                WHERE Id = :BC.getJobId()
-            ];
+        
         try {
             this.batchLogObj= createBatchLog();
             return Database.getQueryLocator([
@@ -33,7 +26,9 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
             ]);
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            System.abortJob(jobInfo.Id);
+            if(BC != null){
+                System.abortJob(BC.getJobId());
+            }
             return null;
         }
     }
@@ -46,7 +41,14 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
      * @modified : 2023/01/25 + Nguyen Vinh
      */
     public void execute(Database.BatchableContext BC, List<SubjectScore__c> subjectScoresToDelete) {
-        delete subjectScoresToDelete;
+        try {
+            delete subjectScoresToDelete;
+        } catch (Exception e) {
+            updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
+            if(BC != null){
+                System.abortJob(BC.getJobId());
+            }
+        }
     }
     /**
      * finish
@@ -61,7 +63,7 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
                 , Status
                 , NumberOfErrors
                 , ExtendedStatus
-                FROM AsyncApexJob 
+                FROM AsyncApexJob
                 WHERE Id = :BC.getJobId()
             ];
         try {
@@ -75,7 +77,7 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
             }
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            System.abortJob(jobInfo.Id);
+            System.abortJob(BC.getJobId());
         }
     }
     /**
