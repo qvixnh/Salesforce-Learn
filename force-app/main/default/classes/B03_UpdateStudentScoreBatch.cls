@@ -18,9 +18,17 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
      * @param    : Database.BatchableContext BC
      * @return   : Database.QueryLocator
      * @created  : 2023/01/25 + Nguyen Vinh
-     * @modified :
+     * @modified : 2023/01/30 + Nguyen Vinh
      */
     public Database.QueryLocator start(Database.BatchableContext BC) {
+        AsyncApexJob jobInfo = [
+                SELECT Id
+                , Status
+                , NumberOfErrors
+                , ExtendedStatus
+                FROM AsyncApexJob
+                WHERE Id = :BC.getJobId()
+            ];
         try {
             this.batchLogObj= createBatchLog();
             this.semestersList = [
@@ -44,6 +52,7 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
             ]);
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
+            System.abortJob(jobInfo.Id);
             return null;
         }
     }
@@ -52,7 +61,7 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
      * @param    : Database.BatchableContext BC, List<Student__c> studentsList
      * @return   :
      * @created  : 2023/01/25 + Nguyen Vinh
-     * @modified :
+     * @modified : 2023/01/25 + Nguyen Vinh
      */
     public void execute(Database.BatchableContext BC, List<Student__c> studentsList) {
         List<Student__c> studentsListUpdate = new List<Student__c>();
@@ -75,8 +84,7 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
      * @modified :
      */
     public void finish(Database.BatchableContext BC) {
-        try {
-            AsyncApexJob jobInfo = [
+        AsyncApexJob jobInfo = [
                 SELECT Id
                 , Status
                 , NumberOfErrors
@@ -84,14 +92,15 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
                 FROM AsyncApexJob
                 WHERE Id = :BC.getJobId()
             ];
+        try {
             if (jobInfo.NumberOfErrors > 0) {
                 updateBatchLog(this.batchLogObj.id, jobInfo.ExtendedStatus, ERROR);
             } else {
                 updateBatchLog(this.batchLogObj.id, '', SUCCESS);
-
             }
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
+            System.abortJob(jobInfo.Id);
         }
     }
     /**
@@ -99,7 +108,7 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
      * @param    : BatchLog__c
      * @return   : BatchLog__c
      * @created  : 2023/01/25 + Nguyen Vinh
-     * @modified :
+     * @modified : 
      */
     private static BatchLog__c createBatchLog(){
         BatchLog__c batchLog = new BatchLog__c();
@@ -127,7 +136,7 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
      * @param    : List<Student__c> studentList
      * @return   : Map<Id, List<SubjectScore__c>>
      * @created  : 2023/01/25 + Nguyen Vinh
-     * @modified :
+     * @modified : 2023/01/25 + Nguyen Vinh
      */
     private static Map<Id, List<SubjectScore__c>> getSubjectScoreByStudentsMap(List<Student__c> studentList){
         Map<Id, List<SubjectScore__c>> subjectScoreByStudentsMap = new Map<Id, List<SubjectScore__c>>();
@@ -139,14 +148,11 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
                 , AverageScore__c
                 , Subject_look__r.CourseCredit__c
             FROM SubjectScore__c
-            ORDER BY AverageScore__c DESC NULLS LAST
+            ORDER BY Student_look__r.Name, Subject_look__r.Name, AverageScore__c DESC NULLS LAST
         ];
         for(SubjectScore__c subjectScore: subjectScoreList){
             if(!subjectScoreByStudentsMap.containsKey(subjectScore.Student_look__c)){
                 subjectScoreByStudentsMap.put(subjectScore.Student_look__c, new List<SubjectScore__c>{subjectScore});
-            }
-            else{
-                subjectScoreByStudentsMap.get(subjectScore.Student_look__c).add(subjectScore);
             }
         }
         return subjectScoreByStudentsMap;
@@ -156,37 +162,27 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
      * @param    : List<SubjectScore__c> subjectScoreList, Student__c student
      * @return   : Student__c
      * @created  : 2023/01/25 + Nguyen Vinh
-     * @modified :
+     * @modified : 2023/01/25 + Nguyen Vinh
      */
-    private static Student__c getStudentGPA_Credit(List<SubjectScore__c> subjectScoreList, Student__c student){
-        subjectScoreList = filterSSList(subjectScoreList);
+    private static Student__c getStudentGPA_Credit(List<SubjectScore__c> subjectScoreList, Student__c student) {
         Decimal totalCredits = 0;
         Decimal totalWeightedAverage = 0;
+    
         for (SubjectScore__c subjectScore : subjectScoreList) {
-            Decimal courseCredit = subjectScore.Subject_look__r.CourseCredit__c;
-            totalCredits += courseCredit;
-            totalWeightedAverage += subjectScore.AverageScore__c * courseCredit;
-        }
-        Decimal weightedAverageCredit = totalWeightedAverage / totalCredits;
-        student.TotalCredit__c = totalCredits;
-        student.GPAScore__c = weightedAverageCredit;
-        return student;
-    }
-    /**
-     * getStudentGPA_Credit
-     * @param    : List<SubjectScore__c> subjectScoreList, Student__c student
-     * @return   : Student__c
-     * @created  : 2023/01/25 + Nguyen Vinh
-     * @modified :
-     */
-    private static List<SubjectScore__c>  filterSSList(List<SubjectScore__c> subjectScoreList){
-        Map<String, SubjectScore__c> highestScoresMap = new Map<String, SubjectScore__c>();
-        for (SubjectScore__c subjectScore : subjectScoreList) {
-            String key = subjectScore.Student_look__c + '_' + subjectScore.Subject_look__c;
-            if (!highestScoresMap.containsKey(key) || highestScoresMap.get(key).AverageScore__c < subjectScore.AverageScore__c) {
-                highestScoresMap.put(key, subjectScore);
+            if (subjectScore.Subject_look__r != null && subjectScore.Subject_look__r.CourseCredit__c != null) {
+                Decimal courseCredit = subjectScore.Subject_look__r.CourseCredit__c;
+                totalCredits += courseCredit;
+                if (subjectScore.AverageScore__c != null) {
+                    totalWeightedAverage += subjectScore.AverageScore__c * courseCredit;
+                }
             }
         }
-        return new List<SubjectScore__c>(highestScoresMap.values());
+    
+        Decimal weightedAverageCredit = totalCredits != 0 ? totalWeightedAverage / totalCredits : 0;
+        
+        student.TotalCredit__c = totalCredits;
+        student.GPAScore__c = weightedAverageCredit.setScale(2, System.RoundingMode.HALF_UP);
+        
+        return student;
     }
 }

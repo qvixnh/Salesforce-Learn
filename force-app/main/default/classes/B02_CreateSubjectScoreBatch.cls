@@ -25,6 +25,14 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
      * @modified : 2023/01/25 + Nguyen Vinh
      */
     public Database.QueryLocator start(Database.BatchableContext BC) {
+        AsyncApexJob jobInfo = [
+                SELECT Id
+                , Status
+                , NumberOfErrors
+                , ExtendedStatus
+                FROM AsyncApexJob
+                WHERE Id = :BC.getJobId()
+            ];
         try {
             this.batchLogObj= createBatchLog();
             this.semestersList = [
@@ -46,6 +54,7 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
             ]);
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
+            System.abortJob(jobInfo.Id);
             return null;
         }
     }
@@ -99,14 +108,14 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
      * @modified : 2023/01/25 + Nguyen Vinh
      */
     public void finish(Database.BatchableContext BC) {
-        try {
-            AsyncApexJob jobInfo = [
+        AsyncApexJob jobInfo = [
                 SELECT Id
                 , NumberOfErrors
                 , ExtendedStatus
                 FROM AsyncApexJob 
                 WHERE Id = :BC.getJobId()
             ];
+        try {
             if (jobInfo.NumberOfErrors > 0) {
                 updateBatchLog(this.batchLogObj.id, jobInfo.ExtendedStatus, ERROR);
             } else {
@@ -116,6 +125,7 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
             }
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
+            System.abortJob(jobInfo.Id);
         }
     }
     /**
