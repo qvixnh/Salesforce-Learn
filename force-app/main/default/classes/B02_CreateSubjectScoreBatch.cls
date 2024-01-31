@@ -185,7 +185,8 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
     private static Score__c createScore(Id subScoreId, String type){
         Score__c score = new Score__c();
         score.SubjectScore_look__c = subScoreId;
-        score.Score__c = 1 + (Math.random() *9);
+        Integer randomNumber = Integer.valueOf(Math.floor(Math.random() * 10) + 1);
+        score.Score__c = randomNumber;
         score.ExamType__c = type;
         return score;
     }

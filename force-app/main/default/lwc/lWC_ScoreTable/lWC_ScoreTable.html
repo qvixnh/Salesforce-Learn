@@ -7,11 +7,11 @@
             Điểm tích lũy: {student.GPAScore__c}
         </div>
         <div class="slds-col">
-            <lightning-combobox  value={selectedSemester} options={semesterOptions} onchange={handleChangeClass}></lightning-combobox>
+            <lightning-combobox  value={selectedSemester} options={semesterOptions} onchange={handleSemesterChange}></lightning-combobox>
         </div>
     </div>
     <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
-        <caption>hoc ki: </caption>
+        <caption>hoc ki: {selectedSemester}</caption>
         <thead>
             <tr>
                 <th scope="col"> ma mon hoc</th>
@@ -25,64 +25,18 @@
             </tr>
         </thead>
         <tbody>
-            <!-- <template for:each={displayedStudents} for:item="student">
-                <tr key={student.StudentCode__c}>
-                    <td style="width:2%;">
-                        <div class="slds-truncate" title="Select">
-                            <input type="checkbox" value={student.StudentCode__c} checked={student.selected__c} onchange={handleSelect} />
-                        </div>
-                    </td>
-                    <td style="width:3%;">{student.index}</td>
-                    <td style="width:5%;">{student.StudentCode__c}</td>
-                    <td style="width:25%;">{student.Firstname__c}</td>
-                    <td style="width:25%;">{student.Lastname__c}</td>
-                    <td style="width:25%;">{student.Class_look__r.Name}</td>
-                    <template if:true={student.Gender__c}>
-                        <td style="width:5%;">Male</td>
-                    </template>
-                    <template if:false={student.Gender__c}>
-                        <td style="width:5%;">Female</td>
-                    </template>
-                    <td style="width:5%;">
-                            <lightning-formatted-date-time
-                              value={student.Birthday__c}
-                              year="numeric"
-                              month="numeric"
-                              day="numeric"
-                            ></lightning-formatted-date-time>
-                    </td>
-                    <td >
-                        <lightning-button-icon 
-                            icon-name="utility:description"
-                            alternative-text="Details"
-                            title="Details"
-                            onclick={openModalDetail} 
-                            data-student-id={student.Id}
-                            >
-                        </lightning-button-icon>
-                    </td>
-                    <td><lightning-button-icon
-                        icon-name="utility:delete"
-                        alternative-text="Delete"
-                        title="Delete"
-                        onclick={openModalDelete}
-                        data-student-id={student.Id}
-                        
-                        >
-                    </lightning-button-icon></td>
-                    <td>
-                        <lightning-button-icon
-                            icon-name="utility:settings"
-                            alternative-text="settings"
-                            title="Delete"
-                            onclick={openModalUpdate}
-                            data-student-id={student.Id}
-                            >
-                            
-                        </lightning-button-icon>
-                    </td>
+            <template for:each={subjectScoreList} for:item="subjectScore">
+                <tr key={subjectScore}>
+                    <td scope="col">{subjectScore.SubjectCode}</td>
+                    <td scope="col"> {subjectScore.SubjectName}</td>
+                    <td scope="col" >{subjectScore.CourseCredit}</td>
+                    <td scope="col" >{subjectScore.ProgressScore}</td>
+                    <td scope="col" >{subjectScore.PracticalScore}</td>
+                    <td scope="col" >{subjectScore.MidtermScore}</td>
+                    <td scope="col" >{subjectScore.FinalScore}</td>
+                    <td scope="col" >{subjectScore.AverageScore}</td>
                 </tr>
-            </template> -->
+            </template>
         </tbody>
     </table>
 </template>
