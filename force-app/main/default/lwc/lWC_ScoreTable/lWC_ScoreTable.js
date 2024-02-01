@@ -5,7 +5,7 @@ import getSemesterOptions from '@salesforce/apex/LWC_DetailStudentCtrl.getSemest
 import getResults from '@salesforce/apex/LWC_DetailStudentCtrl.getResults';
 export default class LWC_ScoreTable extends LightningElement {
     @api student;
-    @track subjectScoreList;
+    @track semesterDTOList;
     @track semesterOptions;
     trungbinhHK = 0;
     tinchiHK = 0;
@@ -36,11 +36,7 @@ export default class LWC_ScoreTable extends LightningElement {
             semesterId: this.selectedSemester,
         })
             .then(result => {
-                this.subjectScoreList = result.scoreTableDtoList;
-                this.tinchiHK = result.tinchiHK;                        
-                this.trungbinhHK = result.trungbinhHK;
-                this.selectedSemesterName = result.semesterName;
-
+                this.semesterDTOList = result;
             })
             .catch(error => {
                 this.showSuccessToast('Error retrieving subject scores:',error);
