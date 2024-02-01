@@ -20,34 +20,56 @@ public with sharing class LWC_DetailStudentCtrl {
         return semesterList;
     }
     private static List<SubjectScore__c> getSubjectScores(Id studentId, Id semesterId) {
-        List<SubjectScore__c> subjectScoreList = new List<SubjectScore__c>();
-        try {
-                subjectScoreList = [
-                    SELECT 
-                        Id
-                        , (SELECT Score__c, ExamType__c FROM Scores__r )
-                        , Status__c
-                        , Semester_look__c 
-                        , Student_look__c
-                        , AverageScore__c
-                        , Subject_look__r.Name
-                        , Subject_look__r.SubjectCode__c
-                        , Subject_look__r.CourseCredit__c
-                    FROM SubjectScore__c    
-                    WHERE Student_look__c = :studentId 
-                        AND Semester_look__c = :semesterId
-                ];
-                return subjectScoreList;
-        } catch (Exception e) {
-            throw new CustomException('An error occurred when getting semesters: ' + e.getMessage());
-
+        List<String> selectedFields = new List<String>{
+                'Id'
+                , '(SELECT Score__c, ExamType__c FROM Scores__r )'
+                , 'Status__c'
+                , 'Semester_look__c' 
+                , 'Student_look__c'
+                , 'AverageScore__c'
+                , 'Semester_look__r.Name'
+                , 'Subject_look__r.Name'
+                , 'Subject_look__r.SubjectCode__c'
+                , 'Subject_look__r.CourseCredit__c'
+        };
+        String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM SubjectScore__c';
+        
+        List<String> conditions = new List<String>();
+        if (studentId != null) {
+            conditions.add('Student_look__c = \'' + studentId + '\'');
         }
+        if (semesterId != null) {
+            conditions.add('Semester_look__c = \'' + semesterId + '\'');
+        }
+        queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ')  : '';
+        return Database.query(queryString);
     }
-    @AuraEnabled
-    public static List<ScoreTableDto> getScoreTableDtoList(Id studentId, Id semesterId){
+    private static List<SemesterResultDto> getSemesterResultDtoMap(Id studentId) {
+        List<SubjectScore__c> subjectScoreList = getSubjectScores(studentId, null);
+        Map<String, List<SubjectScore__c>> subjectScoreBySemesterMap = new Map<String, List<SubjectScore__c>>();
+        Set<String> semKeySet = new Set<String>();
+        for(SubjectScore__c subjectScore: subjectScoreList){
+            String semKey = subjectScore.Semester_look__r.Name; 
+            if(!semKeySet.contains(semKey)){
+                semKeySet.add(semKey);
+            }
+            else{
+                subjectScoreBySemesterMap.get(subjectScore.Semester_look__r.Name).add(subjectScore);
+            }
+        }
+        List<SemesterResultDto> semesterResultByIdMap = new List<SemesterResultDto>();
+        for(String currentKey: subjectScoreBySemesterMap.keySet()){
+            SemesterResultDto temp = getSemesterResultDto(subjectScoreBySemesterMap.get(currentKey));
+            semesterResultByIdMap.add(temp);
+        }
+        return semesterResultByIdMap;
+    }
+    private static SemesterResultDto getSemesterResultDto(List<SubjectScore__c> subjectScoreList){
         try {
             List<ScoreTableDto> ScoreTableDtoList = new  List<ScoreTableDto>();
-            List<SubjectScore__c> subjectScoreList = getSubjectScores(studentId,semesterId );
+            Decimal tongdiemTinChi = 0;
+            Decimal tinchiHK = 0;
+            String semesterName = '';
             for(SubjectScore__c subjectScore: subjectScoreList ){
                 ScoreTableDto obj = new ScoreTableDto();
                 obj.SubjectScoreId = subjectScore.Id;
@@ -56,13 +78,14 @@ public with sharing class LWC_DetailStudentCtrl {
                 obj.SubjectName = subjectScore.Subject_look__r.Name;
                 obj.SubjectCode = subjectScore.Subject_look__r.SubjectCode__c;
                 obj.CourseCredit = subjectScore.Subject_look__r.CourseCredit__c;
+                semesterName = subjectScore.Semester_look__r.Name;
                 for(Score__c score: subjectScore.Scores__r){
                     if(PROGRESS.equals(score.ExamType__c)){
                         obj.ProgressScore = score.Score__c;
                     }
                     else if(PRACTICAL.equals(score.ExamType__c)){
-                        obj.PracticalScore = score.Score__c;
-                    }
+                        obj.PracticalScore = score.Score__c;        
+                    }                                                                                              
                     else if(MIDTERM.equals(score.ExamType__c)){
                         obj.MidtermScore = score.Score__c;
                     }
@@ -70,16 +93,38 @@ public with sharing class LWC_DetailStudentCtrl {
                         obj.FinalScore = score.Score__c;
                     }
                 }
+                tinchiHK += subjectScore.Subject_look__r.CourseCredit__c;
+                tongdiemTinChi += obj.AverageScore*obj.CourseCredit;
                 ScoreTableDtoList.add(obj);
             }
-            return ScoreTableDtoList;
+            Decimal trungbinhHK =0;
+            if(tinchiHK > 0){
+                trungbinhHK = (tongdiemTinChi/tinchiHK).setScale(2,System.RoundingMode.HALF_UP);
+            }
+            SemesterResultDto result  = new SemesterResultDto();
+            result.scoreTableDtoList = ScoreTableDtoList;
+            result.trungbinhHK = trungbinhHK;
+            result.tinchiHK = tinchiHK;
+            result.semesterName = semesterName;
+            return result;
+            
+        } catch (Exception e) {
+            throw new CustomException('An error occurred when getting semesters: ' + e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static SemesterResultDto getResults(Id studentId, Id semesterId){
+        try {
+            List<SubjectScore__c> subjectScoreList = getSubjectScores(studentId,semesterId);
+            SemesterResultDto semesterResult = getSemesterResultDto(subjectScoreList);
+            return semesterResult;
         } catch (Exception e) {
             throw new CustomException('An error occurred when getting semesters: ' + e.getMessage());
         }
     }
     
-    public  class  ScoreTableDto {
-        
+    public class ScoreTableDto {
         @AuraEnabled
         public Id SubjectScoreId;
         @AuraEnabled
@@ -101,16 +146,19 @@ public with sharing class LWC_DetailStudentCtrl {
         @AuraEnabled
         public Decimal FinalScore;
     }
-    public  class  SemesterResultDto {
+    public class SemesterResultDto {
         @AuraEnabled
         public List<ScoreTableDto> scoreTableDtoList;
         @AuraEnabled
         public Decimal trungbinhHK;
         @AuraEnabled
         public Decimal tinchiHK;
+        @AuraEnabled
+        public String semesterName;
         
     }
-    public  class  CustomException extends Exception {
+    
+    public class CustomException extends Exception {
         
     }
 }

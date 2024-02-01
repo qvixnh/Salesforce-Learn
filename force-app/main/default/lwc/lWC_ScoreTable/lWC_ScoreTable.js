@@ -2,14 +2,15 @@ import { LightningElement, api, track,wire} from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 // import getSemesterOptions from '@salesforce/apex/c/LWC_DetailStudentCtrl.getSemesterOptions';
 import getSemesterOptions from '@salesforce/apex/LWC_DetailStudentCtrl.getSemesterOptions';
-import getScoreTableDtoList from '@salesforce/apex/LWC_DetailStudentCtrl.getScoreTableDtoList';
+import getResults from '@salesforce/apex/LWC_DetailStudentCtrl.getResults';
 export default class LWC_ScoreTable extends LightningElement {
     @api student;
     @track subjectScoreList;
     @track semesterOptions;
-    trungbinhHK;
-    tinchiHK;
+    trungbinhHK = 0;
+    tinchiHK = 0;
     selectedSemester;
+    selectedSemesterName;
 
     handleSemesterChange(event) {
         this.selectedSemester = event.detail.value;
@@ -30,29 +31,19 @@ export default class LWC_ScoreTable extends LightningElement {
     }
     
     loadSubjectScores() {
-        getScoreTableDtoList({
+        getResults({
             studentId: this.student.Id,
             semesterId: this.selectedSemester,
         })
             .then(result => {
-                this.subjectScoreList = result;
-                // this.subjectScoreList = result.scoreTableDtoList;
-                // console.log(JSON.stringify(subjectScoreList));
-                // this.tinchiHK = result.tinchiHK;
-                // this.trungbinhHK = result.trungbinhHK;
+                this.subjectScoreList = result.scoreTableDtoList;
+                this.tinchiHK = result.tinchiHK;                        
+                this.trungbinhHK = result.trungbinhHK;
+                this.selectedSemesterName = result.semesterName;
+
             })
             .catch(error => {
-                let errorMessage = '';
-                if(error?.body?.message){
-                    errorMessage = error.body.message;
-                }
-                else if(error?.message){
-                    errorMessage = error.message;
-                }
-                else{
-                    errorMessage = error;
-                }
-                this.showSuccessToast('Error retrieving subject scores:',errorMessage);
+                this.showSuccessToast('Error retrieving subject scores:',error);
             });        
     }
     showSuccessToast(message) {

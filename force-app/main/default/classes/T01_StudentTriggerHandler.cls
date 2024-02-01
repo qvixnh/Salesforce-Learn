@@ -107,7 +107,6 @@ public without sharing class T01_StudentTriggerHandler {
      */
     public static void onAfterUpdate(Map<Id,Student__c> mapNewStudents,Map<Id,Student__c> mapOldStudents){
         try {
-            System.debug(isClassUpdated(mapNewStudents, mapOldStudents));
             if(isClassUpdated(mapNewStudents, mapOldStudents)){
                 Set<Id> classIds = new Set<Id>();
                 for (Student__c student : mapOldStudents.values()) {
@@ -193,14 +192,14 @@ public without sharing class T01_StudentTriggerHandler {
             if (student.Birthday__c == null) {
                 fields.add('Birthday__c');
             }
-            if (student.Gender__c == null) {
-                fields.add('Gender__c');
-            }
             else if(student.Birthday__c != null){
                 Date birthday = student.Birthday__c;
                 if (calculateAge(birthday) <= 17) {
                     student.addError('学生の年齢が無効です。有効な年齢は18歳以上です.');
                 }
+            }
+            if (student.Gender__c == null) {
+                fields.add('Gender__c');
             }
             if (String.isBlank(student.Address__c)) {
                 fields.add('Address__c');

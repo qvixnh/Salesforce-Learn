@@ -93,7 +93,7 @@ public without sharing class T02_ScoreTriggerHandler {
             WHERE SubjectScore_look__c IN :subjectScoreIDs
                 AND Score__c <> NULL
                 AND ExamType__c IN :EXAM_TYPE_LIST
-            ORDER BY Score__c DESC NULLS LAST
+            ORDER BY Score__c DESC
         ];
         for(Score__c score: totalScores){
             if(!scoreMap.containsKey(score.SubjectScore_look__c)){
@@ -113,37 +113,30 @@ public without sharing class T02_ScoreTriggerHandler {
      * @created  : 2023/01/24 + Nguyen Vinh
      * @modified : 2023/01/25 + Nguyen Vinh
      */
-    private static Decimal getGPA(List<Score__c> ScoresBySubject){
+    private static Decimal getGPA(List<Score__c> ScoresBySubject) {
         Decimal GPA = 0;
+        Map<String, Decimal> typeToWeightMap = new Map<String, Decimal>{
+            PROGRESS => 0.1,
+            PRACTICAL => 0.2,
+            MIDTERM => 0.2,
+            FINALTERM => 0.5
+        };
         Set<String> typeSet = new Set<String>();
-        Decimal[] gpaArray = new Decimal[]{0, 0, 0, 0};
-        for(Score__c score:  ScoresBySubject){
-            if(PROGRESS.equals(score.ExamType__c)){
-                typeSet.add(PROGRESS);
-                gpaArray[0] = score.Score__c * 0.1;
+        for (Score__c score : ScoresBySubject) {
+            Decimal weight = typeToWeightMap.get(score.ExamType__c);
+            if (weight != null && !typeSet.contains(score.ExamType__c)) {
+                typeSet.add(score.ExamType__c);
+                GPA += score.Score__c * weight;
             }
-            else if(PRACTICAL.equals(score.ExamType__c)){
-                typeSet.add(PRACTICAL);
-                gpaArray[1] = score.Score__c * 0.2;
-            }
-            else if(MIDTERM.equals(score.ExamType__c)){
-                typeSet.add(MIDTERM);
-                gpaArray[2] = score.Score__c * 0.2;
-            }
-            else if(FINALTERM.equals(score.ExamType__c)){
-                typeSet.add(FINALTERM);
-                gpaArray[3] = score.Score__c * 0.5;
-            }
-            if(typeSet.size() == 4){
-                for (Decimal item : gpaArray) {
-                    GPA += item;
-                }
-                GPA = GPA.setScale(2, System.RoundingMode.HALF_UP);
-                return GPA;
-            }
+           
         }
-        return null;
+        
+        if (typeSet.size() < 4) {
+            return null;
+        }
+        return GPA.setScale(2, System.RoundingMode.HALF_UP);
     }
+    
     /**
      * クラス名：   CustomException
      * クラス概要： Custom Exception
