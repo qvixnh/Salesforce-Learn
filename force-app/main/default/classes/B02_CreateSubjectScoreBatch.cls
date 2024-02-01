@@ -123,7 +123,6 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
             }
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            System.abortJob(jobInfo.Id);
         }
     }
     /**

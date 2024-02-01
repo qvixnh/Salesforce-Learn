@@ -10,33 +10,43 @@
             <lightning-combobox  value={selectedSemester} options={semesterOptions} onchange={handleSemesterChange}></lightning-combobox>
         </div>
     </div>
-    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
-        <caption>hoc ki: {selectedSemester}</caption>
-        <thead>
-            <tr>
-                <th scope="col"> ma mon hoc</th>
-                <th scope="col">ten mon hoc </th>
-                <th scope="col" >tinh chi</th>
-                <th scope="col">qt1</th>
-                <th scope="col">qt2</th>
-                <th scope="col">giua ki</th>
-                <th scope="col">cuoi ki</th>
-                <th scope="col">trung binh mon</th>
-            </tr>
-        </thead>
-        <tbody>
-            <template for:each={subjectScoreList} for:item="subjectScore">
-                <tr key={subjectScore}>
-                    <td scope="col">{subjectScore.SubjectCode}</td>
-                    <td scope="col"> {subjectScore.SubjectName}</td>
-                    <td scope="col" >{subjectScore.CourseCredit}</td>
-                    <td scope="col" >{subjectScore.ProgressScore}</td>
-                    <td scope="col" >{subjectScore.PracticalScore}</td>
-                    <td scope="col" >{subjectScore.MidtermScore}</td>
-                    <td scope="col" >{subjectScore.FinalScore}</td>
-                    <td scope="col" >{subjectScore.AverageScore}</td>
+    
+    <template for:each={subjectScoreList} for:item="subjectScore">
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
+            <caption>hoc ki: {selectedSemesterName}</caption>
+            <thead>
+                <tr>
+                    <th scope="col"> ma mon hoc</th>
+                    <th scope="col">ten mon hoc </th>
+                    <th scope="col" >tinh chi</th>
+                    <th scope="col">qt1</th>
+                    <th scope="col">qt2</th>
+                    <th scope="col">giua ki</th>
+                    <th scope="col">cuoi ki</th>
+                    <th scope="col">trung binh mon</th>
                 </tr>
-            </template>
-        </tbody>
+            </thead>
+            <tbody>
+                <template for:each={subjectScoreList} for:item="subjectScore">
+                    <tr key={subjectScore.SubjectScoreId}>
+                        <td scope="col">{subjectScore.SubjectCode}</td>
+                        <td scope="col"> {subjectScore.SubjectName}</td>
+                        <td scope="col" >{subjectScore.CourseCredit}</td>
+                        <td scope="col" >{subjectScore.ProgressScore}</td>
+                        <td scope="col" >{subjectScore.PracticalScore}</td>
+                        <td scope="col" >{subjectScore.MidtermScore}</td>
+                        <td scope="col" >{subjectScore.FinalScore}</td>
+                        <td scope="col" >{subjectScore.AverageScore}</td>
+                    </tr>
+                </template>
+                <tr>
+                    <td colspan="2">tong: </td>
+                    <td colspan="5">{tinchiHK} </td>
+                    <td >{trungbinhHK} </td>
+                </tr>
+                <!-- <tr> {trungbinhHK} {tinchiHK} </tr> -->
+            </tbody>
+    </template>
+    
     </table>
 </template>

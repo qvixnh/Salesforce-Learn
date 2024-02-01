@@ -81,7 +81,6 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
             }
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            System.abortJob(jobInfo.Id);
         }
     }
     /**

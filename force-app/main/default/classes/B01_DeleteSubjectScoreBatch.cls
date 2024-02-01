@@ -68,7 +68,6 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
             }
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            System.abortJob(BC.getJobId());
         }
     }
     /**
