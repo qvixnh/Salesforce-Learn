@@ -103,19 +103,13 @@ public without sharing class T01_StudentTriggerHandler {
      * @param    : List<Student__c> newStudents,List<Student__c> oldStudents
      * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified :
+     * @modified : 2023/02/01 + Nguyen Vinh
      */
-    public static void onAfterUpdate(Map<Id,Student__c> mapNewStudents,Map<Id,Student__c> mapOldStudents){
+    public static void onAfterUpdate(List<Student__c> newStudentList,Map<Id,Student__c> mapOldStudents){
         try {
-            if(isClassUpdated(mapNewStudents, mapOldStudents)){
-                Set<Id> classIds = new Set<Id>();
-                for (Student__c student : mapOldStudents.values()) {
-                    classIds.add(student.Class_look__c);
-                }
-                for (Student__c student : mapNewStudents.values()) {
-                    classIds.add(student.Class_look__c);
-                }
-                List<Class__c> classesToUpdateList = updateNumberOfStudentByClassIds(classIds);
+            Set<Id> updatedClassIdSet  =  getUpdatedClassIdsSet(newStudentList, mapOldStudents);
+            if(!updatedClassIdSet.isEmpty()){
+                List<Class__c> classesToUpdateList = updateNumberOfStudentByClassIds(updatedClassIdSet);
                 if (!classesToUpdateList.isEmpty()) {
                     update classesToUpdateList;
                 }
@@ -127,19 +121,25 @@ public without sharing class T01_StudentTriggerHandler {
     }
     /**
      * isClassUpdated
-     * @param    : Map<Id,Student__c> mapNewStudents,Map<Id,Student__c> mapOldStudents
-     * @return   : Boolean
+     * @param    : List<Student__c> studentList,Map<Id,Student__c> mapOldStudents
+     * @return   : Set<Id>
      * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified :
+     * @modified : 2023/02/01 + Nguyen Vinh
      */
-    private static Boolean isClassUpdated(Map<Id,Student__c> mapNewStudents,Map<Id,Student__c> mapOldStudents){
-        
-        for (Id id : mapNewStudents.keySet()) {
-            if(mapNewStudents.get(id).Class_look__c != mapOldStudents.get(id).Class_look__c){
-                return true;
+    private static Set<Id> getUpdatedClassIdsSet(List<Student__c> studentList,Map<Id,Student__c> mapOldStudents){
+        Set<Id> classIds = new Set<Id>();        
+        for (Student__C student : studentList) {
+            if(student.Class_look__c != mapOldStudents.get(student.Id).Class_look__c){
+                if(student.Class_look__c != null){
+                    classIds.add(student.Class_look__c);
+                }
+                if(mapOldStudents.get(student.Id).Class_look__c != null){
+                    classIds.add(mapOldStudents.get(student.Id).Class_look__c);
+                    
+                }
             }
         }
-        return false;
+        return classIds;
     }
     /**
      * updateNumberOfStudentByClassIds
