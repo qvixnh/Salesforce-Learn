@@ -8,6 +8,7 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
     private static final String BATCHNAME = 'B01_科目得点削除バッチ';
     private static final String SUCCESS = 'Success';
     private static final String ERROR = 'Error';
+    private static final String BATCH_SUCCESS = 'Batch run successfully';
     private BatchLog__c batchLogObj = new BatchLog__c();
     /**
      * start
@@ -26,9 +27,7 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
             ]);
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            if(BC != null){
-                System.abortJob(BC.getJobId());
-            }
+            System.abortJob(BC.getJobId());
             return null;
         }
     }
@@ -41,14 +40,7 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
      * @modified : 2023/01/25 + Nguyen Vinh
      */
     public void execute(Database.BatchableContext BC, List<SubjectScore__c> subjectScoresToDelete) {
-        try {
             delete subjectScoresToDelete;
-        } catch (Exception e) {
-            updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            if(BC != null){
-                System.abortJob(BC.getJobId());
-            }
-        }
     }
     /**
      * finish
@@ -60,7 +52,6 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
     public void finish(Database.BatchableContext BC) {
         AsyncApexJob jobInfo = [
                 SELECT Id
-                , Status
                 , NumberOfErrors
                 , ExtendedStatus
                 FROM AsyncApexJob
@@ -73,7 +64,7 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
                 Integer batchSize = 150;
                 B02_CreateSubjectScoreBatch b02CreateSubjectScoreBatch = new B02_CreateSubjectScoreBatch();
                 Database.executeBatch(b02CreateSubjectScoreBatch, batchSize);
-                updateBatchLog(this.batchLogObj.id, '', SUCCESS);
+                updateBatchLog(this.batchLogObj.id, BATCH_SUCCESS, SUCCESS);
             }
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);

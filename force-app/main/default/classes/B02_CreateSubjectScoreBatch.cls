@@ -14,8 +14,13 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
     private static final String MIDTERM = 'Midterm Exam';
     private static final String FINALTERM = 'FinalTerm Exam';
     private BatchLog__c batchLogObj = new BatchLog__c();
-    private List<Semester__c> semestersList = new List<Semester__c>();
+    private List<Id> semestersListId = new List<Id>();
     private List<Subject__C> subjectsList = new List<Subject__C>();
+    private static final String BATCH_SUCCESS = 'Batch run successfully';
+
+    private Integer semestersListSize = 0;
+    private Integer subjectsListSize = 0;
+    
     
     /**
      * start
@@ -27,28 +32,29 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
     public Database.QueryLocator start(Database.BatchableContext BC) {
         try {
             this.batchLogObj= createBatchLog();
-            this.semestersList = [
+            List<Semester__c> semestersList = [
                 SELECT Id
-                , Name 
                 FROM Semester__c 
             ];
+            for(Semester__c s : semestersList){
+                this.semestersListId.add(s.Id);
+            }
+            this.semestersListSize=semestersListId.size();
             this.subjectsList = [
                 SELECT Id
                 , Name 
                 , CourseCredit__c
                 FROM Subject__c
             ];
+            this.subjectsListSize = subjectsList.size();
             return Database.getQueryLocator([
                 SELECT Id
-                    , LearningStatus__c
                 FROM Student__c 
                 WHERE LearningStatus__c = :ENROLLED
             ]);
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            if(BC != null){
-                System.abortJob(BC.getJobId());
-            }
+            System.abortJob(BC.getJobId());
             return null;
         }
     }
@@ -63,19 +69,19 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
     public void execute(Database.BatchableContext BC, List<Student__c> studentsList) {
         List<SubjectScore__c> subjectScoreObjList = new List<SubjectScore__c>();
         for (Student__c student : studentsList) {
-            Set<Semester__c> semesterSet = new Set<Semester__c>();
+            Set<Id> semesterSet = new Set<Id>();
             while (semesterSet.size() < 2) {
-                Semester__c currentSemester = semestersList[getRandomNumber(this.semestersList.size())];
+                Id currentSemester = semestersListId[getRandomNumber(this.semestersListSize)];
                 if (!semesterSet.contains(currentSemester)) {
-                    Set<Subject__c> subjectSet = new Set<Subject__c>();
+                    Set<Id> subjectSet = new Set<Id>();
                     Decimal totalCredit = 0;
                     while (subjectSet.size() < 5) {
-                        Subject__c currentSubject = subjectsList[getRandomNumber(this.subjectsList.size())];
-                        if (!subjectSet.contains(currentSubject)){
-                            SubjectScore__c subjectScoreObj = createSubjectScore(currentSubject.Id, currentSemester.Id, student.Id);
+                        Subject__c currentSubject = subjectsList[getRandomNumber(this.subjectsListSize)];
+                        if (!subjectSet.contains(currentSubject.Id) && totalCredit < 25){
+                            SubjectScore__c subjectScoreObj = createSubjectScore(currentSubject.Id, currentSemester, student.Id);
                             subjectScoreObjList.add(subjectScoreObj);
                             totalCredit+=currentSubject.CourseCredit__c;
-                            subjectSet.add(currentSubject);
+                            subjectSet.add(currentSubject.Id);
                         }
                     }
                     semesterSet.add(currentSemester);
@@ -113,7 +119,7 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
             } else {
                 B03_UpdateStudentScoreBatch b03UpdateStudentScoreBatch = new B03_UpdateStudentScoreBatch();
                 Database.executeBatch(b03UpdateStudentScoreBatch);
-                updateBatchLog(this.batchLogObj.id, '', SUCCESS);
+                updateBatchLog(this.batchLogObj.id, BATCH_SUCCESS, SUCCESS);
             }
         } catch (Exception e) {
             updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
