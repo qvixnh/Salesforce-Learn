@@ -1,8 +1,12 @@
 <template>
-    <div style="width: 940px;">
+    <div style="width: 940px; border: 1px solid #ccc;" >
         <div class="slds-m-around_medium">
             <table class="slds-table slds-table_cell-buffer slds-no-row-hover">
                 <tbody>
+                    <tr>
+                        <th class="slds-text-title_caps" scope="row">Student  Code:</th>
+                        <td>{student.StudentCode__c}</td>
+                    </tr>
                     <tr>
                         <th class="slds-text-title_caps" scope="row">Student  Name:</th>
                         <td>{student.Firstname__c} {student.Lastname__c}</td>
@@ -34,11 +38,16 @@
                         <th class="slds-text-title_caps" scope="row">Birthdate:</th>
                         <td>{student.Birthday__c}</td>
                     </tr>
+                    <tr>
+                        <th class="slds-text-title_caps" scope="row">Address:</th>
+                        <td>{student.Address__c}</td>
+                    </tr>
                 </tbody>
             </table>
-            <p style="word-wrap: break-word; width:400px;margin-left:23px">ADDRESS:  {student.Address__c}</p>
         </div>
         
     </div>
-    <c-l-w-c_-score-table student={student}  ></c-l-w-c_-score-table>
+    <div >
+        <c-l-w-c_-score-table student={student}  ></c-l-w-c_-score-table>
+    </div>
 </template>

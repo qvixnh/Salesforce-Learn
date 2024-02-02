@@ -7,7 +7,6 @@ export default class LWC_ScoreTable extends LightningElement {
     @api student;
     @track semesterDTOList;
     @track semesterOptions;
-    trungbinhHK = 0;
     tinchiHK = 0;
     selectedSemester;
     selectedSemesterName;

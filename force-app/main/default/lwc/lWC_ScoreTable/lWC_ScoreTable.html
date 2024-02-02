@@ -1,30 +1,30 @@
 <template>
     <div class="slds-grid">
-        <div class="slds-col  slds-p-top_medium">
-            Tổng tín chỉ: {student.TotalCredit__c}
+        <div class="slds-col  slds-p-top_large">
+            合計クレジット状況: {student.TotalCredit__c}
         </div>
-        <div class="slds-col slds-p-top_medium">
-            Điểm tích lũy: {student.GPAScore__c}
+        <div class="slds-col  slds-p-top_large slds-m-left_small">
+           >平均学分绩点: {student.GPAScore__c}
         </div>
         <div class="slds-col">
-            <lightning-combobox  value={selectedSemester} options={semesterOptions} onchange={handleSemesterChange}></lightning-combobox>
+            <lightning-combobox  value={selectedSemester} options={semesterOptions} onchange={handleSemesterChange} placeholder="学期の選択リスト"></lightning-combobox>
         </div>
     </div>
     
     <template for:each={semesterDTOList} for:item="semesterDTO">
-        <div key={semesterDTO.semesterName}>
+        <div key={semesterDTO.semesterName} class="slds-m-top_medium slds-p-around_medium" style="border: 1px solid #ccc;">
             <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
-                <caption>hoc ki: {semesterDTO.semesterName}</caption>
+                <caption class="slds-m-around_medium ">学期名: {semesterDTO.semesterName}</caption>
                 <thead>
                     <tr>
-                        <th scope="col"> ma mon hoc</th>
-                        <th scope="col">ten mon hoc </th>
-                        <th scope="col" >tinh chi</th>
-                        <th scope="col">qt1</th>
-                        <th scope="col">qt2</th>
-                        <th scope="col">giua ki</th>
-                        <th scope="col">cuoi ki</th>
-                        <th scope="col">trung binh mon</th>
+                        <th scope="col"> 科目コード</th>
+                        <th scope="col">科目名 </th>
+                        <th scope="col" >クレジット</th>
+                        <th scope="col">進捗点</th>
+                        <th scope="col">実技点</th>
+                        <th scope="col">中間試験点</th>
+                        <th scope="col">中間試験点</th>
+                        <th scope="col">科目平均点</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,18 +37,24 @@
                             <td scope="col" >{scoreTableDto.PracticalScore}</td>
                             <td scope="col" >{scoreTableDto.MidtermScore}</td>
                             <td scope="col" >{scoreTableDto.FinalScore}</td>
-                            <td scope="col" >{scoreTableDto.AverageScore}</td>
+                            <td scope="col">
+                                <template if:true={scoreTableDto.isPassed}>
+                                        {scoreTableDto.AverageScore}
+                                </template>
+                                <template if:false={scoreTableDto.isPassed}>
+                                    <p class="slds-text-color_error" >{scoreTableDto.AverageScore}</p>
+                                </template>
+                            </td>
                         </tr>
                     </template>
                     <tr>
-                        <td colspan="2">tong: </td>
-                        <td colspan="5">{semesterDTO.tinchiHK} </td>
-                        <td >{semesterDTO.trungbinhHK} </td>
+                        <td colspan="2">科目名: </td>
+                        <td colspan="5">{semesterDTO.semesterCredit} </td>
+                        <td >{semesterDTO.semesterScore} </td>
                     </tr>
-                    <!-- <tr> {trungbinhHK} {tinchiHK} </tr> -->
                 </tbody>
             </table>
-    </div>
+        </div>
     </template>
     
 </template>
