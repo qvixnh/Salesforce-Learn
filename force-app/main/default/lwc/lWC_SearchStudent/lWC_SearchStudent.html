@@ -70,14 +70,6 @@
                         options={orderTypeOptions}
                         onchange={handleTypeChange}
                     ></lightning-combobox>
-                    <!-- <lightning-combobox
-                        style="width:70px;"
-                        name="progress"
-                        label="pageSize"
-                        value={pageSize}
-                        options={pageSizeOptions}
-                        onchange={handlePageSizeChange} >
-                    </lightning-combobox> -->
                 </div>
                 
                 <div class="slds-col slds-size_2-of-4 slds-m-top_large ">
@@ -203,10 +195,10 @@
              <template if:true={showModal}>
                 <div class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container ">
-                        <header class="slds-modal__header">
+                        <header class="slds-modal__header"  style="width:1000px;margin-left:-150px;">
                             <h2 class="slds-text-heading_medium">Delete Student</h2>
                         </header>
-                        <div class="slds-modal__content slds-p-around_medium ">
+                        <div class="slds-modal__content slds-p-around_medium "  style="width:1000px;margin-left:-150px;">
                             <div class="slds-align_absolute-center">
                                 <c-l-w-c_-detail-student student={selectedStudent}  ></c-l-w-c_-detail-student>
                             </div>
@@ -230,16 +222,6 @@
                             <div class="slds-m-around_medium slds-text-color_destructive slds-text-heading_large">
                                 Are you sure to delete {selectionNumber} students
                             </div>
-                            <!-- <div class="slds-m-around_medium">
-                                <h1>Seletect students List: </h1>
-                                <lightning-card>
-                                    <ul class="slds-list_ordered">
-                                        <template for:each={selectedStudentIds} for:item="id">
-                                            <li key={id} class="slds-list__item">Student: {id}</li>
-                                        </template>
-                                    </ul>
-                                </lightning-card>
-                            </div> -->
                             <div class="slds-align_absolute-center">
                                 <button  class="slds-button slds-button_destructive" title="Delete" onclick={handleDeleteSelectedStudent}>Delete</button>
                                 <button  class="slds-button slds-button_neutral " title="Close" onclick={closeModalDelSelStu} >Close</button >
@@ -289,10 +271,13 @@
                 <div class="slds-backdrop slds-backdrop_open"></div>
                 <div class="slds-modal slds-fade-in-open">
                     <div class="slds-modal__container" >
-                        <div class="slds-modal__header" style="width:1000px;">
+                        <div class="slds-modal__header" style="width:1000px;margin-left:-150px;">
                             <h2 class="slds-text-heading_medium" >Student Detail</h2>
+                            <lightning-button-icon icon-name="utility:close" alternative-text="Close this window" size="large"  
+                                variant="bare-inverse" onclick={closeModalDetail} class="slds-modal__close">  
+                            </lightning-button-icon>
                         </div>
-                        <div class="slds-modal__content slds-p-around_medium" style="width:1000px;">
+                        <div class="slds-modal__content slds-p-around_medium" style="width:1000px;margin-left:-150px;">
                             <div class="slds-align_absolute-center">
                                 <c-l-w-c_-detail-student student={selectedStudent}  ></c-l-w-c_-detail-student>
                             </div>

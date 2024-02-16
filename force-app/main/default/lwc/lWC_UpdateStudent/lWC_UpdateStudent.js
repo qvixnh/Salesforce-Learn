@@ -82,7 +82,7 @@ export default class LWC_UpdateStudent extends LightningElement {
                 this.showErrorToast('Error updating student record:', error);
             });    
         } catch (error) {
-            console.log("error when updating student: ", error.message);
+            this.showErrorToast("error when updating student: " + error.message);
         }
             
        

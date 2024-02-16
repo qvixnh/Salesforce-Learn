@@ -130,12 +130,10 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning:card>
-                        <c:CMP_DetailStudent childStatus="{!v.DetailStudentModal}" student="{!v.selectedStudent}" />
+                        <c:CMP_DetailStudent  student="{!v.selectedStudent}" />
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">
-                    <lightning:button label="Update" onclick="{!c.openUpdate}"  class=" slds-button slds-button_brand"  />
-
                     <lightning:button variant="brand" label="Close" onclick="{!c.close}" />
                 </footer>
             </div>
@@ -157,7 +155,7 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning:card>
-                        <c:CMP_UpdateStudent childStatus="{!v.UpdateStudentModal}" student="{!v.selectedStudent}" />
+                        <c:CMP_UpdateStudent student="{!v.selectedStudent}" />
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">
@@ -170,7 +168,7 @@
      <aura:if isTrue="{!v.DeleteStudentModal}">
         <div class="slds-backdrop slds-backdrop_open"></div>
         <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-03" aria-modal="true"
-            class="slds-modal slds-fade-in-open">
+            class="slds-modal slds-fade-in-open">   
             <div class="slds-modal__container">
                 <header class="slds-modal__header">
                     <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Are you sure to delete?</h2>
@@ -181,7 +179,7 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning:card>
-                        <c:CMP_DetailStudent childStatus="{!v.DeleteStudentModal}" student="{!v.selectedStudent}" />
+                        <c:CMP_DetailStudent  student="{!v.selectedStudent}" />
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">
@@ -192,7 +190,6 @@
         </div>
     </aura:if>
     <!-- CreateStudentsModal -->
-
     <aura:if isTrue="{!v.CreateStudentModal}">
         <div class="slds-backdrop slds-backdrop_open"></div>
         <div role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
@@ -207,7 +204,7 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium">
                     <lightning:card>
-                        <c:CMP_CreateStudent childStatus="{!v.CreateStudentModal}" />
+                        <c:CMP_CreateStudent  />
                     </lightning:card>
                 </div>
                 <footer class="slds-modal__footer">

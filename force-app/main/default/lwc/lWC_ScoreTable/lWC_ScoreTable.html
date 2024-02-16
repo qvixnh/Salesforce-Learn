@@ -1,16 +1,18 @@
 <template>
     <div class="slds-grid">
         <div class="slds-col  slds-p-top_large">
-            合計クレジット状況: {student.TotalCredit__c}
+            <b>合計クレジット状況:</b> {student.TotalCredit__c}
         </div>
         <div class="slds-col  slds-p-top_large slds-m-left_small">
-           >平均学分绩点: {student.GPAScore__c}
+           <b>平均学分绩点:</b> {student.GPAScore__c}
         </div>
         <div class="slds-col">
             <lightning-combobox  value={selectedSemester} options={semesterOptions} onchange={handleSemesterChange} placeholder="学期の選択リスト"></lightning-combobox>
         </div>
     </div>
-    
+    <template if:true={notStudy}>
+        <div class="slds-text-heading_medium">Student does not study in this semester!</div>
+    </template>
     <template for:each={semesterDTOList} for:item="semesterDTO">
         <div key={semesterDTO.semesterName} class="slds-m-top_medium slds-p-around_medium" style="border: 1px solid #ccc;">
             <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">

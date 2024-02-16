@@ -656,7 +656,6 @@
                 if (today.getMonth() < bd.getMonth() || (today.getMonth() === bd.getMonth() && today.getDate() < bd.getDate())) {
                     age--;
                 }
-                console.log(age);
                 if (age <= 17) {
                     birthdateError.innerText = "Student must be atleast 17 years old";
                 }
@@ -664,7 +663,6 @@
             if (firstNameError.innerText || lastNameError.innerText || birthdateError.innerText || addressError.innerText ) {
                 return false;
             }
-            console.log("handle create");
             return true; 
         }
         function handleUpdate() {
@@ -710,7 +708,6 @@
                 if (today.getMonth() < bd.getMonth() || (today.getMonth() === bd.getMonth() && today.getDate() < bd.getDate())) {
                     age--;
                 }
-                console.log(age);
                 if (age <= 17) {
                     birthdateError.innerText = "Student must be atleast 17 years old";
                 }
@@ -718,7 +715,6 @@
             if (firstNameError.innerText || lastNameError.innerText || birthdateError.innerText || addressError.innerText ) {
                 return false;
             }
-            console.log("handle create");
             return true; 
         }
     </script>

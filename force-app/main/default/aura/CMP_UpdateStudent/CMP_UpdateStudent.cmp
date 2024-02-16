@@ -1,6 +1,5 @@
 <!-- CMP_UpdateStudent.cmp -->
 <aura:component controller="CMP_UpdateStudentCtrl" implements="flexipage:availableForAllPageTypes">
-    <aura:attribute name="childStatus" type="boolean" default="false"/>
     <aura:attribute name="student" type="Object" />
     <aura:attribute name="genderOptions" type="List"/>
     <aura:attribute name="selectedClass" type="Id" default="a035j00000WuPOtAAN"/>

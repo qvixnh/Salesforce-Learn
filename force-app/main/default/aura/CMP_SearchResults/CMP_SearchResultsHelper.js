@@ -194,6 +194,5 @@
 
         }
         component.set("v.totalStudents",students);
-        console.log(JSON.stringify(students));
     }
 })

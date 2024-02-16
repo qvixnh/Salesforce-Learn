@@ -61,7 +61,6 @@ export default class LWC_CreateStudent extends LightningElement {
         }).then(newSCode => {
             this.resetForm();
             this.showSuccessToast('Student created successfully', newSCode);
-            console.log("displatch event from create component ");
             const successEvent = new CustomEvent('studentcreated', {
                 detail: { studentCode: newSCode }
             });

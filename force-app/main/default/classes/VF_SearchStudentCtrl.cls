@@ -137,7 +137,7 @@ public with sharing class VF_SearchStudentCtrl {
             queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ') + ' ORDER BY StudentCode__c' : ' ORDER BY StudentCode__c';
             searchResults = Database.query(queryString);
         } catch (Exception e) {
-            System.debug(e);
+            throw new CustomException('An error occurred when loading student: ' + e.getMessage());
         }
         performPagination();
     }
@@ -244,7 +244,7 @@ public with sharing class VF_SearchStudentCtrl {
                 performSearch();
         } catch (Exception e) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Error creating student: ' + e.getMessage()));
-            System.debug('Exception Details: ' + e);
+            throw new CustomException('An error occurred when creating student: ' + e.getMessage());
         }
     }
     /**
@@ -265,8 +265,7 @@ public with sharing class VF_SearchStudentCtrl {
             return null;
         } catch (Exception e) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Error updating student: ' + e.getMessage()));
-            System.debug('Exception Details: ' + e);
-            return null;
+            throw new CustomException('An error occurred when updating student: ' + e.getMessage());
         }
     }
     public void deleteStudent() {
@@ -288,7 +287,7 @@ public with sharing class VF_SearchStudentCtrl {
             }
         } catch (Exception e) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Error deleting student: ' + e.getMessage()));
-            System.debug('Exception Details: ' + e);
+            throw new CustomException('An error occurred when deleting a student: ' + e.getMessage());
         }
     }
       /**
@@ -323,7 +322,7 @@ public with sharing class VF_SearchStudentCtrl {
                 performSearch();
             } catch (Exception e) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Error deleting records: ' + e.getMessage()));
-                System.debug('Exception Details: ' + e);
+                throw new CustomException('An error occurred when deleting students: ' + e.getMessage());
             }
         } else {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'No records selected for deletion.'));
@@ -354,7 +353,7 @@ public with sharing class VF_SearchStudentCtrl {
         startIndex += pageSize;
         currentPage++;
         this.allSelected=false;
-        updateSelectedRecordsNumder();
+        // updateSelectedRecordsNumder();
         return null; 
     }
      /**     
@@ -380,7 +379,6 @@ public with sharing class VF_SearchStudentCtrl {
      */
     public PageReference last() {
         if(totalRecords ==0){
-            
             return null;
         }
         else{
@@ -392,7 +390,7 @@ public with sharing class VF_SearchStudentCtrl {
             
             currentPage = totalPages;
             this.allSelected=false;
-            updateSelectedRecordsNumder();
+            // updateSelectedRecordsNumder();
             return null; 
         }    
     }
@@ -513,5 +511,8 @@ public with sharing class VF_SearchStudentCtrl {
             
         }
     }
-
+    
+    public  class  CustomException extends Exception {
+        
+    }
 }

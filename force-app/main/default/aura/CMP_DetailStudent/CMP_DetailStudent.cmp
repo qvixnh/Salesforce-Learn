@@ -1,29 +1,49 @@
-<aura:component>
-    <aura:attribute name="childStatus" type="boolean" default="false"/>
+<aura:component  implements="flexipage:availableForAllPageTypes">
     <aura:attribute name="student" type="Object" />
+    <div class="slds-m-around_medium">
+        <table class="slds-table slds-table_cell-buffer slds-no-row-hover">
+            <tbody>
+                <tr>
+                    <th class="slds-text-title_caps" scope="row">Student  Code:</th>
+                    <td>{!v.student.StudentCode__c}</td>
+                </tr>
+                <tr>
+                    <th class="slds-text-title_caps" scope="row">Student  Name:</th>
+                    <td>{!v.student.Firstname__c} {!v.student.Lastname__c}</td>
+                </tr>
+                <tr>
+                    <th class="slds-text-title_caps" scope="row">First Name:</th>
+                    <td>{!v.student.Firstname__c}</td>
+                </tr>
+                <tr>
+                    <th class="slds-text-title_caps" scope="row">Last Name:</th>
+                    <td>{!v.student.Lastname__c}</td>
+                </tr>
+                <tr>
+                    <th class="slds-text-title_caps" scope="row">Class Name:</th>
+                    <td>{!v.student.Class_look__r.Name}</td>
+                </tr>
+                <tr>
+                    <th class="slds-text-title_caps" scope="row">Gender:</th>
+                    <td>
+                        <aura:if isTrue="{!v.student.Gender__c}">
+                            Male
+                            <aura:set attribute="else">
+                            Female
+                            </aura:set>
+                        </aura:if>
+                    </td>
 
-    <aura:if isTrue="{!v.childStatus}">
-        <div class="slds-card slds-p-around_medium">
-            <h1 class="slds-text-heading_medium">Student: {!v.student.StudentCode__c}</h1>
-            <dl class="slds-list_horizontal slds-wrap">
-                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="First Name">First Name:</dt>
-                <dd class="slds-item_detail slds-truncate">{!v.student.Firstname__c}</dd>
-                
-                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Last Name">Last Name:</dt>
-                <dd class="slds-item_detail slds-truncate">{!v.student.Lastname__c}</dd>
-                
-                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Class">Class:</dt>
-                <dd class="slds-item_detail slds-truncate">{!v.student.Class_look__r.Name}</dd>
-                
-                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Gender">Gender:</dt>
-                <dd class="slds-item_detail slds-truncate"> {!IF(student.Gender__c, 'Male', 'Female')}</dd>
-                
-                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Birthdate">Birthdate:</dt>
-                <dd class="slds-item_detail slds-truncate">{!v.student.Birthday__c}</dd>
-                
-                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Address">Address:</dt>
-                <dd class="slds-item_detail slds-truncate">{!v.student.Address__c}</dd>
-            </dl>
-        </div>
-    </aura:if>
+                </tr>
+                <tr>
+                    <th class="slds-text-title_caps" scope="row">Birthdate:</th>
+                    <td>{!v.student.Birthday__c}</td>
+                </tr>
+                <tr>
+                    <th class="slds-text-title_caps" scope="row">Address:</th>
+                    <td>{!v.student.Address__c}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </aura:component>

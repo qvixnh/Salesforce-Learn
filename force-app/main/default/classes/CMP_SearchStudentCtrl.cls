@@ -50,7 +50,8 @@ public with sharing class CMP_SearchStudentCtrl {
                                 , Birthday__c
                                 , Address__c
                             FROM Student__c 
-                            WHERE Id = :studentId];
+                            WHERE Id = :studentId
+                            ];
             return studentDetails;
         } catch (Exception e) {
             throw new CustomException('An error occurred when getting student details: ' + e.getMessage());

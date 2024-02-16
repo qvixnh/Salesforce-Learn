@@ -97,7 +97,6 @@ export default class LWC_SearchStudent extends LightningElement {
         this.template.addEventListener('studentcreated', this.handleStudentCreated.bind(this));
     }
     handleStudentCreated() {
-        console.log("student list load by event ");
         this.loadStudents(true);
     }
     @wire(getClassOptions)
@@ -192,7 +191,6 @@ export default class LWC_SearchStudent extends LightningElement {
 
 
     handleSearch() {
-        console.log("Student year: ", this.yearOfBirth);
         this.currentPage = 1;
         this.loadStudents(true);
         this.updateDisplayedStudents();
@@ -234,7 +232,8 @@ export default class LWC_SearchStudent extends LightningElement {
                 }
                 this.updateSelectAll();
             } catch (error) {
-                console.log("error when updating student", error.message);
+                var message = "error when updating student" + error.message;
+                this.showErrorToast(message);
             }
             
         }
@@ -372,9 +371,8 @@ export default class LWC_SearchStudent extends LightningElement {
                 }
             }
         } catch (error) {
-            console.log("error message", error.message);
+            this.showErrorToast("error message" + error.message);
         }
-        console.log(JSON.stringify(this.students));
         this.updateSelectAll();
     }
     
@@ -437,6 +435,14 @@ export default class LWC_SearchStudent extends LightningElement {
             title: 'Success',
             message: message,
             variant: 'success',
+        });
+        this.dispatchEvent(event);
+    }
+    showErrorToast(message) {
+        const event = new ShowToastEvent({
+            title: 'Error',
+            message: message,
+            variant: 'error',
         });
         this.dispatchEvent(event);
     }

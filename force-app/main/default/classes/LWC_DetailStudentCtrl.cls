@@ -17,7 +17,7 @@ public with sharing class LWC_DetailStudentCtrl {
      * @created  : 2023/01/31 + Nguyen Vinh
      * @modified : 
      */
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<Semester__c> getSemesterOptions() {
         List<Semester__c> semesterList = new List<Semester__c>();
         try {
@@ -27,7 +27,7 @@ public with sharing class LWC_DetailStudentCtrl {
                             , StartDate__c
                             , EndDate__c
                         FROM Semester__c
-                        ORDER BY Name];
+                        ORDER BY StartDate__c DESC];
         } catch (Exception e) {
             throw new CustomException('An error occurred when getting semesters: ' + e.getMessage());
         }
