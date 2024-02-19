@@ -1,6 +1,5 @@
 import { LightningElement, api, track} from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-// import getSemesterOptions from '@salesforce/apex/c/LWC_DetailStudentCtrl.getSemesterOptions';
 import getSemesterOptions from '@salesforce/apex/LWC_DetailStudentCtrl.getSemesterOptions';
 import getResults from '@salesforce/apex/LWC_DetailStudentCtrl.getResults';
 export default class LWC_ScoreTable extends LightningElement {

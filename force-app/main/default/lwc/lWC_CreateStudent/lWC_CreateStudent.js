@@ -6,6 +6,8 @@ import createStudentRec from '@salesforce/apex/LWC_CreateStudentCtrl.createStude
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class LWC_CreateStudent extends LightningElement {
+    ERRORTYPE = 'error'
+    SUCCESSTYPE = 'success'
     @track classes;
     firstName = '';
     lastName = '';
@@ -60,14 +62,14 @@ export default class LWC_CreateStudent extends LightningElement {
             
         }).then(newSCode => {
             this.resetForm();
-            this.showSuccessToast('Student created successfully', newSCode);
+            this.showToast('Student created successfully: '+ newSCode, this.SUCCESSTYPE);
             const successEvent = new CustomEvent('studentcreated', {
                 detail: { studentCode: newSCode }
             });
             this.dispatchEvent(successEvent);
         })
         .catch(error => {
-            this.showErrorToast('Error creating student record:', error);
+            this.showToast('Error creating student record:'+ error, this.ERRORTYPE);
         });    
        
     }
@@ -145,10 +147,10 @@ export default class LWC_CreateStudent extends LightningElement {
         return true;
     }
     resetForm() {
-        // this.firstName = '';
-        // this.lastName = '';
-        // this.address = '';
-        // this.birthdate = '';
+        this.firstName = '';
+        this.lastName = '';
+        this.address = '';
+        this.birthdate = '';
     }
     clearErrors() {
         this.firstNameError = '';
@@ -158,22 +160,12 @@ export default class LWC_CreateStudent extends LightningElement {
         this.birthdateError = '';
         this.genderError = '';
     }
-    showSuccessToast(message) {
+    showToast(message,type) {
         const event = new ShowToastEvent({
-            title: 'Success',
+            title: type,
             message: message,
-            variant: 'success',
+            variant: type,
         });
         this.dispatchEvent(event);
     }
-    
-    showErrorToast(message) {
-        const event = new ShowToastEvent({
-            title: 'Error',
-            message: message,
-            variant: 'error',
-        });
-        this.dispatchEvent(event);
-    }
-    
 }

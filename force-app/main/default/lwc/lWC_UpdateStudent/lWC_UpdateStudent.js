@@ -6,6 +6,8 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 
 export default class LWC_UpdateStudent extends LightningElement {
+    ERRORTYPE = 'error'
+    SUCCESSTYPE = 'success'
     @track classes;
     firstName = '';
     lastName = '';
@@ -60,32 +62,26 @@ export default class LWC_UpdateStudent extends LightningElement {
         this.updateStudent();
     }
     updateStudent(){
-        try {
-            updateStudentRec({
-                //Student__C student, String  sFirstName, String sLastName, String sClassId, Boolean sGender, String sAddress, Date sBirthdate
-                student:this.student,
-                sFirstName:this.firstName,
-                sLastName:this.lastName,
-                sClassId:this.selectedClass,
-                sGender:this.selectedGender,
-                sAddress:this.address,
-                sBirthdate:this.birthdate
-                
-            }).then(newSCode => {
-                this.showSuccessToast('Student updated successfully', newSCode);
-                const successEvent = new CustomEvent('studentupdated', {
-                    detail: { studentCode: newSCode }
-                });
-                this.dispatchEvent(successEvent);
-            })
-            .catch(error => {
-                this.showErrorToast('Error updating student record:', error);
-            });    
-        } catch (error) {
-            this.showErrorToast("error when updating student: " + error.message);
-        }
+        updateStudentRec({
+            student:this.student,
+            sFirstName:this.firstName,
+            sLastName:this.lastName,
+            sClassId:this.selectedClass,
+            sGender:this.selectedGender,
+            sAddress:this.address,
+            sBirthdate:this.birthdate
             
-       
+        }).then(newSCode => {
+            this.showToast('Student updated successfully' + newSCode, this.SUCCESSTYPE);
+            const successEvent = new CustomEvent('studentupdated', {
+                detail: { studentCode: newSCode }
+            });
+            this.dispatchEvent(successEvent);
+        })
+        .catch(error => {
+            this.showToast('Error updating student record:' + error, this.ERRORTYPE);
+            
+        });    
     }
     validation(){
         this.clearErrors();
@@ -170,19 +166,12 @@ export default class LWC_UpdateStudent extends LightningElement {
         this.birthdateError = '';
         this.genderError = '';
     }
-    showSuccessToast(message) {
+   
+    showToast(message,type) {
         const event = new ShowToastEvent({
-            title: 'Success',
+            title: type,
             message: message,
-            variant: 'success',
-        });
-        this.dispatchEvent(event);
-    }
-    showErrorToast(message) {
-        const event = new ShowToastEvent({
-            title: 'Error',
-            message: message,
-            variant: 'error',
+            variant: type,
         });
         this.dispatchEvent(event);
     }

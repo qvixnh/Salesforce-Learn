@@ -9,6 +9,8 @@ import deleteStudentRecord from '@salesforce/apex/LWC_SearchStudentCtrl.deleteSt
 const ITEMS_PER_PAGE = 10;
 
 export default class LWC_SearchStudent extends LightningElement {
+    ERRORTYPE = 'error'
+    SUCCESSTYPE = 'success'
     //track variable
     @track classes;
     @track students;
@@ -134,7 +136,8 @@ export default class LWC_SearchStudent extends LightningElement {
             .then(result => {
                 this.students = result;
                 if(flagMessage){
-                    this.showSuccessToast("Student list loaded successfully");
+                    this.showToast("Student list loaded successfully", this.SUCCESSTYPE);
+
                 }
                 this.updateDisplayedStudents();
                 this.error = undefined;
@@ -233,7 +236,7 @@ export default class LWC_SearchStudent extends LightningElement {
                 this.updateSelectAll();
             } catch (error) {
                 var message = "error when updating student" + error.message;
-                this.showErrorToast(message);
+                this.showToast(message, this.ERRORTYPE);
             }
             
         }
@@ -371,7 +374,7 @@ export default class LWC_SearchStudent extends LightningElement {
                 }
             }
         } catch (error) {
-            this.showErrorToast("error message" + error.message);
+            this.showToast("error message" + error.message, this.ERRORTYPE);
         }
         this.updateSelectAll();
     }
@@ -405,7 +408,7 @@ export default class LWC_SearchStudent extends LightningElement {
             .then(result => {
                 this.selectedStudentIds = [];
                 this.isSelectAllChecked = false;
-                this.showSuccessToast('Multiples Student deleted successfully');
+                this.showToast('Multiples Student deleted successfully', this.SUCCESSTYPE);
                 this.closeModalDelSelStu();
             })
             .catch(error => {
@@ -422,27 +425,19 @@ export default class LWC_SearchStudent extends LightningElement {
     deleteStudent(studentId) {
         deleteStudentRecord({ studentId })
             .then(result => {
-                this.showSuccessToast('Student deleted successfully');
+                this.showToast('Student deleted successfully', this.SUCCESSTYPE);
                 this.loadStudents();
             })
             .catch(error => {
-                // Handle error
                 console.error('Error deleting student: ', error);
             });
     }
-    showSuccessToast(message) {
+    
+    showToast(message,type) {
         const event = new ShowToastEvent({
-            title: 'Success',
+            title: type,
             message: message,
-            variant: 'success',
-        });
-        this.dispatchEvent(event);
-    }
-    showErrorToast(message) {
-        const event = new ShowToastEvent({
-            title: 'Error',
-            message: message,
-            variant: 'error',
+            variant: type,
         });
         this.dispatchEvent(event);
     }

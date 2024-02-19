@@ -50,15 +50,6 @@
         component.set("v.selectedRecordsNumber",selectedIds.length);
         
     },
-    /*when navigate to another page, uncheck all the student records*/
-    uncheck:function(component){
-        // var students = component.get("v.students");
-        // students.forEach(function(student){
-        //     student.selected__c =false;
-        // });
-        // component.set("v.selectedRecordsNumber",0);
-
-    },
     /*when navigate to another page,update the display student by current page number and update the page numbers list*/
     updateTable : function(component) {
         var records = component.get("v.totalStudents");
@@ -81,7 +72,6 @@
     },
     /*when click on page number, navigate to that page*/
     navigateToPage : function(component, pageNumber) {
-        this.uncheck(component);
         component.set("v.currentPage", pageNumber);
         component.set("v.allStudentChecked",false);
         this.updateTable(component);
@@ -91,7 +81,6 @@
         handle navigate nex or previous page
     */
     navigate : function(component, direction) {
-        this.uncheck(component);
         var currentPage = component.get("v.currentPage");
         component.set("v.currentPage", currentPage + direction);
         component.set("v.allStudentChecked",false);
@@ -183,6 +172,7 @@
                 toastEvent.fire();
             }
         });
+        component.set("v.DeleteMultipleStudentsModal", false);
         $A.enqueueAction(action);
     },
     checkStu: function(component, id, check){

@@ -142,39 +142,45 @@ public with sharing class LWC_SearchStudentCtrl {
         
     }
 
-    //scoretable session
-    @AuraEnabled(cacheable=true)
-    public static List<Semester__c> getSemesterOptions() {
-        List<Semester__c> semesterList = new List<Semester__c>();
-        try {
-            semesterList = [SELECT 
-                            Id
-                            , Name
-                            , StartDate__c
-                            , EndDate__c 
-                        FROM Semester__c 
-                        ORDER BY Name];
-        } catch (Exception e) {
-            throw new CustomException('An error occurred when getting semesters: ' + e.getMessage());
+   
+    /**
+     * クラス名：   SearchConditionDTO
+     * クラス概要： Search COndition Dto Class
+     * @created： 2023/01/10 + Nguyen Vinh
+     * @modified: 
+     */
+    public class SearchConditionDTO {
+        public SearchConditionDTO() {
+    
         }
-        return semesterList;
-    }
-    public static List<SubjectScore__c> getSubjectScores() {
-        List<SubjectScore__c> semesterList = new List<SubjectScore__c>();
-        try {
-            semesterList = [SELECT 
-                            Id
-                            , Name
-                            , Status__c
-                            , Semester_look__c 
-                            , Student_look__c
-                            , AverageScore__c
-                            , Subject_look__c
-                        FROM SubjectScore__c 
-                        ORDER BY Name];
-        } catch (Exception e) {
-            throw new CustomException('An error occurred when getting semesters: ' + e.getMessage());
-        }
-        return semesterList;
+        @AuraEnabled
+        public String classId;
+        
+        @AuraEnabled
+        public Integer gender;
+        
+        @AuraEnabled
+        public String searchName;
+        
+        @AuraEnabled
+        public String searchCode;
+        
+        @AuraEnabled
+        public Integer day;
+        
+        @AuraEnabled
+        public Integer month;
+        
+        @AuraEnabled
+        public Integer year;
+        
+        @AuraEnabled
+        public String birthdate;
+        
+        @AuraEnabled
+        public String orderField;
+        
+        @AuraEnabled
+        public String orderType;
     }
 }

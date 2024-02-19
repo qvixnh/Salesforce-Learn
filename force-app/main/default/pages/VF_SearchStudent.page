@@ -294,8 +294,6 @@
                 </apex:column>
             </apex:pageBlockTable>
             <!-- Add buttons for Select Records, Clear Records, and Delete Records -->
-            <!-- <apex:commandButton value="Select all records" action="{!selectAllCheckboxes}" rerender="results" /> -->
-            <!-- Checkbox for selecting all records -->
             <div class="row">
                 <div class="col-md-2 mt-2">
                     <apex:commandButton value="Clear" rerender="results" oncomplete="checkChecked()" action="{!clearRecords}" styleClass="btnClear" />
@@ -425,7 +423,8 @@
                 </div>
                 <div class="modal-body">
                     <apex:pageBlock id="modalbodyDetail" >
-                        <h1>{!student.StudentCode__c}</h1>
+                        
+                        <h3>{!student.StudentCode__c}</h3>
                         <p><b>Class:</b> {!student.Class_look__r.Name}</p>
                         <p><b>First name:</b> {!student.Firstname__c}</p>
                         <p><b>Last name:</b> {!student.Lastname__c}</p>
