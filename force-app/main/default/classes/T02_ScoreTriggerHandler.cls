@@ -1,7 +1,7 @@
 /**
  * クラス名：   T02_ScoreTriggerHandler.cls
  * クラス概要： Score Trigger Handler
- * @created： 2023/01/24 + Nguyen Vinh
+ * @created： 2024/01/24 + Nguyen Vinh
  * @modified:
  */
 public without sharing class T02_ScoreTriggerHandler {
@@ -17,8 +17,8 @@ public without sharing class T02_ScoreTriggerHandler {
      * onAfterInsert
      * @param    : List<Score__c> newScores
      * @return   :
-     * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified : 2023/01/25 + Nguyen Vinh
+     * @created  : 2024/01/24 + Nguyen Vinh
+     * @modified : 2024/01/25 + Nguyen Vinh
      */
     public static void  onAfterInsert(List<Score__c> newScores){
         try {
@@ -32,8 +32,8 @@ public without sharing class T02_ScoreTriggerHandler {
      * onAfterUpdate
      * @param    : List<Score__c> newScores
      * @return   :
-     * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified : 2023/01/25 + Nguyen Vinh
+     * @created  : 2024/01/24 + Nguyen Vinh
+     * @modified : 2024/01/25 + Nguyen Vinh
      */
     public static void  onAfterUpdate(List<Score__c> newScores){
         try {
@@ -47,8 +47,8 @@ public without sharing class T02_ScoreTriggerHandler {
      * updateStatusAndGPA
      * @param    : List<Score__c> newScores
      * @return   :
-     * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified : 2023/01/25 + Nguyen Vinh
+     * @created  : 2024/01/24 + Nguyen Vinh
+     * @modified : 2024/01/25 + Nguyen Vinh
      */
     private static void updateStatusAndGPA(List<Score__c> newScores){
         Set<Id> subjectScoreIDs = new Set<Id>();
@@ -79,7 +79,7 @@ public without sharing class T02_ScoreTriggerHandler {
      * getScoreMap
      * @param    : Set<Id> subjectScoreIDs
      * @return   : Map<Id, List<Score__c>> getScoreMap
-     * @created  : 2023/01/25 + Nguyen Vinh
+     * @created  : 2024/01/25 + Nguyen Vinh
      * @modified :
      */
     private static Map<Id, List<Score__c>> getScoreMap(Set<Id> subjectScoreIDs){
@@ -110,8 +110,8 @@ public without sharing class T02_ScoreTriggerHandler {
      * getGPA
      * @param    : List<Score__c > ScoresBySubject
      * @return   : Decimal
-     * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified : 2023/01/25 + Nguyen Vinh
+     * @created  : 2024/01/24 + Nguyen Vinh
+     * @modified : 2024/01/25 + Nguyen Vinh
      */
     private static Decimal getGPA(List<Score__c> ScoresBySubject) {
         Decimal GPA = 0;
@@ -140,7 +140,7 @@ public without sharing class T02_ScoreTriggerHandler {
     /**
      * クラス名：   CustomException
      * クラス概要： Custom Exception
-     * @created： 2023/01/24 + Nguyen Vinh
+     * @created： 2024/01/24 + Nguyen Vinh
      * @modified:
      */
     public class CustomException extends Exception {

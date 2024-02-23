@@ -1,61 +1,42 @@
+/**
+ * クラス名：   VF_SearchStudentCtrl.cls
+ * クラス概要： Search Student Controller
+ * @created： 2023/12/15 + Nguyen Vinh
+ * @modified: 2024/02/19 +  Nguyen Vinh
+ */
 public with sharing class VF_CreateStudentCtrl {
-    public Student__c student { get; set; }
-    public List<SelectOption> classList { get; set; }
-    public String firstNameError{get;set;}
-    public String lastNameError{get;set;}
-    public String birthdateError{get;set;}
-    public String addressError{get;set;}
+    public List<SelectOption> classListCreate { get; set; }
+    public Student__c studentToCreate {get;set;}
 
     public VF_CreateStudentCtrl() {
-        this.student = new Student__c();
-        classList = getClasses();
+        this.studentToCreate = new Student__c();
+        this.classListCreate = getClasses();
     }
-
-    public PageReference saveStudent() {
+    /**
+     * createStudent
+     * @param    : 
+     * @return   :  
+     * @created  : 2023/12/15 + Nguyen Vinh
+     * @modified: 2024/02/19 +  Nguyen Vinh
+     * **/
+    public void createStudent() {
         try {
-            //isBlank check validation
-            if (String.isBlank(this.student.Firstname__c)) {
-                // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'First Name cannot be blank.'));
-                this.firstNameError='First Name cannot be blank.';
-                return null;
-            }
-            if (String.isBlank(this.student.Lastname__c)) {
-                // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Last Name cannot be blank.'));
-                this.lastNameError='Last Name cannot be blank.';
-                return null;
-            }
-            if (String.isBlank(this.student.Address__c)) {
-                // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Address cannot be blank.'));
-                this.addressError='Address cannot be blank.';
-                return null;
-            }
-            if(this.student.Birthday__c ==null){
-                // ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Birthdate cannot be blank.'));
-                this.birthdateError='Birthdate cannot be blank.';
-                return null;
-            }
-            Integer age =getAge(this.student.Birthday__c);
-            if (age < 17) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Student must be at least 17 years old.'));
-                return null;
-            }
-            insert student;
-            
+            this.studentToCreate.Name = studentToCreate.Firstname__c.left(39) + ' ' + studentToCreate.Lastname__c.left(39);
+            insert studentToCreate;
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Student created successfully.'));
-            this.student = new Student__c();
-            return new PageReference('/apex/VF_SearchStudent');
-            
+            this.studentToCreate = new Student__c();
         } catch (Exception e) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Error creating student: ' + e.getMessage()));
-            System.debug('Exception Details: ' + e);
-            return null;
+            throw new CustomException('An error occurred when creating student: ' + e.getMessage());
         }
     }
-    //helper
-    private Integer getAge(Date birthdate){
-        Date today = Date.today();
-        return today.year() - birthdate.year() - (today.month() < birthdate.month() || (today.month() == birthdate.month() && today.day() < birthdate.day()) ? 1 : 0);
-    }
+    /**
+     * getClasses
+     * @param    : 
+     * @return   :  
+     * @created  : 2023/12/15 + Nguyen Vinh
+     * @modified: 
+     * **/
     private List<SelectOption> getClasses() {
         List<SelectOption> options = new List<SelectOption>();
         List<Class__c> classes = [
@@ -68,5 +49,8 @@ public with sharing class VF_CreateStudentCtrl {
             options.add(new SelectOption(cls.Id, cls.Name));
         }
         return options;
+    }
+    public  class  CustomException extends Exception {
+        
     }
 }

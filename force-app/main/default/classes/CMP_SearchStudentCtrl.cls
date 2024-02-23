@@ -19,7 +19,6 @@ public with sharing class CMP_SearchStudentCtrl {
             classList = [SELECT 
                             Id
                             , Name
-                            , NumberOfStudent__c
                         FROM Class__c 
                         ORDER BY Name];
             return classList;

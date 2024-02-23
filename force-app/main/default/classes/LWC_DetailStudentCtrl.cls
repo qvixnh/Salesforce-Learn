@@ -2,7 +2,7 @@
  * クラス名：   LWC_DetailStudentCtrl.cls
  * クラス概要： Detail Student controller
  * @created： 2023/01/31 + Nguyen Vinh
- * @modified: 2023/02/01 + Nguyen Vinh
+ * @modified: 2024/02/01 + Nguyen Vinh
  */
 public with sharing class LWC_DetailStudentCtrl {
     private static final String PROGRESS = 'Progress';
@@ -38,7 +38,7 @@ public with sharing class LWC_DetailStudentCtrl {
      * @param    : Id studentId, Id semesterId
      * @return   : List<SemesterResultDto>
      * @created  : 2023/01/31 + Nguyen Vinh
-     * @modified : 2023/02/01 + Nguyen Vinh
+     * @modified : 2024/02/01 + Nguyen Vinh
      */
     @AuraEnabled
     public static List<SemesterResultDto> getResults(Id studentId, Id semesterId){
@@ -55,7 +55,7 @@ public with sharing class LWC_DetailStudentCtrl {
      * @param    : Id studentId, Id semesterId
      * @return   : List<SubjectScore__c>
      * @created  : 2023/01/31 + Nguyen Vinh
-     * @modified : 2023/02/01 + Nguyen Vinh
+     * @modified : 2024/02/01 + Nguyen Vinh
      */
     private static List<SubjectScore__c> getSubjectScores(Id studentId, Id semesterId) {
         List<String> selectedFields = new List<String>{
@@ -88,7 +88,7 @@ public with sharing class LWC_DetailStudentCtrl {
      * @param    : List<SubjectScore__c> subjectScoreList
      * @return   : List<SemesterResultDto>
      * @created  : 2023/01/31 + Nguyen Vinh
-     * @modified : 2023/02/01 + Nguyen Vinh
+     * @modified : 2024/02/01 + Nguyen Vinh
      */
     private static List<SemesterResultDto> getSemesterResultDtoList(List<SubjectScore__c> subjectScoreList) {
         Map<String, List<SubjectScore__c>> subjectScoreBySemesterMap = getSubjectScoreBySemesterMap(subjectScoreList);
@@ -105,7 +105,7 @@ public with sharing class LWC_DetailStudentCtrl {
      * @param    : List<SubjectScore__c> subjectScoreList
      * @return   : Map<String, List<SubjectScore__c>>
      * @created  : 2023/01/31 + Nguyen Vinh
-     * @modified : 2023/02/01 + Nguyen Vinh
+     * @modified : 2024/02/01 + Nguyen Vinh
      */
     private static Map<String, List<SubjectScore__c>> getSubjectScoreBySemesterMap(List<SubjectScore__c> subjectScoreList){
         Map<String, List<SubjectScore__c>> subjectScoreBySemesterMap = new Map<String, List<SubjectScore__c>>();
@@ -125,7 +125,7 @@ public with sharing class LWC_DetailStudentCtrl {
      * @param    : String semesterName,List<SubjectScore__c> subjectScoreList
      * @return   : SemesterResultDto
      * @created  : 2023/01/31 + Nguyen Vinh
-     * @modified : 2023/02/01 + Nguyen Vinh
+     * @modified : 2024/02/01 + Nguyen Vinh
      */
     private static SemesterResultDto getSemesterResultDto(String semesterName,List<SubjectScore__c> subjectScoreList){
         List<ScoreTableDto> ScoreTableDtoList = new  List<ScoreTableDto>();
@@ -149,7 +149,7 @@ public with sharing class LWC_DetailStudentCtrl {
      * @param    : SubjectScore__c subjectScore
      * @return   : ScoreTableDto
      * @created  : 2023/01/31 + Nguyen Vinh
-     * @modified : 2023/02/01 + Nguyen Vinh
+     * @modified : 2024/02/01 + Nguyen Vinh
      */
     private static ScoreTableDto createScoreTableDto(SubjectScore__c subjectScore){
         ScoreTableDto obj = new ScoreTableDto(
@@ -214,7 +214,7 @@ public with sharing class LWC_DetailStudentCtrl {
     /**
      * クラス名：   SemesterResultDto
      * クラス概要： Semester Result Dto
-     * @created： 2023/02/01 + Nguyen Vinh
+     * @created： 2024/02/01 + Nguyen Vinh
      * @modified:
      */
     public class SemesterResultDto {

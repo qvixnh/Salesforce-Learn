@@ -30,33 +30,27 @@ public class B02_CreateSubjectScoreBatch implements Database.Batchable<SObject>,
      * @modified : 2023/01/25 + Nguyen Vinh
      */
     public Database.QueryLocator start(Database.BatchableContext BC) {
-        try {
-            this.batchLogObj= createBatchLog();
-            List<Semester__c> semestersList = [
-                SELECT Id
-                FROM Semester__c 
-            ];
-            for(Semester__c s : semestersList){
-                this.semestersListId.add(s.Id);
-            }
-            this.semestersListSize=semestersListId.size();
-            this.subjectsList = [
-                SELECT Id
-                , Name 
-                , CourseCredit__c
-                FROM Subject__c
-            ];
-            this.subjectsListSize = subjectsList.size();
-            return Database.getQueryLocator([
-                SELECT Id
-                FROM Student__c 
-                WHERE LearningStatus__c = :ENROLLED
-            ]);
-        } catch (Exception e) {
-            updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            System.abortJob(BC.getJobId());
-            return null;
+        this.batchLogObj= createBatchLog();
+        List<Semester__c> semestersList = [
+            SELECT Id
+            FROM Semester__c 
+        ];
+        for(Semester__c s : semestersList){
+            this.semestersListId.add(s.Id);
         }
+        this.semestersListSize=semestersListId.size();
+        this.subjectsList = [
+            SELECT Id
+            , Name 
+            , CourseCredit__c
+            FROM Subject__c
+        ];
+        this.subjectsListSize = subjectsList.size();
+        return Database.getQueryLocator([
+            SELECT Id
+            FROM Student__c 
+            WHERE LearningStatus__c = :ENROLLED
+        ]);
     }
     
     /**

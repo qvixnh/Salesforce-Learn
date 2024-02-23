@@ -15,7 +15,7 @@ describe('c-l-w-c-search-student', () => {
             is: LWC_SearchStudent
         });
 
-        // Act
+        // Actw
         document.body.appendChild(element);
 
         // Assert

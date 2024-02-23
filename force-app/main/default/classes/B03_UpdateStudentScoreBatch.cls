@@ -21,21 +21,15 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
      */
     public Database.QueryLocator start(Database.BatchableContext BC) {
         
-        try {
-            this.batchLogObj= createBatchLog();
-            return Database.getQueryLocator([
-                SELECT Id
-                , TotalCredit__c
-                , GPAScore__c
-                , LearningStatus__c
-                FROM Student__c
-                WHERE LearningStatus__c = :ENROLLED
-            ]);
-        } catch (Exception e) {
-            updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            System.abortJob(BC.getJobId());
-            return null;
-        }
+        this.batchLogObj= createBatchLog();
+        return Database.getQueryLocator([
+            SELECT Id
+            , TotalCredit__c
+            , GPAScore__c
+            , LearningStatus__c
+            FROM Student__c
+            WHERE LearningStatus__c = :ENROLLED
+        ]);
     }
     /**
      * execute
@@ -149,7 +143,7 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
         }
         return subjectScoreByStudentsMapById;
     }
-     /**
+    /**
      * getStudentGPA_Credit
      * @param    : List<SubjectScore__c> subjectScoreList, Student__c student
      * @return   : Student__c

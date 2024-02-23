@@ -73,28 +73,7 @@ public with sharing class LWC_SearchStudentCtrl {
                 conditions.add('CALENDAR_YEAR(Birthday__c) = ' + searchCondition.year);
             }
             queryString += !conditions.isEmpty() ? ' WHERE ' + String.join(conditions, ' AND ')  : '';
-            if(searchCondition.orderField =='StudentCode__c'){
-                queryString +=' ORDER BY StudentCode__c';
-            }
-            else if(searchCondition.orderField=='Firstname__c'){
-                queryString +=' ORDER BY Firstname__c';
-
-            }
-            else if(searchCondition.orderField=='Class_look__r.Name'){
-                queryString +=' ORDER BY Class_look__r.Name';
-                
-            }
-            else if(searchCondition.orderField=='Gender__c'){
-                queryString +=' ORDER BY Gender__c';
-            }
-            else if(searchCondition.orderField=='Birthday__c'){
-                queryString +=' ORDER BY Birthday__c';
-            }
-            if(searchCondition.orderType=='ASC'){
-                queryString+= ' ASC'; 
-            }else{
-                queryString+= ' DESC';
-            }
+            queryString +=  ' ORDER BY StudentCode__c DESC';
             return Database.query(queryString);
         } catch (Exception e) {
             throw new CustomException('An error occurred in getStudents: ' + e.getMessage());
@@ -127,7 +106,6 @@ public with sharing class LWC_SearchStudentCtrl {
     public static void deleteStudentRecord(Id studentId) {
         try {
             Student__c studentToDelete = [SELECT Id FROM Student__c WHERE Id = :studentId];
-            // Check if the student record exists
             if (studentToDelete != null) {
                 delete studentToDelete;
             } else {
@@ -150,12 +128,9 @@ public with sharing class LWC_SearchStudentCtrl {
      * @modified: 
      */
     public class SearchConditionDTO {
-        public SearchConditionDTO() {
-    
-        }
         @AuraEnabled
         public String classId;
-        
+
         @AuraEnabled
         public Integer gender;
         
@@ -176,11 +151,5 @@ public with sharing class LWC_SearchStudentCtrl {
         
         @AuraEnabled
         public String birthdate;
-        
-        @AuraEnabled
-        public String orderField;
-        
-        @AuraEnabled
-        public String orderType;
     }
 }

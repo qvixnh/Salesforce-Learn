@@ -29,9 +29,9 @@ public with sharing class LWC_UpdateStudentCtrl {
             student.Gender__c= sGender;
             student.Address__c = sAddress;
             update student;
-            return student.StudentCode__c;
+            return student.Id;
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+        throw new AuraHandledException(e.getMessage());
         }
     }
 }

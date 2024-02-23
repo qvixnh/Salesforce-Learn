@@ -28,9 +28,6 @@ export default class LWC_SearchStudent extends LightningElement {
     dayOfBirth = null;
     monthOfBirth = null;
     yearOfBirth = null;
-    // Define select options for day and month
-    fieldOrderBy = 'StudentCode__c';
-    orderType = 'ASC';
     //pagination
     currentPage = 1;
     totalPages = 1;
@@ -126,8 +123,6 @@ export default class LWC_SearchStudent extends LightningElement {
             month: this.monthOfBirth,
             year: this.yearOfBirth,
             birthdate: this.birthdate,
-            orderField: this.fieldOrderBy,
-            orderType: this.orderType
         };
         var searchJson = JSON.stringify(searchCondition);
         getStudentsByCondition({

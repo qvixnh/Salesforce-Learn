@@ -52,27 +52,9 @@
                 </div>
             </div>
             <div class="slds-grid slds-gutters slds-m-around_medium">
-                <div class="slds-col slds-size_1-of-4">
-                    <lightning-combobox
-                        name="FieldOrder"
-                        label="Select Field Order"
-                        value={fieldOrderBy}
-                        options={fieldOrderByOptions}
-                        onchange={handleFieldChange}
-                    ></lightning-combobox>
-                </div>
-        
-                <div class="slds-col slds-size_1-of-4">
-                    <lightning-combobox
-                        name="OrderType"
-                        label="Select Order type"
-                        value={orderType}
-                        options={orderTypeOptions}
-                        onchange={handleTypeChange}
-                    ></lightning-combobox>
-                </div>
                 
-                <div class="slds-col slds-size_2-of-4 slds-m-top_large ">
+                
+                <div class="slds-col slds-size_4-of-4 slds-m-top_large ">
                         
                     <button   class=" slds-button  slds-button_brand slds-m-right_large" onclick={handleSearch}>Search Student</button>
                     <button   class="slds-button slds-button_outline-brand slds-m-right_large" onclick={handleClearFilters}>Clear Search Filters</button>

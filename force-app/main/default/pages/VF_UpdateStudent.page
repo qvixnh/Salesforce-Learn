@@ -1,77 +1,119 @@
 <apex:page controller="VF_UpdateStudentCtrl">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: block;
-        }   
-
-        .input-container {
-            margin-bottom: 10px;
-        }
-
-        .error-message {
-            color: red;
-            font-style: italic;
-            margin-top: 5px;
-            margin-bottom: 10px;
-        }
-
-        .form-container {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .btn-container {
-            margin-top: 10px;
+        .errorMessage{
+                color: red;
         }
     </style>
     <apex:outputLink value="/apex/VF_SearchStudent">back to list</apex:outputLink>
+    <apex:pageBlock id="modalbodyUpdate" >
+        <apex:form styleClass="form-container" onsubmit="return handleUpdate();">
+            <h1>{!student.StudentCode__c}</h1>
+            <apex:pageMessages />
+            <div class="input-container">
+                <label>First Name:</label>
+                <apex:inputText value="{!student.Firstname__c}" id="firstNameToUpdate"/>
+                <p class="errorMessage" id="firstNameErrorToUpdate"></p>
 
-    <apex:form styleClass="form-container">
-        <apex:pageMessages />
+            </div>
 
-        <div class="input-container">
-            <label>First Name:</label>
-            <apex:inputText value="{!student.Firstname__c}" />
-        </div>
+            <div class="input-container">
+                <label>Last Name:</label>
+                <apex:inputText value="{!student.Lastname__c}"  id="lastNameToUpdate" />
+                <p class="errorMessage" id="lastNameErrorToUpdate" ></p>
 
-        <div class="input-container">
-            <label>Last Name:</label>
-            <apex:inputText value="{!student.Lastname__c}" />
-        </div>
+            </div>
 
-        <div class="input-container">
-            <label>Class:</label>
-            <apex:selectList value="{!student.Class_look__c}" size="1">
-                <apex:selectOptions value="{!classList}" />
-            </apex:selectList>
-        </div>
-
-        
-        <div class="input-container">
-            <label>Gender:</label>
-            <apex:selectRadio value="{!student.Gender__c}">
-                <apex:selectOption itemLabel="Male" itemValue="Male" />
-                <apex:selectOption itemLabel="Female" itemValue="Female" />
+            <div class="input-container">
+                <label>Class:</label>
+                <apex:selectList value="{!student.Class_look__c}" size="1">
+                    <apex:selectOptions value="{!classListCreate}" />
+                </apex:selectList>
+            </div>
+            <div class="input-container">
+                <label>Gender:</label>
+            </div>                        
+            <apex:selectRadio value="{!student.Gender__c}" styleClass="gender-radio">
+                <apex:selectOption itemLabel="Male" itemValue="true"  />
+                <apex:selectOption itemLabel="Female" itemValue="false"  />
             </apex:selectRadio>
-        </div>
-        <div class="input-container">
-            <label>Birthdate:</label>
-            <apex:inputField value="{!student.Birthday__c}" />
-        </div>
+            
+            
+            <div class="input-container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Birthdate:</label>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <apex:inputField value="{!student.Birthday__c}"   id="birthdateToUpdate" />
+                    <p id="birthdateErrorToUpdate" class="errorMessage"></p>
 
-        <div class="input-container">
-            <label>Address:</label>
-            <apex:inputText value="{!student.Address__c}" />
-        </div>
+                </div>
+            </div>
+            <div class="input-container">
+                <label>Address:</label>
+                <apex:inputText value="{!student.Address__c}"   id="addressToUpdate" />
+                <p id="addressErrorToUpdate" class="errorMessage"></p>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
 
-        <div class="btn-container">
-            <apex:commandButton value="Update" action="{!updateStudent}" />
-        </div>
-    </apex:form>
+                </div>
+                <div class="col-md-3">
+                    <apex:commandButton value="Update" action="{!updateStudent}" />
+                </div>
+            </div>
+        </apex:form>
+    </apex:pageBlock>
+    <script>
+    function handleUpdate() {
+            // Basic validation example
+            var firstName = document.querySelector("[id$='firstNameToUpdate']");
+            var lastName = document.querySelector("[id$='lastNameToUpdate']");
+            var birthdate = document.querySelector("[id$='birthdateToUpdate']");
+            var address = document.querySelector("[id$='addressToUpdate']");
+
+            var firstNameError = document.getElementById("firstNameErrorToUpdate");
+            var lastNameError = document.getElementById("lastNameErrorToUpdate");
+            var birthdateError = document.getElementById("birthdateErrorToUpdate");
+            var addressError = document.getElementById("addressErrorToUpdate");
+
+            firstNameError.innerText = "";
+            lastNameError.innerText = "";
+            birthdateError.innerText = "";
+            addressError.innerText = "";
+            if (!firstName.value.trim()) {
+                firstNameError.innerText = "Please enter First Name.";
+            }
+
+            if (!lastName.value.trim()) {
+                lastNameError.innerText = "Please enter Last Name.";
+            }
+
+            
+            if (!address.value.trim()) {
+                addressError.innerText = "Please enter Address.";
+            }
+            if (!birthdate.value.trim()) {
+                birthdateError.innerText = "Please enter Birthdate.";
+            }
+            else if(birthdate.value.trim()) {
+                var dateParts = birthdate.value.split("/"); // Assuming birthdate.value is in "DD/MM/YYYY" format
+                var formattedDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
+                var bd = new Date(formattedDate);
+                var today = new Date();
+                var age = today.getFullYear() - bd.getFullYear();
+                if (today.getMonth() < bd.getMonth() || (today.getMonth() === bd.getMonth() && today.getDate() < bd.getDate())) {
+                    age--;
+                }
+                if (age <= 17) {
+                    birthdateError.innerText = "Student must be atleast 17 years old";
+                }
+            }
+            if (firstNameError.innerText || lastNameError.innerText || birthdateError.innerText || addressError.innerText ) {
+                return false;
+            }
+            return true; 
+        }
+    </script>
 </apex:page>

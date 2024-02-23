@@ -1,6 +1,5 @@
-<apex:page controller="VF_DetailStudentCtrl" action="{!loadStudentDetails}">
+<apex:page controller="VF_DetailStudentCtrl" >
     <style>
-        /* Add your CSS styles here */
         body {
             font-family: Arial, sans-serif;
             color: #333;
@@ -14,8 +13,6 @@
         p {
             margin-bottom: 10px;
         }
-
-        /* Customize the link style */
         a {
             color: #0066cc;
             text-decoration: none;
@@ -39,6 +36,5 @@
         <apex:param value="{!student.Birthday__c}" />
     </apex:outputText>
     <p>Address: {!student.Address__c}</p>
-    <!-- Add the Update button -->
     <apex:outputLink value="/apex/VF_UpdateStudent?id={!student.Id}">Update</apex:outputLink>
 </apex:page>

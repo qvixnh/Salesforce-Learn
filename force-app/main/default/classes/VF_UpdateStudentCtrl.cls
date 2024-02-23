@@ -1,79 +1,83 @@
+/**
+ * クラス名：   VF_UpdateStudentCtrl.cls
+ * クラス概要： Update Student Controller
+ * @created： 2023/12/15 + Nguyen Vinh
+ * @modified: 2023/12/17 + Nguyen Vinh
+ */
 public with sharing class VF_UpdateStudentCtrl {
     public Student__c student { get; set; }
-    public List<SelectOption> classList { get; set; }
+    public List<SelectOption> classListCreate { get; set; }
 
     public VF_UpdateStudentCtrl() {
         String studentId = ApexPages.currentPage().getParameters().get('id');
-        this.student = [
-            SELECT 
-                Id
-                , Firstname__c
-                , Lastname__c
-                , Class_look__c
-                , Gender__c
-                , Birthday__c
-                , Address__c 
-            FROM Student__c
-            WHERE Id = :studentId 
-            LIMIT 1
-        ];
-        classList = getClassOptions();
+        if(!String.isBlank(studentId)){
+            this.student = [
+                SELECT 
+                    Id
+                    , StudentCode__c
+                    , Firstname__c
+                    , Lastname__c
+                    , Class_look__r.Name
+                    , Gender__c
+                    , Birthday__c
+                    , Address__c 
+                FROM Student__c
+                WHERE Id = :studentId
+            ];
+        }
+        else{
+            this.student = null;
+        }
+        classListCreate = getClasses();
     }
 
+    /**
+     * updateStudent
+     * @param    : 
+     * @return   : 
+     * @created  : 2023/12/22 + Nguyen Vinh
+     * @modified : 2024/02/19 +  Nguyen Vinh
+     */
     public PageReference updateStudent() {
         try {
-            
-            //isBlank check validation
-            if (String.isBlank(this.student.Firstname__c)) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'First Name cannot be blank.'));
-                return null;
-            }
-            if (String.isBlank(this.student.Lastname__c)) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Last Name cannot be blank.'));
-                return null;
-            }
-            if (String.isBlank(this.student.Address__c)) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Address cannot be blank.'));
-                return null;
-            }
-            if(this.student.Birthday__c ==null){
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Birthdate cannot be blank.'));
-                return null;
-            }
-            Integer age =getAge(this.student.Birthday__c);
-
-            if (age < 17) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Student must be at least 17 years old.'));
-                return null;
-            }
+            this.student.Name = student.Firstname__c.left(39) + ' ' + student.Lastname__c.left(39);
             update student;
-            
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Student updated successfully.'));
-            
-            return new PageReference('/apex/VF_SearchStudent');
-        } catch (Exception e) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Error updating student: ' + e.getMessage()));
-            System.debug('Exception Details: ' + e);
+            this.student=new Student__c();
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Student updated successfully.'));  
             return null;
+        } catch (Exception e) {
+            this.student= null;
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Error updating student: ' + e.getMessage()));
+            throw new CustomException('An error occurred when updating student: ' + e.getMessage());
         }
     }
+     /**
+     * getClasses
+     * @param    : 
+     * @return   :  
+     * @created  : 2023/12/15 + Nguyen Vinh
+     * @modified: 
+     * **/
+    public List<SelectOption> getClasses() {
+        try {
+            List<SelectOption> options = new List<SelectOption>();
+            List<Class__c> classes = [
+                SELECT 
+                    Id
+                    , Name 
+                FROM Class__c
+            ];
+            for (Class__c cls : classes) {
+                options.add(new SelectOption(cls.Id, cls.Name));
+            }
+            return options;
+        } catch (Exception e) {
+            throw new CustomException('An error occurred when getting classes: ' + e.getMessage());
 
-    //helper
-    private Integer getAge(Date birthdate){
-        Date today = Date.today();
-        return today.year() - birthdate.year() - (today.month() < birthdate.month() || (today.month() == birthdate.month() && today.day() < birthdate.day()) ? 1 : 0);
-    }
-    public List<SelectOption> getClassOptions() {
-        List<SelectOption> options = new List<SelectOption>();
-        List<Class__c> classes = [
-            SELECT 
-                Id
-                , Name 
-            FROM Class__c
-        ];
-        for (Class__c cls : classes) {
-            options.add(new SelectOption(cls.Id, cls.Name));
         }
-        return options;
+        
+    }
+    public  class  CustomException extends Exception {
+        
     }
 }

@@ -30,7 +30,7 @@ public with sharing class LWC_CreateStudentCtrl {
             student.Gender__c= sGender;
             student.Address__c = sAddress;
             insert student;
-            return student.StudentCode__c;
+            return student.Id;
             
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());

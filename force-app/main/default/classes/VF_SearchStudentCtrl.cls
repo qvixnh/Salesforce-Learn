@@ -115,7 +115,7 @@ public with sharing class VF_SearchStudentCtrl {
             if (!String.isBlank(searchCode)) {
                 conditions.add('StudentCode__c LIKE \'%' + searchCode + '%\'');
             }
-            if (searchSelectedClass != '1') {
+            if (searchSelectedClass != '1' &&  searchSelectedClass != null ) {
                 conditions.add('Class_look__c = \'' + searchSelectedClass + '\'');
             }
             if (gender == 1 || gender == 0) {
@@ -353,7 +353,6 @@ public with sharing class VF_SearchStudentCtrl {
         startIndex += pageSize;
         currentPage++;
         this.allSelected=false;
-        // updateSelectedRecordsNumder();
         return null; 
     }
      /**     
@@ -390,7 +389,6 @@ public with sharing class VF_SearchStudentCtrl {
             
             currentPage = totalPages;
             this.allSelected=false;
-            // updateSelectedRecordsNumder();
             return null; 
         }    
     }
@@ -431,7 +429,7 @@ public with sharing class VF_SearchStudentCtrl {
      * @modified : 
      */
     public void setStudent() {
-        if (selectedId == '') {
+        if (String.isBlank(selectedId)) {
             this.student = new Student__c();
         } else {
             this.student = [

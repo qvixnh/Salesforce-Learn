@@ -103,7 +103,7 @@ public without sharing class T01_StudentTriggerHandler {
      * @param    : List<Student__c> newStudents,List<Student__c> oldStudents
      * @return   :
      * @created  : 2023/01/23 + Nguyen Vinh
-     * @modified : 2023/02/01 + Nguyen Vinh
+     * @modified : 2024/02/01 + Nguyen Vinh
      */
     public static void onAfterUpdate(List<Student__c> newStudentList,Map<Id,Student__c> mapOldStudents){
         try {
@@ -124,7 +124,7 @@ public without sharing class T01_StudentTriggerHandler {
      * @param    : List<Student__c> studentList,Map<Id,Student__c> mapOldStudents
      * @return   : Set<Id>
      * @created  : 2023/01/24 + Nguyen Vinh
-     * @modified : 2023/02/01 + Nguyen Vinh
+     * @modified : 2024/02/01 + Nguyen Vinh
      */
     private static Set<Id> getUpdatedClassIdsSet(List<Student__c> studentList,Map<Id,Student__c> mapOldStudents){
         Set<Id> classIds = new Set<Id>();        

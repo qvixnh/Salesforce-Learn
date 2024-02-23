@@ -19,17 +19,11 @@ public without sharing class B01_DeleteSubjectScoreBatch implements Database.Bat
      */
     public Database.QueryLocator start(Database.BatchableContext BC) {
         
-        try {
-            this.batchLogObj= createBatchLog();
-            return Database.getQueryLocator([
-                SELECT Id 
-                FROM SubjectScore__c
-            ]);
-        } catch (Exception e) {
-            updateBatchLog(this.batchLogObj.id, e.getMessage(), ERROR);
-            System.abortJob(BC.getJobId());
-            return null;
-        }
+        this.batchLogObj = createBatchLog();
+        return Database.getQueryLocator([
+            SELECT Id 
+            FROM SubjectScore__c
+        ]);
     }
     
     /**
