@@ -4,7 +4,6 @@ import getClassOptions  from '@salesforce/apex/LWC_CreateStudentCtrl.getClassOpt
 import updateStudentRec from '@salesforce/apex/LWC_UpdateStudentCtrl.updateStudentRec';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
-
 export default class LWC_UpdateStudent extends LightningElement {
     ERRORTYPE = 'error'
     SUCCESSTYPE = 'success'
@@ -34,6 +33,7 @@ export default class LWC_UpdateStudent extends LightningElement {
         }
         return true;
     }
+    //Method to get class options
     @api student;
     @wire(getClassOptions)
     wiredClasses({ error, data }) {
@@ -61,6 +61,7 @@ export default class LWC_UpdateStudent extends LightningElement {
         }
         this.updateStudent();
     }
+    //Method to call the controller to update student 
     updateStudent(){
         updateStudentRec({
             student:this.student,
@@ -83,6 +84,7 @@ export default class LWC_UpdateStudent extends LightningElement {
             
         });    
     }
+    //Method to validate updated input
     validation(){
         this.clearErrors();
         this.firstName = this.template.querySelector('[data-id="sFirstName"]').value;
@@ -158,6 +160,7 @@ export default class LWC_UpdateStudent extends LightningElement {
         }
         return true;
     }
+    //method to clear error content in the validation handler
     clearErrors() {
         this.firstNameError = '';
         this.lastNameError = '';

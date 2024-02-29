@@ -60,7 +60,7 @@
                     <button   class="slds-button slds-button_outline-brand slds-m-right_large" onclick={handleClearFilters}>Clear Search Filters</button>
                     <button   class="slds-button  slds-button_success slds-m-right_large" onclick={openModalCreate}>Create Student</button>
                     <button   class="slds-button  slds-button slds-button_destructive slds-m-right_large" onclick={openModalDelSelStu} disabled={isDeleteSelectedStudentsDisabled}>Delete Selected</button>
-                    <button   class="slds-button  slds-button slds-button_outline-brand" onclick={clearSelection} disabled={isDeleteSelectedStudentsDisabled}>Clear</button>
+                    <button   class="slds-button  slds-button slds-button_outline-brand" onclick={clearSelection} disabled={isDeleteSelectedStudentsDisabled}>Clear Selection</button>
 
                 </div>
             </div>
@@ -75,10 +75,31 @@
                                     </div>
                                 </th>    
                                 <th scope="col">#</th>
-                                <th scope="col" >Student Code</th>
+                                <th scope="col" >
+                                        Student Code 
+                                    <lightning-button-icon 
+                                        class="studentCodeSort"
+                                        icon-name="utility:arrowdown"
+                                        alternative-text="Sort by Student Code"
+                                        title="Sort by Student Code"
+                                        onclick={sortStudentsByCode}
+                                        variant="bare"
+                                        >
+                                    </lightning-button-icon>
+                                </th>
                                 <th scope="col">First Name</th>
                                 <th scope="col">Last Name</th>
-                                <th scope="col">Class</th>
+                                <th scope="col">Class
+                                    <lightning-button-icon 
+                                        class="studentClassSort"
+                                        icon-name="utility:arrowdown"
+                                        alternative-text="Sort by Student Class"
+                                        title="Sort by Student Class"
+                                        onclick={sortStudentsByClass}
+                                        variant="bare"
+                                        >
+                                    </lightning-button-icon>
+                                </th>
                                 <th scope="col">Gender</th>
                                 <th scope="col">Birthdate</th>
                                 <th scope="col" style="width:30px;">
@@ -94,14 +115,19 @@
                         </thead>
                         <tbody>
                             <template for:each={displayedStudents} for:item="student">
-                                <tr key={student.StudentCode__c}>
+                                <tr key={student.StudentCode__c} >
                                     <td style="width:2%;">
                                         <div class="slds-truncate" title="Select">
                                             <input type="checkbox" value={student.StudentCode__c} checked={student.selected__c} onchange={handleSelect} />
                                         </div>
                                     </td>
                                     <td style="width:3%;">{student.index}</td>
-                                    <td style="width:5%;">{student.StudentCode__c}</td>
+                                    <td style="width:5%;">
+                                        <a href="javascript:void(0);" onclick={openModalDetail} data-student-id={student.Id}>
+                                            {student.StudentCode__c}
+                                        </a>
+                                        
+                                    </td>
                                     <td style="width:25%;">{student.Firstname__c}</td>
                                     <td style="width:25%;">{student.Lastname__c}</td>
                                     <td style="width:25%;">{student.Class_look__r.Name}</td>

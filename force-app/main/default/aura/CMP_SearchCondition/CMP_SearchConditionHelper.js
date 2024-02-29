@@ -77,7 +77,7 @@
             pageSize: component.get("v.pageSize"),
             classId: classId,
             gender:gender,
-            searchName:searchName,
+            searchName:searchName.trim(),
             searchCode:searchCode,
             day:day,
             month:month,

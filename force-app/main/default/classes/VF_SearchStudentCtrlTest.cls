@@ -6,6 +6,13 @@
  */
 @isTest
 public with sharing class VF_SearchStudentCtrlTest {
+    private static final Integer LISTSIZE = 100;
+    private static void setUp(){
+        Class__c testClass = new Class__c();
+        insert testClass;
+        List<Student__c> stuList = createStudentList(testClass.Id, LISTSIZE );
+        insert stuList;
+    }
     /**
      * testConstructor
      * @param    :
@@ -15,11 +22,7 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testConstructor() {
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         Test.startTest();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         Test.stopTest();
@@ -29,7 +32,7 @@ public with sharing class VF_SearchStudentCtrlTest {
         Assert.areNotEqual(null, controller.selectedIds);
         Assert.areNotEqual(0, controller.searchResults.size(), 'expected search result size');
         //test pagination in constructor
-        Assert.areEqual(listSize, controller.totalRecords, 'expected total records size');
+        Assert.areEqual(LISTSIZE, controller.totalRecords, 'expected total records size');
         Assert.areEqual(10, controller.totalPages, 'expected total pages');
         Assert.areNotEqual(0, controller.pageNumbers.size());
 
@@ -43,16 +46,12 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testPerformSearchAll() {
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         Test.startTest();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         controller.performSearch();
         Test.stopTest();
-        Assert.areEqual(listSize, controller.totalRecords, 'expected total records size');
+        Assert.areEqual(LISTSIZE, controller.totalRecords, 'expected total records size');
     }
     /**
      * testPerformSearchByCondition
@@ -65,8 +64,7 @@ public with sharing class VF_SearchStudentCtrlTest {
     private static void testPerformSearchByCondition() {
         Class__c testClass = new Class__c();
         insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
+        List<Student__c> stuList = createStudentList(testClass.Id, LISTSIZE );
         insert stuList;
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         controller.gender = 1;
@@ -76,7 +74,7 @@ public with sharing class VF_SearchStudentCtrlTest {
         Test.startTest();
         controller.performSearch();
         Test.stopTest();
-        Assert.areEqual(listSize, controller.totalRecords, 'expected total records size');
+        Assert.areEqual(LISTSIZE, controller.totalRecords, 'expected total records size');
     }
     /**
      * testPerformSearchByDayMonthYear
@@ -87,11 +85,7 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testPerformSearchByDayMonthYear() {
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         controller.day = 1;
         controller.month = 1;
@@ -99,7 +93,7 @@ public with sharing class VF_SearchStudentCtrlTest {
         Test.startTest();
         controller.performSearch();
         Test.stopTest();
-        Assert.areEqual(listSize, controller.totalRecords, 'expected total records size');
+        Assert.areEqual(LISTSIZE, controller.totalRecords, 'expected total records size');
     }
      /**
      * testClearFilters
@@ -112,8 +106,7 @@ public with sharing class VF_SearchStudentCtrlTest {
     private static void testClearFilters() {
         Class__c testClass = new Class__c();
         insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
+        List<Student__c> stuList = createStudentList(testClass.Id, LISTSIZE );
         insert stuList;
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         controller.gender = 1;
@@ -134,17 +127,13 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testPerformSearchByFirstName() {
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         controller.searchName= 'Test FirstName';
         Test.startTest();
         controller.performSearch();
         Test.stopTest();
-        Assert.areEqual(listSize, controller.totalRecords, 'expected total records size');
+        Assert.areEqual(LISTSIZE, controller.totalRecords, 'expected total records size');
     }
     /**
      * testDeleteSelectedRecords
@@ -173,21 +162,7 @@ public with sharing class VF_SearchStudentCtrlTest {
         Assert.areEqual(ApexPages.Severity.INFO, messages[0].getSeverity(), 'Message severity should be INFO');
         Assert.areEqual('Selected records deleted successfully.', messages[0].getSummary(), 'Message summary should match');
     }
-    /**
-     * createStudentList
-     * @param    : Id classId, Integer size
-     * @return   : List<Student__c>
-     * @created  : 2024/02/21 + Nguyen Vinh
-     * @modified :
-     */
-    private static List<Student__c> createStudentList(Id classId, Integer size){
-        List<Student__c> stuList = new List<Student__c>();
-        for(Integer i = 1; i <= size; i++ ){
-            Student__c s = createStudent(classId);
-            stuList.add(s);
-        }
-        return stuList;
-    }
+    
     /**
      * testCreateStudent
      * @param    :
@@ -241,8 +216,7 @@ public with sharing class VF_SearchStudentCtrlTest {
     private static void testDeleteStudent() {
         Class__c testClass = new Class__c();
         insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
+        List<Student__c> stuList = createStudentList(testClass.Id, LISTSIZE );
         insert stuList;
         Student__c stuToDelete = createStudent(testClass.Id);
         insert stuToDelete;
@@ -289,11 +263,7 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testFirst(){
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         Test.startTest();
         PageReference pr = controller.first();
@@ -312,11 +282,7 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testPrevious(){
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         controller.currentPage = 2;
         controller.gotoPage();
@@ -337,11 +303,7 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testNext(){
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         controller.currentPage = 2;
         controller.gotoPage();
@@ -362,11 +324,7 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testLast(){
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         Test.startTest();
         PageReference pr = controller.last();
@@ -385,11 +343,7 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testGoToPage(){
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         controller.currentPage  = 2;
         Test.startTest();
@@ -408,11 +362,7 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testClearRecords(){
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         Test.startTest();
         controller.clearRecords();
@@ -429,11 +379,7 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testGetHasPrevious(){
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         controller.currentPage = 2;
         controller.gotoPage();
@@ -453,11 +399,7 @@ public with sharing class VF_SearchStudentCtrlTest {
      */
     @isTest
     private static void testSelectAllCheckBoxes(){
-        Class__c testClass = new Class__c();
-        insert testClass;
-        Integer listSize = 100;
-        List<Student__c> stuList = createStudentList(testClass.Id, listSize );
-        insert stuList;
+        setUp();
         VF_SearchStudentCtrl controller = new VF_SearchStudentCtrl();
         controller.currentPage = 2;
         controller.gotoPage();
@@ -483,5 +425,20 @@ public with sharing class VF_SearchStudentCtrlTest {
         stu.Birthday__c = Date.valueOf('2000-01-01');
         stu.Address__c = 'Test Address';
         return stu;
+    }
+    /**
+     * createStudentList
+     * @param    : Id classId, Integer size
+     * @return   : List<Student__c>
+     * @created  : 2024/02/21 + Nguyen Vinh
+     * @modified :
+     */
+    private static List<Student__c> createStudentList(Id classId, Integer size){
+        List<Student__c> stuList = new List<Student__c>();
+        for(Integer i = 1; i <= size; i++ ){
+            Student__c s = createStudent(classId);
+            stuList.add(s);
+        }
+        return stuList;
     }
 }

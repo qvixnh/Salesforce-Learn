@@ -155,7 +155,9 @@ public with sharing class CMP_SearchStudentCtrlTest {
         Test.startTest();
         String result = CMP_SearchStudentCtrl.deleteStudentRecord(stu.Id);
         Test.stopTest();
+        Integer sizeAfterDelete = [SELECT COUNT() FROM Student__c WHERE Class_look__c = :testClass.Id];
         Assert.areEqual('Success', result);
+        Assert.areEqual(0, sizeAfterDelete);
     }
     /**
      * testDeleteStudentEmptyId

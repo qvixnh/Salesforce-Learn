@@ -17,6 +17,11 @@ export default class LWC_SearchStudent extends LightningElement {
     @track displayedStudents;
     @track pageNumbers = [];
     @track selectedStudentIds = [];
+    @track genderOptions=[
+        {label:'All', value: '2'},
+        {label:'Male', value: '1'},
+        {label:'Female', value:'0'}        
+    ];
     pageSize =10;
     error;
     //search condition
@@ -28,7 +33,6 @@ export default class LWC_SearchStudent extends LightningElement {
     dayOfBirth = null;
     monthOfBirth = null;
     yearOfBirth = null;
-    //pagination
     currentPage = 1;
     totalPages = 1;
     // Add this property to your component
@@ -86,11 +90,7 @@ export default class LWC_SearchStudent extends LightningElement {
         { label: 'December', value: '12' },
     ];
     
-    @track genderOptions=[
-        {label:'All', value: '2'},
-        {label:'Male', value: '1'},
-        {label:'Female', value:'0'}        
-    ];
+    
     connectedCallback() {
         this.loadStudents(true);
         this.template.addEventListener('studentcreated', this.handleStudentCreated.bind(this));
@@ -158,10 +158,10 @@ export default class LWC_SearchStudent extends LightningElement {
         this.selectedGender = event.detail.value;
     }
     handleSearchCodeChange(event) {
-        this.searchCode = event.detail.value;
+        this.searchCode = event.detail.value.trim();
     }
     handleSearchNameChange(event) {
-        this.searchName = event.detail.value;
+        this.searchName = event.detail.value.trim();
     }
     handleBirthdateChange(event) {
         this.birthdate = event.detail.value;
@@ -193,6 +193,7 @@ export default class LWC_SearchStudent extends LightningElement {
         this.loadStudents(true);
         this.updateDisplayedStudents();
     }
+    //clear search filter
     handleClearFilters() {
         this.selectedClass = null;
         this.searchCode = 'SV_';
@@ -200,12 +201,12 @@ export default class LWC_SearchStudent extends LightningElement {
         this.birthdate='';
         this.dayOfBirth = null;
         this.monthOfBirth = null;
-        this.yearOfBirth = null;
+        this.yearOfBirth = 0;
         this.currentPage = 1;
         this.selectedGender = 2;
     }
+    //Method to update the displayed students(per page) in pagination
     updateDisplayedStudents() {
-        
         if (this.students) {
             try {
                 this.totalPages = Math.ceil(this.students.length / ITEMS_PER_PAGE);
@@ -214,10 +215,10 @@ export default class LWC_SearchStudent extends LightningElement {
                 this.displayedStudents = this.students.slice(startIndex, endIndex);
                 this.displayedStudents = this.displayedStudents.map((student, index) => ({ ...student, index: index + 1 }));
                 this.isSelectAllChecked = false;
-                var startPage = Math.max(1, this.currentPage - 1);
+                var startPage = Math.max( 1, this.currentPage - 1);
                 var endPage = Math.min(this.totalPages, startPage + 2);
                 this.pageNumbers=[]
-                if(this.currentPage==this.totalPages && (startPage-1)>=1){
+                if(this.currentPage == this.totalPages && (startPage-1) >= 1){
                     this.pageNumbers.push({ pageNumber: startPage - 1, status: false });
                 }
                 for (var i = startPage; i <= endPage; i++) {
@@ -341,6 +342,7 @@ export default class LWC_SearchStudent extends LightningElement {
         }
         
     }
+    //Handle set the student selected checkbox to new status 
     checkStuden(code,check=true){
         for(var stu of this.students){
             if(stu.StudentCode__c == code){
@@ -349,6 +351,7 @@ export default class LWC_SearchStudent extends LightningElement {
         }
         this.updateSelectNumber();
     }
+    //Method to update the number of selected students 
     updateSelectNumber(){
         var count =0;
         for(var stu of this.students){
@@ -358,22 +361,31 @@ export default class LWC_SearchStudent extends LightningElement {
         }
         this.selectionNumber=count;
     }
+    //Method to select student when click on the student checkbox
     handleSelect(event) {
         const studentCode = event.target.value;
         const newcheck=event.target.checked;
         this.checkStuden(studentCode,newcheck);
-        try {
-            for(let i = 0; i<this.displayedStudents.length;i++ ){
-                if(this.displayedStudents[i].StudentCode__c == studentCode){
-                    this.displayedStudents[i].selected__c = newcheck;
-                }
+        for(let i = 0; i<this.displayedStudents.length;i++ ){
+            if(this.displayedStudents[i].StudentCode__c == studentCode){
+                this.displayedStudents[i].selected__c = newcheck;
             }
-        } catch (error) {
-            this.showToast("error message" + error.message, this.ERRORTYPE);
-        }
-        this.updateSelectAll();
     }
-    
+    this.updateSelectAll();
+    }
+    // HTML handle: Methods for opening and closing modals delete multiples students
+    handleDeleteSelectedStudent(){
+        this.deleteSelectedStudents();
+        this.selectionNumber=0;
+    }
+    // HTML handle: Methods for opening and closing modals delete one student
+    deleteStudentHandler(event) {
+        const studentId = event.currentTarget.dataset.studentId;
+        this.deleteStudent(studentId);
+        this.showModal = false;
+        this.selectedStudent = null;
+    }
+    // Methods to update the "is select all checkbox" when check or uncheck other checkboxes
     updateSelectAll(){
         this.selectedStudentIds=[];
         for(let i = 0; i<this.displayedStudents.length;i++ ){
@@ -388,10 +400,7 @@ export default class LWC_SearchStudent extends LightningElement {
             this.isSelectAllChecked=false;
         }    
     }
-    handleDeleteSelectedStudent(){
-        this.deleteSelectedStudents();
-        this.selectionNumber=0;
-    }
+    // Methods to delete selected students
     deleteSelectedStudents() {
         this.selectedStudentIds=[];
         for(let i = 0; i<this.students.length;i++ ){
@@ -410,13 +419,7 @@ export default class LWC_SearchStudent extends LightningElement {
                 console.error('Error deleting students: ', error);
             });
     }
-    deleteStudentHandler(event) {
-        const studentId = event.currentTarget.dataset.studentId;
-        this.deleteStudent(studentId);
-        this.showModal = false;
-        this.selectedStudent = null;
-    }
-
+    //Methods for selecting and deleting students
     deleteStudent(studentId) {
         deleteStudentRecord({ studentId })
             .then(result => {
@@ -428,14 +431,7 @@ export default class LWC_SearchStudent extends LightningElement {
             });
     }
     
-    showToast(message,type) {
-        const event = new ShowToastEvent({
-            title: type,
-            message: message,
-            variant: type,
-        });
-        this.dispatchEvent(event);
-    }
+    // Method to clear selection
     clearSelection(){
         for(var stu of this.displayedStudents){
             stu.selected__c=false;
@@ -446,5 +442,61 @@ export default class LWC_SearchStudent extends LightningElement {
         this.selectedStudentIds=[];
         this.selectionNumber=0;
         this.isSelectAllChecked=false;
+    }
+    // Method to sort students by code
+    sortStudentsByCode(event) {
+        const currentUtility= event.target.iconName;
+        let sortedStudents = [...this.students];
+        if(currentUtility == 'utility:arrowdown'){
+            sortedStudents.sort((a, b) => {
+                return a.StudentCode__c.localeCompare(b.StudentCode__c);
+            });
+            this.template.querySelector('.studentCodeSort').iconName = 'utility:arrowup';
+        }
+        else if((currentUtility == 'utility:arrowup')){
+            sortedStudents.sort((a, b) => {
+                return b.StudentCode__c.localeCompare(a.StudentCode__c);
+            });
+            this.template.querySelector('.studentCodeSort').iconName =  'utility:arrowdown';
+        }
+        const newUtility= event.target.iconName;
+        console.log(newUtility);
+        this.students = sortedStudents;
+        this.updateDisplayedStudents();
+    }
+    // Method to sort students by code
+    sortStudentsByClass(event) {
+        const currentUtility= event.target.iconName;
+        let sortedStudents = [...this.students];
+        try {
+            if(currentUtility == 'utility:arrowdown'){
+                sortedStudents.sort((a, b) => {
+                    return a.Class_look__c.localeCompare(b.Class_look__c);
+                });
+                this.template.querySelector('.studentClassSort').iconName = 'utility:arrowup';
+            }
+            else if((currentUtility == 'utility:arrowup')){
+                sortedStudents.sort((a, b) => {
+                    return b.Class_look__c.localeCompare(a.Class_look__c);
+                });
+                this.template.querySelector('.studentClassSort').iconName =  'utility:arrowdown';
+            }
+        } catch (error) {
+            console.log(error);
+        }
+       
+        const newUtility= event.target.iconName;
+        console.log(newUtility);
+        this.students = sortedStudents;
+        this.updateDisplayedStudents();
+    }
+    //HTML Handle: Method to display toast messages
+    showToast(message,type) {
+        const event = new ShowToastEvent({
+            title: type,
+            message: message,
+            variant: type,
+        });
+        this.dispatchEvent(event);
     }
 }

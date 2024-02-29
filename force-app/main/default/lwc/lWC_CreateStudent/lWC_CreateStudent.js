@@ -1,6 +1,4 @@
-// LWC_UpdateStudent.js
 import { LightningElement, api ,wire,track} from 'lwc';
-import getClassOptions from '@salesforce/apex/LWC_SearchStudentCtrl.getClassOptions';
 import getClassOptionsToCreate from '@salesforce/apex/LWC_CreateStudentCtrl.getClassOptionsToCreate';
 import createStudentRec from '@salesforce/apex/LWC_CreateStudentCtrl.createStudentRec';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';

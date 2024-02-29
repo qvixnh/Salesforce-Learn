@@ -36,7 +36,6 @@ public with sharing class LWC_CreateStudentCtrl {
             throw new AuraHandledException(e.getMessage());
         }
     }
-    //1101
     /**
      * getClassOptions
      * @param    : 
