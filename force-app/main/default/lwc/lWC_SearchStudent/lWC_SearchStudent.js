@@ -454,8 +454,6 @@ export default class LWC_SearchStudent extends LightningElement {
             });
             this.template.querySelector('.studentCodeSort').iconName =  'utility:arrowdown';
         }
-        const newUtility= event.target.iconName;
-        console.log(newUtility);
         this.students = sortedStudents;
         this.updateDisplayedStudents();
     }
@@ -480,8 +478,54 @@ export default class LWC_SearchStudent extends LightningElement {
             console.log(error);
         }
        
-        const newUtility= event.target.iconName;
-        console.log(newUtility);
+        this.students = sortedStudents;
+        this.updateDisplayedStudents();
+    }
+    // Method to sort students by First Name
+    sortByFirstName(event) {
+        const currentUtility= event.target.iconName;
+        let sortedStudents = [...this.students];
+        try {
+            if(currentUtility == 'utility:arrowdown'){
+                sortedStudents.sort((a, b) => {
+                    return ('' + a.Firstname__c).localeCompare(b.Firstname__c);
+                });
+                this.template.querySelector('.sortByFirstNameCls').iconName = 'utility:arrowup';
+            }
+            else if((currentUtility == 'utility:arrowup')){
+                sortedStudents.sort((a, b) => {
+                    return ('' + b.Firstname__c).localeCompare(a.Firstname__c);
+                });
+                this.template.querySelector('.sortByFirstNameCls').iconName =  'utility:arrowdown';
+            }
+        } catch (error) {
+            console.log(error);
+        }
+       
+        this.students = sortedStudents;
+        this.updateDisplayedStudents();
+    }
+    // Method to sort students by First Name
+    sortByGender(event) {
+        const currentUtility= event.target.iconName;
+        let sortedStudents = [...this.students];
+        try {
+            if(currentUtility == 'utility:arrowdown'){
+                sortedStudents.sort((a, b) => {
+                    return Number(a.Gender__c) - Number(b.Gender__c);
+                });
+                this.template.querySelector('.sortByGendercls').iconName = 'utility:arrowup';
+            }
+            else if((currentUtility == 'utility:arrowup')){
+                sortedStudents.sort((a, b) => {
+                    return Number(b.Gender__c) - Number(a.Gender__c);
+                });
+                this.template.querySelector('.sortByGendercls').iconName =  'utility:arrowdown';
+            }
+        } catch (error) {
+            console.log(error);
+        }
+       
         this.students = sortedStudents;
         this.updateDisplayedStudents();
     }

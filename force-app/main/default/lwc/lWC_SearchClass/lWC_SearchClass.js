@@ -72,5 +72,52 @@ export default class LWC_SearchClass extends LightningElement {
         this.updateDisplayedClasses();
 
     }
+    goToPage(event) {
+        this.currentPage = event.target.value;
+        this.updateDisplayedClasses();
+
+    }
+    sortByCode(event){
+        const currentUtility= event.target.iconName;
+        let sortedClasses = [...this.classes];
+        try {
+            if(currentUtility == 'utility:arrowdown'){
+                sortedClasses.sort((a, b) => {
+                    return b.Name.localeCompare(a.Name);
+                });
+                this.template.querySelector('.sortByCodeCls').iconName = 'utility:arrowup';
+            }
+            else if((currentUtility == 'utility:arrowup')){
+                sortedClasses.sort((a, b) => {
+                    return a.Name.localeCompare(b.Name);
+                });
+                this.template.querySelector('.sortByCodeCls').iconName =  'utility:arrowdown';
+            }
+        } catch (error) {
+            console.log(error);
+        }
+       
+        this.classes = sortedClasses;
+        this.updateDisplayedClasses();
+    }
+    sortByStudentNumber(event){
+        const currentUtility= event.target.iconName;
+        let sortedClasses = [...this.classes];
+        if(currentUtility == 'utility:arrowdown'){
+            sortedClasses.sort((a, b) => {
+                return b.NumberOfStudent__c - a.NumberOfStudent__c;
+            });
+            this.template.querySelector('.sortByStudentNumberCls').iconName = 'utility:arrowup';
+        }
+        else if((currentUtility == 'utility:arrowup')){
+            sortedClasses.sort((a, b) => {
+                return a.NumberOfStudent__c - b.NumberOfStudent__c;
+            });
+            this.template.querySelector('.sortByStudentNumberCls').iconName =  'utility:arrowdown';
+        }
+       
+        this.classes = sortedClasses;
+        this.updateDisplayedClasses();
+    }
 }
 

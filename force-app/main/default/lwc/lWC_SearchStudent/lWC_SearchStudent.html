@@ -59,8 +59,12 @@
                     <button   class="slds-button slds-button_outline-brand slds-m-right_large" onclick={handleClearFilters}>Clear Search Filters</button>
                     <button   class="slds-button  slds-button_success slds-m-right_large" onclick={openModalCreate}>Create Student</button>
                     <button   class="slds-button  slds-button slds-button_destructive slds-m-right_large" onclick={openModalDelSelStu} disabled={isDeleteSelectedStudentsDisabled}>Delete Selected</button>
-                    <button   class="slds-button  slds-button slds-button_outline-brand" onclick={clearSelection} disabled={isDeleteSelectedStudentsDisabled}>Clear Selection</button>
-                    <button   class="slds-button  slds-button slds-button_outline-brand" onclick={openClassManagement} disabled={isClassManagementOpen}></button>
+                    <button   class="slds-button  slds-button slds-button_outline-brand slds-m-right_large" onclick={clearSelection} disabled={isDeleteSelectedStudentsDisabled}>Clear Selection</button>
+                    <button   class="slds-button  slds-button slds-button_outline-brand" onclick={openClassManagement} disabled={isClassManagementOpen}>
+                        <p>
+                            <lightning-formatted-url value="https://resilient-koala-pqwi3c-dev-ed.trailblaze.lightning.force.com/lightning/n/LWC_SearchClass" label="Class list" tooltip="Omit leading slash" target="_blank"></lightning-formatted-url>
+                        </p>
+                    </button>
                 </div>
             </div>
             <div class="slds-m-around_medium">
@@ -86,7 +90,19 @@
                                         >
                                     </lightning-button-icon>
                                 </th>
-                                <th scope="col">First Name</th>
+                                <th scope="col">
+                                    First Name
+                                    <lightning-button-icon 
+                                        class="sortByFirstNameCls"
+                                        icon-name="utility:arrowdown"
+                                        alternative-text="Sort by Student Code"
+                                        title="Sort by Student Code"
+                                        onclick={sortByFirstName}
+                                        variant="bare"
+                                        >
+                                    </lightning-button-icon>
+                                    
+                                </th>
                                 <th scope="col">Last Name</th>
                                 <th scope="col">Class
                                     <lightning-button-icon 
@@ -99,7 +115,19 @@
                                         >
                                     </lightning-button-icon>
                                 </th>
-                                <th scope="col">Gender</th>
+                                <th scope="col">
+                                    Gender
+                                    <lightning-button-icon 
+                                        class="sortByGendercls"
+                                        icon-name="utility:arrowdown"
+                                        alternative-text="Sort by Student Class"
+                                        title="Sort by Student Class"
+                                        onclick={sortByGender}
+                                        variant="bare"
+                                        >
+                                    </lightning-button-icon>
+                                </th>
+                                
                                 <th scope="col">Birthdate</th>
                                 <th scope="col" style="width:30px;">
                                     <div class="slds-truncate" title="Detail">Detail</div>

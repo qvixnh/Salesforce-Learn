@@ -8,9 +8,29 @@
                             <th scope="col">#</th>
                             <th scope="col">
                                 Class Code
+                                <lightning-button-icon 
+                                        class="sortByCodeCls"
+                                        icon-name="utility:arrowdown"
+                                        alternative-text="Sort Class by Code"
+                                        title="Sort Class by Code"
+                                        onclick={sortByCode}
+                                        variant="bare"
+                                        >
+                                    </lightning-button-icon>
                             </th>
                             <th scope="col">Class Falcuty</th>
-                            <th scope="col">Number of students</th>
+                            <th scope="col">
+                                Number of students
+                                <lightning-button-icon 
+                                        class="sortByStudentNumberCls"
+                                        icon-name="utility:arrowdown"
+                                        alternative-text="Sort Class by Student Number"
+                                        title="Sort Class by Student Number"
+                                        onclick={sortByStudentNumber}
+                                        variant="bare"
+                                        >
+                                    </lightning-button-icon>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
