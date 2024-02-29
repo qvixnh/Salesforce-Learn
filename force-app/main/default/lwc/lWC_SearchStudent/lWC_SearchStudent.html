@@ -23,7 +23,7 @@
                     <lightning-input label="Student Code" value={searchCode} onchange={handleSearchCodeChange}></lightning-input>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning-input label="Student First Name" value={searchName} onchange={handleSearchNameChange} placeholder="Enter Student First Name"></lightning-input>
+                    <lightning-input label="Student Name" value={searchName} onchange={handleSearchNameChange} placeholder="Enter Student First Name"></lightning-input>
                 </div>
                
             </div> 
@@ -55,14 +55,12 @@
                 
                 
                 <div class="slds-col slds-size_4-of-4 slds-m-top_large ">
-                        
                     <button   class=" slds-button  slds-button_brand slds-m-right_large" onclick={handleSearch}>Search Student</button>
                     <button   class="slds-button slds-button_outline-brand slds-m-right_large" onclick={handleClearFilters}>Clear Search Filters</button>
                     <button   class="slds-button  slds-button_success slds-m-right_large" onclick={openModalCreate}>Create Student</button>
                     <button   class="slds-button  slds-button slds-button_destructive slds-m-right_large" onclick={openModalDelSelStu} disabled={isDeleteSelectedStudentsDisabled}>Delete Selected</button>
                     <button   class="slds-button  slds-button slds-button_outline-brand" onclick={clearSelection} disabled={isDeleteSelectedStudentsDisabled}>Clear Selection</button>
                     <button   class="slds-button  slds-button slds-button_outline-brand" onclick={openClassManagement} disabled={isClassManagementOpen}></button>
-
                 </div>
             </div>
             <div class="slds-m-around_medium">

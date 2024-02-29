@@ -172,14 +172,14 @@ public with sharing class CMP_SearchStudentCtrl {
     public static List<Student__c> getStudents(String classId, Integer gender, String searchName, String searchCode, Integer day, Integer month, Integer year, String birthdate, String orderField, String orderType) {
         try {
             List<String> selectedFields = new List<String>{
-                'Id', 'StudentCode__c', 'Firstname__c', 'Lastname__c', 'selected__c',
+                'Id', 'StudentCode__c','Name' , 'Firstname__c', 'Lastname__c', 'selected__c',
                 'Class_look__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
             List<String> conditions = new List<String>();
         
             if (!String.isBlank(searchName)) {
-                conditions.add('Firstname__c LIKE \'%' + searchName + '%\'');
+                conditions.add('Name LIKE \'%' + searchName + '%\'');
             }
             if (!String.isBlank(searchCode)) {
                 conditions.add('StudentCode__c LIKE \'%' + searchCode + '%\'');

@@ -1,8 +1,9 @@
 List<Student__c> recordsToInsert = new List<Student__c>();
-for(Integer i = 0; i < 10; i++) {
+for(Integer i = 0; i < 70; i++) {
     Student__c record = new Student__c();
     record.Firstname__c = getRandomFirstName();
     record.Lastname__c = getRandomLastName();
+    record.Name = record.Firstname__c + ' ' + record.Lastname__c;
     record.TotalCredit__c = 0;
     record.GPAScore__c = 0;
     record.Class_look__c = getRandomClass().Id;

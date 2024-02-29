@@ -44,13 +44,13 @@ public with sharing class LWC_SearchStudentCtrl {
             SearchConditionDTO searchCondition = (SearchConditionDTO) JSON.deserialize(searchConditionJSON, SearchConditionDTO.class);
             List<String> conditions = new List<String>();
             List<String> selectedFields = new List<String>{
-                'Id', 'StudentCode__c', 'Firstname__c', 'Lastname__c', 'selected__c','TotalCredit__c','GPAScore__c',
+                'Id', 'StudentCode__c', 'Name' ,'Firstname__c', 'Lastname__c', 'selected__c','TotalCredit__c','GPAScore__c',
                 'Class_look__r.Name', 'Gender__c', 'Birthday__c', 'Address__c'
             };
             String queryString = 'SELECT ' + String.join(selectedFields, ', ') + ' FROM Student__c';
 
             if (!String.isBlank(searchCondition.searchName)) {
-                conditions.add('Firstname__c LIKE \'%' + searchCondition.searchName + '%\'');
+                conditions.add('Name LIKE \'%' + searchCondition.searchName + '%\'');
             }
             if (!String.isBlank(searchCondition.searchCode)) {
                 conditions.add('StudentCode__c LIKE \'%' + searchCondition.searchCode + '%\'');
