@@ -5,7 +5,6 @@
  * @modified: 
  */
 public with sharing class LWC_SearchStudentCtrl {
-    //1101
     /**
      * getClassOptions
      * @param    : 
@@ -20,6 +19,8 @@ public with sharing class LWC_SearchStudentCtrl {
             classList = [SELECT 
                             Id
                             , Name
+                            , NumberOfStudent__c
+                            , Falcuty__c
                         FROM Class__c 
                         ORDER BY Name];
         } catch (Exception e) {
@@ -152,4 +153,6 @@ public with sharing class LWC_SearchStudentCtrl {
         @AuraEnabled
         public String birthdate;
     }
+
+    
 }

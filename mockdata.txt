@@ -1,0 +1,51 @@
+List<Student__c> recordsToInsert = new List<Student__c>();
+for(Integer i = 0; i < 10; i++) {
+    Student__c record = new Student__c();
+    record.Firstname__c = getRandomFirstName();
+    record.Lastname__c = getRandomLastName();
+    record.TotalCredit__c = 0;
+    record.GPAScore__c = 0;
+    record.Class_look__c = getRandomClass().Id;
+    record.Gender__c = getRandomGender();
+    record.Birthday__c = Date.valueOf('2000-01-01');
+    record.Address__c = getRandomAddress();
+    
+    recordsToInsert.add(record);
+}
+
+insert recordsToInsert;
+
+// Helper methods to generate random data
+String getRandomFirstName() {
+    List<String> strList = new List<String>{'Vĩnh', 'Bách', 'Đức', 'Duy', 'Vũ', 'Tài', 'Kiệt', 'Phúc', 'Nhung', 'Lan', 'Lam', 'Trung', 'Hiếu'};
+    Integer ranNumber = (Integer) Math.floor(Math.random() * strList.size());
+    return (String)strList[ranNumber];
+}
+
+String getRandomLastName() {
+    List<String> strList = new List<String>{'Nguyễn', 'Trần', 'Lê', 'Tào', 'Lương', 'Đỗ', 'Trương'};
+    Integer ranNumber = (Integer) Math.floor(Math.random() * strList.size());
+    return (String)strList[ranNumber];
+}
+String getRandomAddress() {
+    List<String> strList = new List<String>{'An Giang', 'HCM', 'Bình Thuận', 'Bạc Liêu', 'Bắc Giang', 'Kiên Giang', 'Tiền Giang', 'Lâm Đồng', 'Đồng Tháp', 'Phú Yên', 'Gia Lai', 'Huế', 'Hà Nội'};
+    Integer ranNumber = (Integer) Math.floor(Math.random() * strList.size());
+    return (String)strList[ranNumber];
+}
+Class__c getRandomClass() {
+    List<Class__c> classes = [SELECT 
+                            Id
+                            , Name
+                            , NumberOfStudent__c
+                            , Falcuty__c
+                        FROM Class__c 
+                        ORDER BY Name ];
+    Integer ranNumber = (Integer) Math.floor(Math.random() * classes.size());
+    return classes[ranNumber];
+}
+
+Boolean getRandomGender() {
+    return Math.random() < 0.5; // 50% chance for true/false
+}
+
+

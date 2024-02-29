@@ -54,11 +54,6 @@ export default class LWC_SearchStudent extends LightningElement {
             { label: '20', value: 20 },
         ];
     }
-
-    handlePageSizeChange(event) {
-        this.pageSize = event.detail.value;
-        this.updateDisplayedStudents();
-    }
     get fieldOrderByOptions() {
         return [
             { label: 'Student Code', value: 'StudentCode__c' },
