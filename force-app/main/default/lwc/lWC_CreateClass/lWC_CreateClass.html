@@ -1,3 +1,16 @@
 <template>
-    
+    <lightning-card title="Create Student" icon-name="standard:account">
+        <div class="slds-card slds-p-around_medium">
+            <lightning-combobox
+                label="Select Falcuty"
+                value={falcuty}
+                options={falcutyOptions}
+                onchange={handleFalcutyChange}
+                >
+            </lightning-combobox>
+            <div class="slds-m-top_medium">
+                <button  variant="brand" class=" slds-button slds-button_brand slds-button_stretch " onclick={createStudent}>Create Student</button>
+            </div>
+        </div>
+    </lightning-card>
 </template>

@@ -1,0 +1,22 @@
+<template>
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_col-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Student Code</th>
+                <th scope="col">Student Name</th>
+                <th scope="col">Total Credit</th>
+                <th scope="col">GPA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <template for:each={stuList} for:item="item">
+                <tr key={item.Id}>
+                    <td>{item.StudentCode__c}</td>
+                    <td>{item.Name}</td>
+                    <td>{item.TotalCredit__c}</td>
+                    <td>{item.GPAScore__c}</td>
+                </tr>
+            </template>
+        </tbody>
+    </table>
+</template>

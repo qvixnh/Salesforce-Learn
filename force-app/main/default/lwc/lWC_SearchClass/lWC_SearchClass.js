@@ -7,6 +7,10 @@ export default class LWC_SearchClass extends LightningElement {
     @track pageNumbers = [];
     currentPage = 1;
     totalPages = 1;
+    createStatus = false;
+    detailStatus = false;
+    selectedClassId;
+    
     connectedCallback() {
         this.loadClasses();
     }
@@ -119,5 +123,19 @@ export default class LWC_SearchClass extends LightningElement {
         this.classes = sortedClasses;
         this.updateDisplayedClasses();
     }
+    openCreate() {
+        this.createStatus = true;
+    }
+    closeCreate() {
+        this.createStatus = false;
+    }
+    openDetail(event) {
+        this.selectedClassId =  event.currentTarget.dataset.classId;
+        this.detailStatus = true;
+    }
+    closeDetail() {
+        this.detailStatus = false;
+    }
+
 }
 
