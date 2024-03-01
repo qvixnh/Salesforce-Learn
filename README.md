@@ -21,13 +21,13 @@ The `sfdx-project.json` file contains useful configuration information for your 
 ###
 This repository is my path learning salesforce with student management project:
 
-##Phase 1: Visualforce page with the files start with prefix: "VF_..."
-##Phase 2: Lightning component with prefix: "CMP_" 
-##Phase 3: Lightning web component with prefix: "LWC_"
-##Phase 4: Trigger
+## Phase 1: Visualforce page with the files start with prefix: "VF_..."
+## Phase 2: Lightning component with prefix: "CMP_" 
+## Phase 3: Lightning web component with prefix: "LWC_"
+## Phase 4: Trigger
   - T01 for student DML handling
   - T02 for score DML handling
-##Phase 5: Batch
+## Phase 5: Batch
   - B01 Delete all the subject scores
   - B02 Create new student subject scores for creating new ones
   - B03 Update the student based on new subject scores 
