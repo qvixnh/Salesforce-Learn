@@ -92,14 +92,15 @@ public with sharing class LWC_SearchStudentCtrlTest {
     @isTest
     static void testDeleteSelectedStudentsEmpty(){
         List<String> studentIds = new List<String>();
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             LWC_SearchStudentCtrl.deleteSelectedStudentsCtrl(studentIds);
         } catch (Exception e) {
-            System.assert(true);            
+            errorFlag = true;
         }
-
         Test.stopTest();
+        Assert.isTrue(errorFlag);
 
     }
     /**
@@ -130,13 +131,15 @@ public with sharing class LWC_SearchStudentCtrlTest {
      */
     @isTest
     static void testDeleteStudentRecordNotFound(){
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             LWC_SearchStudentCtrl.deleteStudentRecord('123');
         } catch (Exception e) {
-            System.assert(true);
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testDeleteStudentRecordEmpty
@@ -147,13 +150,15 @@ public with sharing class LWC_SearchStudentCtrlTest {
      */
     @isTest
     static void testDeleteStudentRecordEmpty(){
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             LWC_SearchStudentCtrl.deleteStudentRecord(null);
         } catch (Exception e) {
-            System.assert(true);
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * createStudent

@@ -5,7 +5,7 @@ import getClassOptions from '@salesforce/apex/LWC_SearchStudentCtrl.getClassOpti
 import getStudentsByCondition from '@salesforce/apex/LWC_SearchStudentCtrl.getStudentsByCondition';
 import deleteSelectedStudentsCtrl from '@salesforce/apex/LWC_SearchStudentCtrl.deleteSelectedStudentsCtrl';
 import deleteStudentRecord from '@salesforce/apex/LWC_SearchStudentCtrl.deleteStudentRecord';
-
+import genStudents from '@salesforce/apex/mockData.genStudents';
 const ITEMS_PER_PAGE = 10;
 
 export default class LWC_SearchStudent extends LightningElement {
@@ -13,7 +13,7 @@ export default class LWC_SearchStudent extends LightningElement {
     SUCCESSTYPE = 'success'
     //track variable
     @track classes;
-    @track students;
+    @track students=[];
     @track displayedStudents;
     @track pageNumbers = [];
     @track selectedStudentIds = [];
@@ -62,7 +62,9 @@ export default class LWC_SearchStudent extends LightningElement {
             { label: 'Student Gender', value: 'Gender__c' },
         ];
     }
-
+    get isGenStudentsDisplay() {
+        return this.students.length > 60;
+    }
     get orderTypeOptions() {
         return [
             { label: 'Ascendant', value: 'ASC' },
@@ -538,4 +540,23 @@ export default class LWC_SearchStudent extends LightningElement {
         });
         this.dispatchEvent(event);
     }
+    //extension method
+    mockStudent(){
+        try {
+            genStudents({
+                classL: this.classList
+            })
+            .then(result => {
+                console.log(result);
+                this.error = undefined;
+                this.loadStudents();    
+            })
+            .catch(error => {
+                this.students = undefined;
+            });  
+        } catch (error) {
+            console.log("error occur when generating students" + error);            
+        }
+    }
+    
 }

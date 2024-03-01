@@ -51,13 +51,15 @@ public class CMP_UpdateStudentCtrlTest {
         Boolean gender = true;
         String address = '';
         Date birthdate = Date.today();
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             String studentId = CMP_UpdateStudentCtrl.updateStudentRec(stu, firstName, lastName , classId, gender, address, birthdate);
         } catch (Exception e) {
-            System.assert(true);            
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testGetClasses

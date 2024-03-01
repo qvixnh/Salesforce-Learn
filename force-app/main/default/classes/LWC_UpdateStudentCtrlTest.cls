@@ -51,13 +51,15 @@ public class LWC_UpdateStudentCtrlTest {
         Boolean gender = null;
         String address = 'Test Address';
         Date birthdate = Date.valueOf('2000-01-01');
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             String studentId = LWC_UpdateStudentCtrl.updateStudentRec(stu, firstName, lastName , classId, gender, address, birthdate);
         } catch (Exception e) {
-            System.assert(true);            
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * createStudent

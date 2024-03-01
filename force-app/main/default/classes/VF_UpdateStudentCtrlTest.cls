@@ -84,14 +84,16 @@ public class VF_UpdateStudentCtrlTest {
      */
     @isTest
     static void testUpdateStudentCatch() {
+        Boolean errorFlag = false;
+        VF_UpdateStudentCtrl controller = new VF_UpdateStudentCtrl();
+        Test.startTest();
         try {
-            VF_UpdateStudentCtrl controller = new VF_UpdateStudentCtrl();
-            Test.startTest();
             PageReference pageRef = controller.updateStudent();
-            Test.stopTest();
         } catch (Exception e) {
-            System.assert(true);
+            errorFlag = true;
         }
+        Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     
      /**

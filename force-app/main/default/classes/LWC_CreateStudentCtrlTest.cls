@@ -47,14 +47,15 @@ public with sharing class LWC_CreateStudentCtrlTest {
         Boolean gender = true;
         String address = 'Test Address';
         Date birthdate = Date.valueOf('2000-01-01');
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             String studentId = LWC_CreateStudentCtrl.createStudentRec(firstName, lastName , classId, gender, address, birthdate);
-
         } catch (Exception e) {
-            System.assert(true);        
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testGetClasses

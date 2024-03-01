@@ -1,5 +1,5 @@
 List<Student__c> recordsToInsert = new List<Student__c>();
-for(Integer i = 0; i < 70; i++) {
+for(Integer i = 0; i < 10; i++) {
     Student__c record = new Student__c();
     record.Firstname__c = getRandomFirstName();
     record.Lastname__c = getRandomLastName();

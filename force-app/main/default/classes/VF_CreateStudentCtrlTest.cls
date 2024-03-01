@@ -51,27 +51,29 @@ public class VF_CreateStudentCtrlTest {
         Assert.areEqual(1, createdStudents.size());
         Assert.areEqual('Test FirstName', createdStudents[0].Firstname__c);
         Assert.areEqual('Test LastName', createdStudents[0].Lastname__c);
-        Assert.areEqual(null, controller.studentToCreate.Id);
     }
     /**
      * testCreateStudentCatch
      * @param    :
      * @return   :
      * @created  : 2024/02/22 + Nguyen Vinh
-     * @modified :
+     * @modified : 2024/03/01 + Nguyen Vinh
      */
     @isTest
     private static void testCreateStudentCatch() {
-        try {
-            VF_CreateStudentCtrl controller = new VF_CreateStudentCtrl();
-            Test.startTest();
-            controller.createStudent();
-            Test.stopTest();
-        } catch (Exception e) {
-            System.assert(true);
-        }
-    }
+        Boolean errorFlag = false;
+        VF_CreateStudentCtrl controller = new VF_CreateStudentCtrl();
 
+        Test.startTest();
+        try {
+            controller.createStudent();
+        } catch (Exception e) {
+            errorFlag = true;
+        }
+        Test.stopTest();
+
+        Assert.isTrue(errorFlag);
+    }
      /**
      * createStudent
      * @param    :

@@ -21,7 +21,9 @@ public with sharing class VF_CreateStudentCtrl {
      * **/
     public void createStudent() {
         try {
-            this.studentToCreate.Name = studentToCreate.Firstname__c.left(39) + ' ' + studentToCreate.Lastname__c.left(39);
+            if(String.isNotBlank(studentToCreate.Firstname__c) && String.isNotBlank(studentToCreate.Lastname__c)){
+                this.studentToCreate.Name = studentToCreate.Firstname__c + ' ' + studentToCreate.Lastname__c;
+            }
             insert studentToCreate;
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Student created successfully.'));
             this.studentToCreate = new Student__c();

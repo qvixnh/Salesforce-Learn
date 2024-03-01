@@ -58,11 +58,12 @@
                     <button   class="slds-button  slds-button_success slds-m-right_large" onclick={openModalCreate}>Create Student</button>
                     <button   class="slds-button  slds-button slds-button_destructive slds-m-right_large" onclick={openModalDelSelStu} disabled={isDeleteSelectedStudentsDisabled}>Delete Selected</button>
                     <button   class="slds-button  slds-button slds-button_outline-brand slds-m-right_large" onclick={clearSelection} disabled={isDeleteSelectedStudentsDisabled}>Clear Selection</button>
-                    <button   class="slds-button  slds-button slds-button_outline-brand" onclick={openClassManagement} disabled={isClassManagementOpen}>
+                    <button   class="slds-button  slds-button slds-button_outline-brand slds-m-right_large" onclick={openClassManagement} disabled={isClassManagementOpen}>
                         <p>
                             <lightning-formatted-url value="https://resilient-koala-pqwi3c-dev-ed.trailblaze.lightning.force.com/lightning/n/LWC_SearchClass" label="Class list" tooltip="Omit leading slash" target="_blank"></lightning-formatted-url>
                         </p>
                     </button>
+                    <button   class="slds-button  slds-button slds-button_outline-brand" onclick={mockStudent} disabled={isGenStudentsDisplay}>Generate students</button>
                 </div>
             </div>
             <div class="slds-m-around_medium">

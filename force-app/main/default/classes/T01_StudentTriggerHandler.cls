@@ -22,7 +22,7 @@ public without sharing class T01_StudentTriggerHandler {
             String formatted = String.format(ERROR_TEMPLATE , new List<String> {'onBeforeInsert',e.getMessage()});
             throw new CustomException(formatted);
         }
-    }
+    }   
     /**
      * onBeforeUpdate
      * @param    : List<Student__c> newStudents

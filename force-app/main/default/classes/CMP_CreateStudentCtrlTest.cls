@@ -39,13 +39,15 @@ public class CMP_CreateStudentCtrlTest {
      */
     @isTest
     static void testCreateStudentRecCatch() {
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             String studentId = CMP_CreateStudentCtrl.createStudentRec(null, null , null, null, null, null);
         } catch (Exception e) {
-            System.assert(true);            
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testGetClasses
@@ -77,13 +79,15 @@ public class CMP_CreateStudentCtrlTest {
      */
     @isTest
     static void testGetClassesCatch() {
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             List<Class__c> classList = CMP_CreateStudentCtrl.getClasses();
         } catch (Exception e) {
-            System.assert(true);            
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * createStudent

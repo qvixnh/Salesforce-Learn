@@ -54,14 +54,17 @@ public with sharing class CMP_SearchStudentCtrlTest {
      */
     @isTest
     static void testGetStudentDetailsCatch() {
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             Student__c getStu= CMP_SearchStudentCtrl.getStudentDetails('');
         } catch (Exception e) {
-            System.assert(true);
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
+
     /**
      * testGetRecords
      * @param    : 

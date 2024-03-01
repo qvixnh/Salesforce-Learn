@@ -40,13 +40,15 @@ private class T01_StudentTriggerHandlerTest {
      */
     @isTest
     private static void testOnBeforeInsertCatch() {
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             T01_StudentTriggerHandler.onBeforeInsert(null);
         } catch (Exception e) {
-            System.assert(true);
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testOnAfterInsertCatch
@@ -57,13 +59,15 @@ private class T01_StudentTriggerHandlerTest {
      */
     @isTest
     private static void testOnAfterInsertCatch() {
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             T01_StudentTriggerHandler.onAfterInsert(null);
         } catch (Exception e) {
-            System.assert(true);
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testOnAfterUpdateCatch
@@ -74,13 +78,15 @@ private class T01_StudentTriggerHandlerTest {
      */
     @isTest
     private static void testOnAfterUpdateCatch() {
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             T01_StudentTriggerHandler.onAfterUpdate(null, null);
         } catch (Exception e) {
-            System.assert(true);
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testOnBeforeUpdateCatch
@@ -91,13 +97,15 @@ private class T01_StudentTriggerHandlerTest {
      */
     @isTest
     private static void testOnBeforeUpdateCatch() {
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             T01_StudentTriggerHandler.onBeforeUpdate(null);
         } catch (Exception e) {
-            System.assert(true);
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testOnBeforeDeleteCatch
@@ -108,13 +116,15 @@ private class T01_StudentTriggerHandlerTest {
      */
     @isTest
     private static void testOnBeforeDeleteCatch() {
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             T01_StudentTriggerHandler.onBeforeDelete(null);
         } catch (Exception e) {
-            System.assert(true);
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testOnBeforeDeleteCatch
@@ -125,13 +135,15 @@ private class T01_StudentTriggerHandlerTest {
      */
     @isTest
     private static void testOnAfterDeleteCatch() {
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             T01_StudentTriggerHandler.onAfterDelete(null);
         } catch (Exception e) {
-            System.assert(true);
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testDelete
@@ -171,13 +183,15 @@ private class T01_StudentTriggerHandlerTest {
     @isTest
     private static void testDeleteCatch() {
         Student__c stu = new Student__c();
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             delete stu;
-        } catch (Exception e)  {
-            System.assert(true);
+        } catch (Exception e) {
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
     /**
      * testUpdateCatch
@@ -189,13 +203,15 @@ private class T01_StudentTriggerHandlerTest {
     @isTest
     private static void testUpdateCatch() {
         Student__c stu = new Student__c();
+        Boolean errorFlag = false;
         Test.startTest();
         try {
             update stu;
-        } catch (Exception e)  {
-            System.assert(true);
+        } catch (Exception e) {
+            errorFlag = true;
         }
         Test.stopTest();
+        Assert.isTrue(errorFlag);
     }
 
     /**
