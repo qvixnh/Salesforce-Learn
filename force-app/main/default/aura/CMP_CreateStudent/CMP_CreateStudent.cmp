@@ -1,4 +1,9 @@
-<!-- CMP_CreateStudent.cmp -->
+<!-- 
+    * クラス名：CMP_CreateStudent.cmp
+    * クラス概要：CMP Create Student lightning component
+    * @created：2023/12/26 + Nguyen Vinh
+    * @modified：
+-->
 <aura:component controller="CMP_CreateStudentCtrl" implements="flexipage:availableForAllPageTypes">
     <aura:attribute name="childStatus" type="boolean" default="false"/>
     <!-- Attribute -->

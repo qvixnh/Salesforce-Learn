@@ -1,3 +1,9 @@
+/* 
+    * クラス名：CMP_UpdateStudentController
+    * クラス概要：CMP Update Student Controller
+    * @created：2023/12/26 + Nguyen Vinh
+    * @modified：
+*/
 ({
     doInit : function(component, event, helper) {
         // Define gender options

@@ -1,3 +1,9 @@
+/*
+    * クラス名：CMP_CreateStudentHelper.js
+    * クラス概要：CMP Create Student Helper
+    * @created：2023/12/26 + Nguyen Vinh
+    * @modified：
+*/
 ({
     /*
     reset the create form went student record created

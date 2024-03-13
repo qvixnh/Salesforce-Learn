@@ -1,3 +1,9 @@
+/*
+    * クラス名：CMP_SearchResultHelper.js
+    * クラス概要：CMP SearchResult Helper
+    * @created：2023/12/26 + Nguyen Vinh
+    * @modified：
+*/
 ({
     /*
         get student detail to show in detail modal, update, or delete 1 student record

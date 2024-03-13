@@ -1,3 +1,9 @@
+/*
+    * クラス名：CMP_SearchConditionHelper.js
+    * クラス概要：CMP Create Student Helper
+    * @created：2023/12/26 + Nguyen Vinh
+    * @modified：
+*/
 ({
     /*
         get class to set the class options to search student by class

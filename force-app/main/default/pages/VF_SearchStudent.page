@@ -1,3 +1,9 @@
+<!--
+ * クラス名：   VF_SearchStudent.page
+ * クラス概要： Search Student Visualpage
+ * @created： 2023/12/15 + Nguyen Vinh
+ * @modified: 
+ -->
 <apex:page docType="html-5.0" controller="VF_SearchStudentCtrl">
     <style>
         label{

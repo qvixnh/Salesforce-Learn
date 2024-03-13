@@ -1,3 +1,9 @@
+/* 
+    * クラス名：CMP_UpdateStudentHelper
+    * クラス概要：CMP Update Student Helper
+    * @created：2023/12/26 + Nguyen Vinh
+    * @modified：
+*/
 ({
     getClasses: function (component) {
         var action = component.get("c.getClasses");

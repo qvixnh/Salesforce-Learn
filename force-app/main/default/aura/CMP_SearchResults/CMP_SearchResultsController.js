@@ -1,4 +1,9 @@
-({
+/*
+    * クラス名：CMP_SearchResultController.js
+    * クラス概要：CMP SearchResult Controller
+    * @created：2023/12/26 + Nguyen Vinh
+    * @modified：
+*/({
     /*
         handle the search event to load students
     */

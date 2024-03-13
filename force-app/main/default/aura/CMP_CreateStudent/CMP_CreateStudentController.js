@@ -1,4 +1,9 @@
-// CMP_CreateStudentController.js
+/*
+    * クラス名：CMP_CreateStudentController.js
+    * クラス概要：CMP Create Student Controller
+    * @created：2023/12/26 + Nguyen Vinh
+    * @modified：
+*/
 ({
     /*
     init gender and class options

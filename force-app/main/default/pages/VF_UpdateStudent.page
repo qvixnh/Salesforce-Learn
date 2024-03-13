@@ -1,3 +1,9 @@
+<!--
+ * クラス名：   VF_UpdateStudent.page
+ * クラス概要： Update Student Visualpage
+ * @created： 2023/12/15 + Nguyen Vinh
+ * @modified: 
+ -->
 <apex:page controller="VF_UpdateStudentCtrl">
     <style>
         .errorMessage{

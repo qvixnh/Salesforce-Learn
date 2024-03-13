@@ -1,4 +1,9 @@
-<!-- CMP_UpdateStudent.cmp -->
+<!-- 
+    * クラス名：CMP_UpdateStudent.cmp
+    * クラス概要：CMP Update Student
+    * @created：2023/12/26 + Nguyen Vinh
+    * @modified：
+-->
 <aura:component controller="CMP_UpdateStudentCtrl" implements="flexipage:availableForAllPageTypes">
     <aura:attribute name="student" type="Object" />
     <aura:attribute name="genderOptions" type="List"/>

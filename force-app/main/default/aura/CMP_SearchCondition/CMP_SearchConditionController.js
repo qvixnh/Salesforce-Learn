@@ -1,3 +1,9 @@
+/*
+    * クラス名：CMP_SearchConditionController.js
+    * クラス概要：CMP Create Student Controller
+    * @created：2023/12/26 + Nguyen Vinh
+    * @modified：
+*/
 ({
     /*init class options, gender, day, month select options, and load student to event*/
     init: function(component, event, helper) {
