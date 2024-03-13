@@ -143,7 +143,7 @@ public with sharing class B03_UpdateStudentScoreBatch  implements Database.Batch
         }
         return subjectScoreByStudentsMapById;
     }
-    /**
+     /**
      * getStudentGPA_Credit
      * @param    : List<SubjectScore__c> subjectScoreList, Student__c student
      * @return   : Student__c
