@@ -20,7 +20,7 @@ public with sharing class T02_ScoreTriggerHandlerTest {
      * @modified : 
      */
     @isTest 
-    private static void testInsert(){
+    private static void testOnAfterInsert(){
         Class__c testClass = new Class__c();
         insert testClass;
         Subject__c testSub = new Subject__c();
@@ -54,7 +54,7 @@ public with sharing class T02_ScoreTriggerHandlerTest {
      * @modified : 
      */
     @isTest 
-    private static void testUpdate(){
+    private static void testOnAfterUpdate(){
         Class__c testClass = new Class__c();
         insert testClass;
         Subject__c testSub = new Subject__c();
@@ -94,7 +94,7 @@ public with sharing class T02_ScoreTriggerHandlerTest {
      * @modified : 
      */
     @isTest 
-    private static void testGPA_Null(){
+    private static void testOnAfterInsertGPA_Null(){
         Class__c testClass = new Class__c();
         insert testClass;
         Subject__c testSub = new Subject__c();
