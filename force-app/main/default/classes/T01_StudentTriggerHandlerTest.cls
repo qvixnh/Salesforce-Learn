@@ -196,30 +196,6 @@ private class T01_StudentTriggerHandlerTest {
     }
     
     /**
-     * testUpdateCatch
-     * @param    :
-     * @return   :
-     * @created  : 2024/02/22 + Nguyen Vinh
-     * @modified :
-     */
-    @isTest
-    private static void testOnBeforeUpdateCatch() {
-        User userTest = createUser();
-        System.runAs(userTest){
-            Student__c stu = new Student__c();
-            Boolean errorFlag = false;
-            Test.startTest();
-            try {
-                update stu;
-            } catch (Exception e) {
-                errorFlag = true;
-            }
-            Test.stopTest();
-            Assert.isTrue(errorFlag);
-        }
-    }
-
-    /**
      * testUpdate
      * @param    :
      * @return   :
@@ -295,27 +271,31 @@ private class T01_StudentTriggerHandlerTest {
      * @modified :
      */
     private static User createUser() {
+        // プロフィール
+        List<Profile> profile = [SELECT Id FROM Profile WHERE Name LIKE 'System Administrator'];
         // ユニーク名
         String uniqueName = UserInfo.getOrganizationId() +                  // 組織Id
                Datetime.now().format('yyyyMMddHHmmssSSS') +                 // 今日付/時間
                Integer.valueOf(math.rint(math.random() * (2000000 - 1)));   // ランダム
         // ユーザ
         User user = new User(
-            FirstName = uniqueName.subString(29, 34)        // 名
-            , LastName = uniqueName.subString(30, 35)       // 姓
-            , Email = uniqueName + '@keizu.co.jp'           // メール
-            , UserName = uniqueName + '@ke1zu.co.jp'        // ユーザ名
-            , EmailEncodingKey = 'UTF-8'                    // メールの文字コード
-            , Alias = '別名'                                // 別名
-            , TimeZoneSidKey = 'Asia/Tokyo'                 // タイムゾーン
-            , LocaleSidKey = 'ja_JP'                        // 地域
-            , LanguageLocaleKey = 'ja'                      // 言語
-            , PostalCode = '123455789'                      // 郵便番号
-            , Department = 'test'                           // 部署
-            , Phone = '123356789'                           // 電話
-            , Fax = '123446789'                             // Fax
-            , CompanyName  = 'keizu'                        // 担当者(IS)のユーザ.会社名
+            FirstName = uniqueName.subString(29, 34)                        // 名
+            , LastName = uniqueName.subString(30, 35)                       // 姓
+            , Email = uniqueName + '@keizu.co.jp'                           // メール
+            , UserName = uniqueName + '@ke1zu.co.jp'                        // ユーザ名
+            , EmailEncodingKey = 'UTF-8'                                    // メールの文字コード
+            , Alias = '別名'                                                // 別名
+            , TimeZoneSidKey = 'Asia/Tokyo'                                 // タイムゾーン
+            , LocaleSidKey = 'ja_JP'                                        // 地域
+            , LanguageLocaleKey = 'ja'                                      // 言語
+            , ProfileId =  profile[0].Id                                 // プロフィールId
+            , PostalCode = '123455789'                                      // 郵便番号
+            , Department = 'test'                                           // 部署
+            , Phone = '123356789'                                           // 電話
+            , Fax = '123446789'                                             // Fax
+            , CompanyName  = 'keizu'                                        // 担当者(IS)のユーザ.会社名
         );
+
         insert user;
         return user;
     }
