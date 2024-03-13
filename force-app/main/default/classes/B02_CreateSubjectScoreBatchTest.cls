@@ -3,6 +3,7 @@
  * クラス概要： B02 Create Subject Score Batch Test
  * @created： 2024/02/22 + Nguyen Vinh
  * @modified: 2024/02/23 + Nguyen Vinh
+ * @modified: 2024/03/13 + Nguyen Vinh
  */
 @isTest
 public with sharing class B02_CreateSubjectScoreBatchTest {
@@ -34,13 +35,16 @@ public with sharing class B02_CreateSubjectScoreBatchTest {
      */
     @isTest
     private static void testExecuteBatch(){
-        setUp();
-        Test.startTest();
-        B02_CreateSubjectScoreBatch batch = new B02_CreateSubjectScoreBatch();
-        Id batchId = Database.executeBatch(batch);
-        Test.stopTest();
-        Integer newSubScoreSize = [SELECT COUNT() FROM SubjectScore__c];
-        Assert.areNotEqual(0, newSubScoreSize);
+        User userTest = createUser();
+            System.runAs(userTest){
+            setUp();
+            Test.startTest();
+            B02_CreateSubjectScoreBatch batch = new B02_CreateSubjectScoreBatch();
+            Id batchId = Database.executeBatch(batch);
+            Test.stopTest();
+            Integer newSubScoreSize = [SELECT COUNT() FROM SubjectScore__c];
+            Assert.areNotEqual(0, newSubScoreSize);
+        }
     }
     /**
      * createStudentList
@@ -132,5 +136,38 @@ public with sharing class B02_CreateSubjectScoreBatchTest {
         Subject__c sub = new Subject__c();
         sub.CourseCredit__c = credit;
         return sub;
+    }
+    /**
+     * createUser
+     * ユーザを作成する
+     * @param    : なし
+     * @return   : user　ユーザ
+     * @created  : 2024/03/13 KSVC Nguyen Quoc VInh
+     * @modified :
+     */
+    private static User createUser() {
+        // ユニーク名
+        String uniqueName = UserInfo.getOrganizationId() +                  // 組織Id
+               Datetime.now().format('yyyyMMddHHmmssSSS') +                 // 今日付/時間
+               Integer.valueOf(math.rint(math.random() * (2000000 - 1)));   // ランダム
+        // ユーザ
+        User user = new User(
+            FirstName = uniqueName.subString(29, 34)        // 名
+            , LastName = uniqueName.subString(30, 35)       // 姓
+            , Email = uniqueName + '@keizu.co.jp'           // メール
+            , UserName = uniqueName + '@ke1zu.co.jp'        // ユーザ名
+            , EmailEncodingKey = 'UTF-8'                    // メールの文字コード
+            , Alias = '別名'                                // 別名
+            , TimeZoneSidKey = 'Asia/Tokyo'                 // タイムゾーン
+            , LocaleSidKey = 'ja_JP'                        // 地域
+            , LanguageLocaleKey = 'ja'                      // 言語
+            , PostalCode = '123455789'                      // 郵便番号
+            , Department = 'test'                           // 部署
+            , Phone = '123356789'                           // 電話
+            , Fax = '123446789'                             // Fax
+            , CompanyName  = 'keizu'                        // 担当者(IS)のユーザ.会社名
+        );
+        insert user;
+        return user;
     }
 }

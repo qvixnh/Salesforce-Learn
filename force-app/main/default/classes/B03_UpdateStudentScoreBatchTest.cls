@@ -19,20 +19,23 @@ public with sharing class B03_UpdateStudentScoreBatchTest {
      */
 	@isTest
 	private static void testExecuteBatch(){
-		setUp();
-		Integer oldCreditStudent = [SELECT COUNT() FROM Student__c WHERE TotalCredit__c > 0];
-		Integer oldGPAStudent = [SELECT COUNT() FROM Student__c WHERE GPAScore__c > 0];
-		
-		Test.startTest();
-		B03_UpdateStudentScoreBatch batch = new B03_UpdateStudentScoreBatch();
-		Id batchId = Database.executeBatch(batch);
-		Test.stopTest();
-		Integer newCreditStudent = [SELECT COUNT() FROM Student__c WHERE TotalCredit__c > 0];
-		Integer newGPAStudent = [SELECT COUNT() FROM Student__c WHERE GPAScore__c > 0];
-		Assert.areEqual(0, oldCreditStudent);
-		Assert.areNotEqual(0, newCreditStudent);
-		Assert.areEqual(0, oldGPAStudent);
-		Assert.areNotEqual(0, newGPAStudent);
+        User userTest = createUser();
+        System.runAs(userTest){
+            setUp();
+            Integer oldCreditStudent = [SELECT COUNT() FROM Student__c WHERE TotalCredit__c > 0];
+            Integer oldGPAStudent = [SELECT COUNT() FROM Student__c WHERE GPAScore__c > 0];
+            
+            Test.startTest();
+            B03_UpdateStudentScoreBatch batch = new B03_UpdateStudentScoreBatch();
+            Id batchId = Database.executeBatch(batch);
+            Test.stopTest();
+            Integer newCreditStudent = [SELECT COUNT() FROM Student__c WHERE TotalCredit__c > 0];
+            Integer newGPAStudent = [SELECT COUNT() FROM Student__c WHERE GPAScore__c > 0];
+            Assert.areEqual(0, oldCreditStudent);
+            Assert.areNotEqual(0, newCreditStudent);
+            Assert.areEqual(0, oldGPAStudent);
+            Assert.areNotEqual(0, newGPAStudent);
+        }
 	}
 	/**
      * setUp
@@ -257,5 +260,38 @@ public with sharing class B03_UpdateStudentScoreBatchTest {
         scoreList.add(midtermScore);
         scoreList.add(finalTermScore);
         return scoreList;
+    }
+    /**
+     * createUser
+     * ユーザを作成する
+     * @param    : なし
+     * @return   : user　ユーザ
+     * @created  : 2024/03/13 KSVC Nguyen Quoc VInh
+     * @modified :
+     */
+    private static User createUser() {
+        // ユニーク名
+        String uniqueName = UserInfo.getOrganizationId() +                  // 組織Id
+               Datetime.now().format('yyyyMMddHHmmssSSS') +                 // 今日付/時間
+               Integer.valueOf(math.rint(math.random() * (2000000 - 1)));   // ランダム
+        // ユーザ
+        User user = new User(
+            FirstName = uniqueName.subString(29, 34)        // 名
+            , LastName = uniqueName.subString(30, 35)       // 姓
+            , Email = uniqueName + '@keizu.co.jp'           // メール
+            , UserName = uniqueName + '@ke1zu.co.jp'        // ユーザ名
+            , EmailEncodingKey = 'UTF-8'                    // メールの文字コード
+            , Alias = '別名'                                // 別名
+            , TimeZoneSidKey = 'Asia/Tokyo'                 // タイムゾーン
+            , LocaleSidKey = 'ja_JP'                        // 地域
+            , LanguageLocaleKey = 'ja'                      // 言語
+            , PostalCode = '123455789'                      // 郵便番号
+            , Department = 'test'                           // 部署
+            , Phone = '123356789'                           // 電話
+            , Fax = '123446789'                             // Fax
+            , CompanyName  = 'keizu'                        // 担当者(IS)のユーザ.会社名
+        );
+        insert user;
+        return user;
     }
 }
